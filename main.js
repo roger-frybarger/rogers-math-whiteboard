@@ -58,3 +58,6 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+// This is critical for enabeling touch events:
+app.commandLine.appendSwitch('touch-events', 'enabled');
