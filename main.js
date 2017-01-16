@@ -2,6 +2,15 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 
+const remote = require('electron').remote
+
+//var ipc = remote.require('ipc')
+
+//const { ipcMain } = require('electron').ipc
+
+const ipcMain = require('electron').ipcMain
+//console.log(ipcMain);
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -23,20 +32,28 @@ function createWindow () {
   win.webContents.openDevTools()
 
   win.on('close', function(e){
+    e.preventDefault();
+    //win.webContents.on('did-finish-load', () => {
+      //win.webContents.send('message', 'Hello in main window');
+    //});
+    
+    win.webContents.send('message', 'Hello in main window');
     //Here is where we can stop the close button and check for unsaved work:
     //e.preventDefault();
     // Here once we remove the above comment and check for unsaved work, then we can close the application.
     console.log("HI!!!");
+    //console.log(remote.getGlobal(safe));
   })
 
   // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-	console.log("gfdhgfdhgd");
-    win = null
-  })
+  //win.on('closed', () => {
+    //// Dereference the window object, usually you would store windows
+    //// in an array if your app supports multi windows, this is the time
+    //// when you should delete the corresponding element.
+	//console.log("gfdhgfdhgd");
+    //win = null
+  //})
+  
 }
 
 // This method will be called when Electron has finished
@@ -60,6 +77,12 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+ipcMain.on('quitter', () => {
+  console.log("fguiyguigyinmain");
+  win.destroy(); // necessary to bypass the repeat-quit-check in the render process.
+  app.quit()
+});
 
 // This is critical for enabeling touch events:
 app.commandLine.appendSwitch('touch-events', 'enabled');
