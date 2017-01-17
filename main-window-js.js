@@ -4,7 +4,7 @@ window.addEventListener('touchend', (evt) => console.log(evt.touches));
 window.addEventListener('mousedown', (evt) => console.log(evt));
 window.addEventListener('touchmove', (evt) => console.log(evt.touches));
 
-var safe = false;
+var safeToClose = false; // Eventually, this default will be true.
 
 //const remote = require('remote');
 //remote.getCurrentWindow().on('close', function() {
@@ -34,15 +34,15 @@ const { dialog } = require('electron').remote;
 
 
 
-ipcRenderer.on('message', (event, message) => {
-    console.log(message); // logs out "Hello second window!"
-    setTimeout( function() {
-      console.log("Before sending signal");
+ipcRenderer.on('message', () => {
+  if(!safeToClose){
+    ipcRenderer.send('maximize-main-win');
+    var ret = dialog.showMessageBox({ type: "warning", message: "Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.", buttons: ["Lose Changes", "Cancel"], defaultId: 1 });
+      
+    if(ret == 0){
       ipcRenderer.send('quitter');
-      console.log("after sending signal");
-      //app.quit();
-      //window.close();
-    }, 1000 );
+    }
+  }
 });
 
 

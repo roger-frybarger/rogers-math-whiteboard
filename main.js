@@ -37,7 +37,7 @@ function createWindow () {
       //win.webContents.send('message', 'Hello in main window');
     //});
     
-    win.webContents.send('message', 'Hello in main window');
+    win.webContents.send('message');
     //Here is where we can stop the close button and check for unsaved work:
     //e.preventDefault();
     // Here once we remove the above comment and check for unsaved work, then we can close the application.
@@ -82,6 +82,10 @@ ipcMain.on('quitter', () => {
   console.log("fguiyguigyinmain");
   win.destroy(); // necessary to bypass the repeat-quit-check in the render process.
   app.quit()
+});
+
+ipcMain.on('maximize-main-win', () => {
+  win.maximize();
 });
 
 // This is critical for enabeling touch events:
