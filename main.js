@@ -1,59 +1,38 @@
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
-const url = require('url')
-
-const remote = require('electron').remote
-
-//var ipc = remote.require('ipc')
-
-//const { ipcMain } = require('electron').ipc
-
-const ipcMain = require('electron').ipcMain
-//console.log(ipcMain);
+const {app, BrowserWindow} = require('electron');
+const path = require('path');
+const url = require('url');
+const ipcMain = require('electron').ipcMain;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win;
+
+// This is critical for enabeling touch events:
+app.commandLine.appendSwitch('touch-events', 'enabled');
 
 function createWindow () {
   // Create the browser window.
-  win = new BrowserWindow({width: 800, height: 600, frame: false})
+  win = new BrowserWindow({width: 800, height: 600, frame: false});
 
   // and load the index.html of the app.
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  }))
+  }));
   
   win.maximize();
 
-  // Open the DevTools.
-  win.webContents.openDevTools()
+  // Open the DevTools.  -- Comment this out before releasing the final version.
+  win.webContents.openDevTools();
 
   win.on('close', function(e){
+    // Once the user tries to click the close button, first prevent the default action of closing the app:
     e.preventDefault();
-    //win.webContents.on('did-finish-load', () => {
-      //win.webContents.send('message', 'Hello in main window');
-    //});
-    
-    win.webContents.send('message');
-    //Here is where we can stop the close button and check for unsaved work:
-    //e.preventDefault();
-    // Here once we remove the above comment and check for unsaved work, then we can close the application.
-    console.log("HI!!!");
-    //console.log(remote.getGlobal(safe));
-  })
-
-  // Emitted when the window is closed.
-  //win.on('closed', () => {
-    //// Dereference the window object, usually you would store windows
-    //// in an array if your app supports multi windows, this is the time
-    //// when you should delete the corresponding element.
-	//console.log("gfdhgfdhgd");
-    //win = null
-  //})
-  
+    // Then send a message to the render process, (main-window-js.js), so that we can check for unsaved work.
+    win.webContents.send('close-button-clicked');
+    // The applicable function in that file can then determine if it is safe to close the app, and warn the user if it isn't.
+  });
 }
 
 // This method will be called when Electron has finished
@@ -63,11 +42,7 @@ app.on('ready', createWindow)
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  app.quit();
 })
 
 app.on('activate', () => {
@@ -78,8 +53,7 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.on('quitter', () => {
-  console.log("fguiyguigyinmain");
+ipcMain.on('terminate-this-app', () => {
   win.destroy(); // necessary to bypass the repeat-quit-check in the render process.
   app.quit()
 });
@@ -87,6 +61,3 @@ ipcMain.on('quitter', () => {
 ipcMain.on('maximize-main-win', () => {
   win.maximize();
 });
-
-// This is critical for enabeling touch events:
-app.commandLine.appendSwitch('touch-events', 'enabled');
