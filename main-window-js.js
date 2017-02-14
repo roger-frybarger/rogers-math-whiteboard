@@ -5,6 +5,7 @@ const {dialog} = require('electron').remote;
 
 
 
+
 //window.addEventListener('touchstart', (evt) => console.log(evt.touches[0]));
 window.addEventListener('touchstart', tstart);
 window.addEventListener('touchend', tend);
@@ -72,4 +73,9 @@ function mup(event){
   
   console.log('mouseup');
   
+}
+
+
+function temporyFunction(){
+
 }
