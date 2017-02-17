@@ -1,0 +1,33 @@
+
+
+#TOP_NAV_BAR {
+  background-color: #009DA0;
+  height: 40px;
+  font-size: 20px;
+}
+
+#TOP_NAV_BAR ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  text-align: left;
+}
+
+#TOP_NAV_BAR li {
+  display: inline;
+  padding: 0px;
+  vertical-align: middle;
+}
+
+#TOP_NAV_BAR a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 8px 10px 8px;
+  vertical-align: middle;
+}
+
+#TOP_NAV_BAR a:hover {
+  background-color: #0000FF;
+  color: white;
+}
+

@@ -15,7 +15,7 @@ window.addEventListener('mousedown', mdown);
 window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
-var safeToClose = false; // Eventually, this default will be true.
+var safeToClose = true; // Eventually, this default will be true.
 
 
 // Here is the function that executes when the close button signal is sent in from the main process, (main.js).
@@ -29,6 +29,9 @@ ipcRenderer.on('close-button-clicked', () => {
       ipcRenderer.send('terminate-this-app');
     }
     // If the user chooses to cancel, we will do nothing and let them save the file(s) on their own.
+  }
+  else{
+    ipcRenderer.send('terminate-this-app');
   }
 });
 
@@ -75,7 +78,3 @@ function mup(event){
   
 }
 
-
-function temporyFunction(){
-
-}
