@@ -7,6 +7,12 @@ body {
   background-color: #3E005C;
 }
 
+/*
+ * This is the start of all the general stuff that describes the
+ * top nav bar. It sets up the srtucture into which the icons
+ * are put.
+*/
+
 #TOP_NAV_BAR {
   -webkit-app-region: drag;
   background-color: #009DA0;
@@ -24,7 +30,6 @@ body {
 #TOP_NAV_BAR li {
   -webkit-app-region: no-drag;
   display: inline;
-  //vertical-align: middle;
 }
 
 #TOP_NAV_BAR a {
@@ -41,23 +46,104 @@ body {
   background-color: #0000FF;
 }
 
-#settings {
+.topLeftButtons {
   float: left;
-  width: 140px;
+  width: 48px;
+}
+
+.topRightButtons {
+  float: right;
+  width: 48px;
+}
+
+/*
+ * The general stuf describing the top nav bar ends here,
+ * and the speciffic stuff for each individual button begins.
+ * The way this works is that each icon consists of 2 frames,
+ * and on the hover, we move the image to expose the other
+ * frame. Unfortunetly, I haven't yet found a way to avoid
+ * styling each button individually yet. I have done as much
+ * as I could in the general stuff, but each button still
+ * requires an individual setting for the background image
+ * and its own hover code.
+*/
+
+#settingsBtn {
+  float: left;
+  width: 150px;
   background: url('images/icons/gear.png');
 }
 
-#settings:hover {
-  background-color: #0000FF;
-  background-position: -140px 0px;
+#settingsBtn:hover {
+  background-position: -150px 0px;
 }
 
-#blah {
-  float: right;
-  width: 48px;
+#undoBtn {
   background: url('images/icons/undo.png');
 }
+#undoBtn:hover {
+  background-position: -48px 0px;
+}
 
-#blah:hover {
+#redoBtn {
+  background: url('images/icons/redo.png');
+}
+#redoBtn:hover {
+  background-position: -48px 0px;
+}
+
+#copyBtn {
+  background: url('images/icons/copy.png');
+}
+#copyBtn:hover {
+  background-position: -48px 0px;
+}
+
+#pasteBtn {
+  background: url('images/icons/paste.png');
+}
+#pasteBtn:hover {
+  background-position: -48px 0px;
+}
+
+#drawRectangleBtn {
+  background: url('images/icons/draw_rectangle.png');
+}
+#drawRectangleBtn:hover {
+  background-position: -48px 0px;
+}
+
+#fillRectangleBtn {
+  background: url('images/icons/fill_rectangle.png');
+}
+#fillRectangleBtn:hover {
+  background-position: -48px 0px;
+}
+
+#drawEllipseBtn {
+  background: url('images/icons/draw_ellipse.png');
+}
+#drawEllipseBtn:hover {
+  background-position: -48px 0px;
+}
+
+#fillEllipseBtn {
+  background: url('images/icons/fill_ellipse.png');
+}
+#fillEllipseBtn:hover {
+  background-position: -48px 0px;
+}
+
+#topRightMinimizeBtn {
+  background: url('images/icons/minimize.png');
+}
+#topRightMinimizeBtn:hover {
+  background-position: -48px 0px;
+}
+
+#topRightCloseBtn {
+  background: url('images/icons/close.png');
+}
+#topRightCloseBtn:hover {
   background-position: -48px 0px;
 }
