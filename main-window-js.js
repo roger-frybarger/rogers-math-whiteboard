@@ -78,4 +78,6 @@ function mup(event){
   
 }
 
-
+function fu(){
+  console.log('rtdytrdytrdytrd');
+}
