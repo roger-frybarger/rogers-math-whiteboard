@@ -8,23 +8,84 @@
   </head>
   <body>
    <div id="TOP_NAV_BAR">
-     
      <ul>
        <!--These are the entries in the top nav bar. They each have to have the transparent image as the
        source because if that is removed, a border will be shown no matter how they are styled in the css-->
-       <li><a href="#" onclick="fu();">&nbsp;<img id="settingsBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="pasteBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="drawRectangleBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="fillRectangleBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="drawEllipseBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="fillEllipseBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="userWantsToClose();">&nbsp;<img class="topRightButtons" id="topRightCloseBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="ipcRenderer.send('minimize-main-win');">&nbsp;<img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="pasteBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="drawRectangleBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="fillRectangleBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="drawEllipseBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img class="topLeftButtons" id="fillEllipseBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="userWantsToClose();"><img class="topRightButtons" id="topRightCloseBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="ipcRenderer.send('minimize-main-win');"><img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png"></a></li>
      </ul>
-     
    </div>
+   
+     <ul id="verticalButtonBar">
+      <li class="dropdown">
+        <a class="dropbtn" onclick="fileBtnFunction();" id="fileBtn">File</a>
+          <div class="dropdown-content" id="fileDropdown">
+            <a class="btn" id="reMaximizeBtn">Re-Maximize</a>
+            <a class="btn" id="openImagesBtn">Open Images</a>
+            <a class="btn" id="saveImagesBtn">Save Images</a>
+            <a class="btn" id="fileCloseBtn">Close</a>
+            <a class="btn" id="deletePageBtn">Delete Page</a>
+            <a class="btn" id="helpBtn">Help</a>
+            <a class="btn" id="aboutBtn">About</a>
+          </div>
+      </li>
+      <li>
+        <a class="dropbtn" id="toolBtn">Tool</a>
+          <div class="dropdown-content" id="toolDropdown">
+            <a class="btn" id="penToolBtn">Pen</a>
+            <a class="btn" id="eraserToolBtn">Eraser</a>
+            <a class="btn" id="lineToolBtn">Straight Line</a>
+            <a class="btn" id="selectToolBtn">Select</a>
+            <a class="btn" id="insertTextToolBtn">Insert Text</a>
+            <a class="btn" id="identifierToolBtn">Identifier</a>
+            <a class="btn" id="dotToolBtn">Dot</a>
+          </div>
+      </li>
+      <li>
+        <a class="dropbtn" id="colorBtn">Color</a>
+          <div class="dropdown-content" id="colorDropdown">
+            <a class="btn" id="blackBtn">Black</a>
+            <a class="btn" id="redBtn">Red</a>
+            <a class="btn" id="greenBtn">Green</a>
+            <a class="btn" id="blueBtn">Blue</a>
+            <a class="btn" id="otherColorBtn">Other Color</a>
+          </div>
+      </li>
+      <li>
+        <a class="dropbtn" id="sizeBtn">Size</a>
+          <div class="dropdown-content" id="sizeDropdown">
+            <a class="btn" id="smallSizeBtn">Small</a>
+            <a class="btn" id="mediumSizeBtn">Medium</a>
+            <a class="btn" id="largeSizeBtn">Large</a>
+            <a class="btn" id="otherSizeBtn">Other Size</a>
+          </div>
+      </li>
+      <li>
+        <a class="dropbtn" id="insertPageBtn">Insert Page</a>
+          <div class="dropdown-content" id="insertPageDropdown">
+            <a class="btn" id="blankWhitePageBtn">Blank White</a>
+            <a class="btn" id="graphPaperPageBtn">Graph Paper</a>
+            <a class="btn" id="coordinatePlaneBtn">Coordinate</a>
+            <a class="btn" id="screenshotBtn">Screenshot</a>
+            <a class="btn" id="otherPageBtn">Other</a>
+          </div>
+      </li>
+      <li>
+        <a class="btn" id="previousPageBtn">Previous Page</a>
+      </li>
+      <li>
+        <a class="btn" id="nextPageBtn">Next Page</a>
+      </li>
+    </ul>
+   
   </body>
 </html>

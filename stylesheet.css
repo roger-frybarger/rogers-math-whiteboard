@@ -147,3 +147,45 @@ body {
 #topRightCloseBtn:hover {
   background-position: -48px 0px;
 }
+
+
+
+
+
+#verticalButtonBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 150px;
+    background-color: #009DA0 ;
+    font-size: 20px;
+}
+
+#verticalButtonBar li a {
+    display: block;
+    color: #000;
+    padding: 15px 0px 14px 16px;
+    text-decoration: none;
+}
+
+#verticalButtonBar li a:hover {
+    background-color: #0000FF;
+    color: white;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #96E9FF;
+    min-width: 100px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.show {display: block;}
+
