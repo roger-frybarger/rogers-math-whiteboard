@@ -24,26 +24,40 @@ body {
 #TOP_NAV_BAR li {
   -webkit-app-region: no-drag;
   display: inline;
-  vertical-align: middle;
+  //vertical-align: middle;
 }
 
 #TOP_NAV_BAR a {
   text-decoration: none;
-  color: white;
-  vertical-align: middle;
 }
 
-
-#blah {
+#TOP_NAV_BAR img {
   -webkit-app-region: no-drag;
-  float: left;
-  width: 48px;
   height: 40px;
-  background: url('images/icons/undo.png');
   background-repeat: no-repeat;
 }
 
-#blah:hover {
+#TOP_NAV_BAR img:hover {
   background-color: #0000FF;
+}
+
+#settings {
+  float: left;
+  width: 140px;
+  background: url('images/icons/gear.png');
+}
+
+#settings:hover {
+  background-color: #0000FF;
+  background-position: -140px 0px;
+}
+
+#blah {
+  float: right;
+  width: 48px;
+  background: url('images/icons/undo.png');
+}
+
+#blah:hover {
   background-position: -48px 0px;
 }
