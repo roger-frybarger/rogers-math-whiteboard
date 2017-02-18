@@ -21,8 +21,8 @@
        <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="fillRectangleBtn" src="images/icons/transparent.png"></a></li>
        <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="drawEllipseBtn" src="images/icons/transparent.png"></a></li>
        <li><a href="#" onclick="fu();">&nbsp;<img class="topLeftButtons" id="fillEllipseBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png"></a></li>
-       <li><a href="#" onclick="fu();">&nbsp;<img class="topRightButtons" id="topRightCloseBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="userWantsToClose();">&nbsp;<img class="topRightButtons" id="topRightCloseBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="ipcRenderer.send('minimize-main-win');">&nbsp;<img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png"></a></li>
      </ul>
      
    </div>

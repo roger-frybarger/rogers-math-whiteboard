@@ -21,6 +21,21 @@ var safeToClose = true; // Eventually, this default will be true.
 // Here is the function that executes when the close button signal is sent in from the main process, (main.js).
 // It essentially checks to see if it is safe to close the app, and warns the user if it isn't.
 ipcRenderer.on('close-button-clicked', () => {
+  //if(!safeToClose){
+    //ipcRenderer.send('maximize-main-win');
+    //var ret = dialog.showMessageBox({ title: 'Warning:', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1 });
+      
+    //if(ret == 0){
+      //ipcRenderer.send('terminate-this-app');
+    //}
+    //// If the user chooses to cancel, we will do nothing and let them save the file(s) on their own.
+  //}
+  //else{
+    //ipcRenderer.send('terminate-this-app');
+  //}
+});
+
+function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('maximize-main-win');
     var ret = dialog.showMessageBox({ title: 'Warning:', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1 });
@@ -33,7 +48,7 @@ ipcRenderer.on('close-button-clicked', () => {
   else{
     ipcRenderer.send('terminate-this-app');
   }
-});
+}
 
 
 function tstart(event){

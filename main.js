@@ -61,3 +61,7 @@ ipcMain.on('terminate-this-app', () => {
 ipcMain.on('maximize-main-win', () => {
   win.maximize();
 });
+
+ipcMain.on('minimize-main-win', () => {
+  win.minimize();
+});
