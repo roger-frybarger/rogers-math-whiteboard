@@ -15,8 +15,6 @@ window.addEventListener('mousedown', mdown);
 window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
-
-
 var safeToClose = true; // Eventually, this default will be true.
 
 
