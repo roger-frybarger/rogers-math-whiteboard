@@ -31,8 +31,6 @@ body {
   text-decoration: none;
   color: white;
   vertical-align: middle;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 
@@ -43,7 +41,6 @@ body {
   height: 40px;
   background: url('images/icons/undo.png');
   background-repeat: no-repeat;
-  border: none;
 }
 
 #blah:hover {
