@@ -1,5 +1,18 @@
 
 
+/*
+ * This first stuff sets up the environment so that it acts like a
+ * native application. It disables text selection among other things.
+*/
+
+:not(input):not(textarea),
+:not(input):not(textarea)::after,
+:not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
 body {
   margin: 0px;
   width:  100%;

@@ -11,7 +11,7 @@
      <ul>
        <!--These are the entries in the top nav bar. They each have to have the transparent image as the
        source because if that is removed, a border will be shown no matter how they are styled in the css-->
-       <li><a href="#" onclick="adjustSizeOfMenuButtonsToScreenSize();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
+       <li><a href="#" onclick="test();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
        <li><a href="#" onclick="test();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
        <li><a href="#" onclick="test();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
        <li><a href="#" onclick="test();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
@@ -39,7 +39,7 @@
           </div>
       </li>
       <li>
-        <a class="dropbtn" id="toolBtn">Tool</a>
+        <a class="dropbtn" onclick="toolBtnFunction();" id="toolBtn">Tool</a>
           <div class="dropdown-content" id="toolDropdown">
             <a class="btn" id="penToolBtn">Pen</a>
             <a class="btn" id="eraserToolBtn">Eraser</a>
@@ -51,7 +51,7 @@
           </div>
       </li>
       <li>
-        <a class="dropbtn" id="colorBtn">Color</a>
+        <a class="dropbtn" onclick="colorBtnFunction();" id="colorBtn">Color</a>
           <div class="dropdown-content" id="colorDropdown">
             <a class="btn" id="blackBtn">Black</a>
             <a class="btn" id="redBtn">Red</a>
@@ -61,7 +61,7 @@
           </div>
       </li>
       <li>
-        <a class="dropbtn" id="sizeBtn">Size</a>
+        <a class="dropbtn" onclick="sizeBtnFunction();" id="sizeBtn">Size</a>
           <div class="dropdown-content" id="sizeDropdown">
             <a class="btn" id="smallSizeBtn">Small</a>
             <a class="btn" id="mediumSizeBtn">Medium</a>
@@ -70,7 +70,7 @@
           </div>
       </li>
       <li>
-        <a class="dropbtn" id="insertPageBtn">Insert Page</a>
+        <a class="dropbtn" onclick="insertPageBtnFunction();" id="insertPageBtn">Insert Page</a>
           <div class="dropdown-content" id="insertPageDropdown">
             <a class="btn" id="blankWhitePageBtn">Blank White</a>
             <a class="btn" id="graphPaperPageBtn">Graph Paper</a>

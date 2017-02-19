@@ -15,6 +15,7 @@ window.addEventListener('mousedown', mdown);
 window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
+
 var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
@@ -89,6 +90,24 @@ function mup(event){
 function fileBtnFunction(){
   document.getElementById('fileDropdown').classList.toggle('show');
 }
+
+function toolBtnFunction(){
+  document.getElementById('toolDropdown').classList.toggle('show');
+}
+
+function colorBtnFunction(){
+  document.getElementById('colorDropdown').classList.toggle('show');
+}
+
+function sizeBtnFunction(){
+  document.getElementById('sizeDropdown').classList.toggle('show');
+}
+
+function insertPageBtnFunction(){
+  document.getElementById('insertPageDropdown').classList.toggle('show');
+}
+
+
 
 function getElementsByIDs(ids){
   if(ids == undefined || (typeof ids != 'object') || (ids.length == 0)){
