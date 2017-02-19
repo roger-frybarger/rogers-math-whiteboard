@@ -15,6 +15,8 @@ window.addEventListener('mousedown', mdown);
 window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
+var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
+
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 
 
@@ -87,6 +89,102 @@ function mup(event){
 function fileBtnFunction(){
   document.getElementById('fileDropdown').classList.toggle('show');
 }
+
+function getElementsByIDs(ids){
+  if(ids == undefined || (typeof ids != 'object') || (ids.length == 0)){
+    console.log('Expecting an array based parameter or there are no ids, exiting');
+    return null;
+  }
+  var elems = [];
+  for(var i = 0; i < ids.length; i++){
+    elems[i] = document.getElementById(ids[i]);
+  }
+  
+  return elems; 
+}
+
+function adjustSizeOfMenuButtonsToScreenSize(){
+  //var vButtonBar = document.getElementById('verticalButtonBar');
+  //var vButtonBarButtons = vButtonBar.getElementsByTagName('a');
+  var vButtonBarButtons = getElementsByIDs(verticalBtnBarBtnIDs);
+  
+  var dropdowns = [];
+  var el = document.getElementById('fileDropdown');
+  //console.log(el);
+  dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
+  //console.log(dropdowns);
+  el = document.getElementById('colorDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  el = document.getElementById('sizeDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  el = document.getElementById('toolDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  el = document.getElementById('insertPageDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  //console.log(dropdowns);
+
+  //var screenH = screen.height;
+  var screenH = window.innerHeight + 30;  // I know this is confusing. Originally I had planned to use screen hight, but then desided to pass in the window height instead.
+  console.log(screenH);
+  switch (true){
+    case (screenH < 720):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '15px 0px 14px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '12px 16px';
+      }
+      
+      //document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
+      
+      break;
+    case (screenH >= 720 && screenH < 854):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '20px 0px 19px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '17px 16px';
+      }
+      
+      //document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      
+      break;
+    case (screenH >= 854 && screenH < 960):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '26px 0px 25px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '23px 16px';
+      }
+      
+      //document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      
+      break;
+    case (screenH >= 960):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '31px 0px 30px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '28px 16px';
+      }
+      
+      //document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      
+      break;
+    default:
+      break;
+  }
+}
+
+
 
 function test(){
   
