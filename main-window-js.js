@@ -15,16 +15,28 @@ window.addEventListener('mousedown', mdown);
 window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
+//window.addEventListener('load', onWindowLoad);
+//window.addEventListener('did-finish-load', onWindowLoad);
+
 
 var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 
 
+//function onWindowLoad(){
+  //adjustSizeOfMenuButtonsToScreenSize();
+//}
+
 // Here is the function that executes when the close button signal is sent in from the main process, (main.js).
 // It essentially delegates the validation work off to the userWantsToClose() function.
 ipcRenderer.on('close-button-clicked', () => {
   userWantsToClose();
+});
+
+ipcRenderer.on('app-finished-loading', () => {
+  //console.log('loading done mainwindow js');
+  adjustSizeOfMenuButtonsToScreenSize();
 });
 
 // Here is the function that executes when the user wants to close the program.

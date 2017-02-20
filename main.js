@@ -25,6 +25,10 @@ function createWindow () {
 
   // Open the DevTools.  -- Comment this out before releasing the final version.
   win.webContents.openDevTools();
+  
+  //console.log('before sending');
+  //win.webContents.send('app-finished-loading');
+  //console.log('after sending');
 
   win.on('close', function(e){
     // Once the user tries to click the close button, first prevent the default action of closing the app:
@@ -33,6 +37,13 @@ function createWindow () {
     win.webContents.send('close-button-clicked');
     // The applicable function in that file can then determine if it is safe to close the app, and warn the user if it isn't.
   });
+  
+  win.webContents.on('did-finish-load', function() {
+    //console.log('finished loading main');
+    setTimeout(function() {win.webContents.send('app-finished-loading');},500);
+    //win.webContents.send('app-finished-loading');
+  });
+  
 }
 
 // This method will be called when Electron has finished
