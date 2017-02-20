@@ -15,6 +15,8 @@ window.addEventListener('mousedown', mdown);
 window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
+window.addEventListener('resize', onWindowResize);
+
 //window.addEventListener('load', onWindowLoad);
 //window.addEventListener('did-finish-load', onWindowLoad);
 
@@ -22,6 +24,8 @@ window.addEventListener('mouseup', mup);
 var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
+
+var tempForTimer;
 
 
 //function onWindowLoad(){
@@ -56,6 +60,39 @@ function userWantsToClose(){
   }
 }
 
+
+function onWindowResize()
+{
+  // First clear the timer, (Remember, if the user is dragging the edge, we only want to fix the image once.)
+  clearTimeout(tempForTimer);
+  
+  // Then set the timer for half a second, so that the re-sizing is not happening continuously:
+  tempForTimer = setTimeout(fixThingsAfterRezizeIsDone, 500);
+}
+
+function fixThingsAfterRezizeIsDone(){
+  adjustSizeOfMenuButtonsToScreenSize();
+}
+
+// If the user clicks on a blank area of the window, the dropdowns should probably close:
+window.onclick = function(e) {
+  if (!e.target.matches('.dropbtn')) {
+    closeDropdowns();
+  }
+}
+
+//Closes all the other dropdowns except for the one with the name passed in.
+function closeDropdowns(buttonName){
+  var dropdowns = document.getElementsByClassName('dropdown-content');
+  for (var d = 0; d < dropdowns.length; d++) {
+    var openDropdown = dropdowns[d];
+    if (openDropdown.classList.contains('show')) {
+      if(openDropdown.id.toString() != buttonName){
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
 
 function tstart(event){
   
@@ -100,22 +137,27 @@ function mup(event){
 }
 
 function fileBtnFunction(){
+  closeDropdowns('fileDropdown');
   document.getElementById('fileDropdown').classList.toggle('show');
 }
 
 function toolBtnFunction(){
+  closeDropdowns('toolDropdown');
   document.getElementById('toolDropdown').classList.toggle('show');
 }
 
 function colorBtnFunction(){
+  closeDropdowns('colorDropdown');
   document.getElementById('colorDropdown').classList.toggle('show');
 }
 
 function sizeBtnFunction(){
+  closeDropdowns('sizeDropdown');
   document.getElementById('sizeDropdown').classList.toggle('show');
 }
 
 function insertPageBtnFunction(){
+  closeDropdowns('insertPageDropdown');
   document.getElementById('insertPageDropdown').classList.toggle('show');
 }
 
@@ -168,7 +210,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
         dropdowns[i].style.padding = '12px 16px';
       }
       
-      //document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
+      document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
       
       break;
     case (screenH >= 720 && screenH < 854):
@@ -181,7 +223,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
         dropdowns[i].style.padding = '17px 16px';
       }
       
-      //document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
       
       break;
     case (screenH >= 854 && screenH < 960):
@@ -194,7 +236,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
         dropdowns[i].style.padding = '23px 16px';
       }
       
-      //document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
       
       break;
     case (screenH >= 960):
@@ -207,7 +249,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
         dropdowns[i].style.padding = '28px 16px';
       }
       
-      //document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
       
       break;
     default:

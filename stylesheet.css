@@ -166,42 +166,87 @@ body {
 
 
 #verticalButtonBar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 150px;
-    background-color: #009DA0;
-    font-family: sans-serif;
-    font-size: 20px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 150px;
+  background-color: #009DA0;
+  font-family: sans-serif;
+  font-size: 20px;
 }
 
 #verticalButtonBar li a {
-    display: block;
-    color: #000;
-    padding: 15px 0px 14px 16px;
-    text-decoration: none;
+  display: block;
+  color: #000;
+  padding: 15px 0px 14px 16px;
+  text-decoration: none;
 }
 
 #verticalButtonBar li a:hover {
-    background-color: #0000FF;
-    color: white;
+  background-color: #0000FF;
+  color: white;
 }
 
 .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #96E9FF;
-    min-width: 100px;
+  display: none;
+  position: absolute;
+  background-color: #96E9FF;
+  min-width: 100px;
 }
 
 .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }
 
 .show {
   display: block;
 }
 
+
+#pageTextBoxDivID {
+  margin: 0;
+  padding: 8px 0px 8px 2px;
+  width: 148px;
+  background-color: #009DA0;
+  font-family: sans-serif;
+  font-size: 20px;
+}
+
+#pageTextBoxID {
+  height: 40px;
+  width: 80px;
+  font-family: sans-serif;
+  font-size: 40px;
+}
+
+#goBtnDivID {
+  margin: 0;
+  padding: 30px 0px 8px 0px;
+  width: 150px;
+  background-color: #009DA0;
+  font-family: sans-serif;
+  font-size: 20px;
+}
+
+#goBtnID {
+  padding: 8px 62px 8px 61px;
+  text-align: center;
+}
+
+#goBtnID:hover {
+  background-color: #0000FF;
+  color: white;
+}
+
+#totalPagesDivID {
+  margin: 0;
+  padding: 8px 0px 8px 0px;
+  width: 150px;
+  text-align: center;
+  background-color: #009DA0;
+  font-family: sans-serif;
+  font-size: 15px;
+}
