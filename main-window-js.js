@@ -6,6 +6,7 @@ const {dialog} = require('electron').remote;
 
 
 
+
 //window.addEventListener('touchstart', (evt) => console.log(evt.touches[0]));
 window.addEventListener('touchstart', tstart);
 window.addEventListener('touchend', tend);
@@ -20,12 +21,33 @@ window.addEventListener('resize', onWindowResize);
 //window.addEventListener('load', onWindowLoad);
 //window.addEventListener('did-finish-load', onWindowLoad);
 
+var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
+
+// This is the context used for drawing the image on the canvas:
+var context;
+
+// This is the context for the canvas used for the original images, which is where the eraser get's its data from.
+var eraserContext;
+
 
 var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
 
-var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
+
 
 var tempForTimer;
+
+var arrayOfCurrentImages = new Array(1);
+var arrayOfOriginalImages = new Array(1);
+var arrayOfOriginalImagesX = new Array(1);
+var arrayOfOriginalImagesY = new Array(1);
+
+var currentPg = 1;
+
+// There must be a better way to do this, probably through CSS, but until I/We figure it out,
+// we will need these for various things. One example is where we draw, we need to subtract
+// these out to align the mouse to the drawing spot.
+var topToolbarWidth = 40;
+var SideToolbarWidth = 150;
 
 
 //function onWindowLoad(){
@@ -40,8 +62,35 @@ ipcRenderer.on('close-button-clicked', () => {
 
 ipcRenderer.on('app-finished-loading', () => {
   //console.log('loading done mainwindow js');
+  document.documentElement.style.overflow = 'hidden';
   adjustSizeOfMenuButtonsToScreenSize();
+  initializeGlobalVariables();
+  initializeCanvas();
 });
+
+function initializeGlobalVariables(){
+  context = document.getElementById('canvas1').getContext('2d');
+  eraserContext = document.getElementById('eraserCanvas').getContext('2d');
+}
+
+function initializeCanvas(){
+  var image = new Image();
+  
+  // Maybe draw image on canvas temporarily here and get dimensions before re-drawing?
+  image.addEventListener('load', function() {
+    context.drawImage(image, 0, 0);
+    eraserContext.drawImage(image, 0, 0);
+    resizeAndLoadImagesOntoCanvases(image, image, image.naturalWidth, image.naturalHeight);
+    arrayOfCurrentImages[currentPg - 1] = new Image();
+    arrayOfCurrentImages[currentPg - 1].src = context.canvas.toDataURL('image/png');
+    arrayOfOriginalImages[currentPg - 1] = new Image();
+    arrayOfOriginalImages[currentPg - 1].src = eraserContext.canvas.toDataURL('image/png');
+    arrayOfOriginalImagesX[0] = image.naturalWidth;
+    arrayOfOriginalImagesY[0] = image.naturalHeight;
+    //clearUndoHistory();
+  }, false);
+  image.src = 'images/Blank_White_Page.png';
+}
 
 // Here is the function that executes when the user wants to close the program.
 // It essentially checks to see if it is safe to close the app, and warns the user if it isn't.
@@ -198,7 +247,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
 
   //var screenH = screen.height;
   var screenH = window.innerHeight + 30;  // I know this is confusing. Originally I had planned to use screen hight, but then desided to pass in the window height instead.
-  console.log(screenH);
+  //console.log(screenH);
   switch (true){
     case (screenH < 720):
       
@@ -255,6 +304,50 @@ function adjustSizeOfMenuButtonsToScreenSize(){
     default:
       break;
   }
+}
+
+
+// Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
+// size of the window.
+function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
+  if(incommingWidth == 0 || incommingHeight == 0){
+    console.log('ERROR: You have called resizeAndLoadImagesOntoCanvases before the image has loaded!');
+  }
+  
+  eraserContext.canvas.style.position = 'absolute';
+  eraserContext.canvas.style.left = SideToolbarWidth + 'px';
+  eraserContext.canvas.style.top =  (screen.height + topToolbarWidth) + 'px';
+
+  
+  var avalibleWidth = window.innerWidth - SideToolbarWidth;   // Maybe there is a better way to do this than fixed positioning in the CSS?
+  var avalibleHeight = window.innerHeight - topToolbarWidth;   // Maybe there is a better way to do this than fixed positioning in the CSS?
+  
+  
+  var proportionalHeight = (incommingHeight * avalibleWidth) / incommingWidth;
+  if(proportionalHeight > window.innerHeight - topToolbarWidth)
+    {  //this means height is limiting dimension.
+      var canvasHeight = avalibleHeight;
+      var canvasWidth = (incommingWidth * avalibleHeight) / incommingHeight;
+      canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
+      context.canvas.width = canvasWidth;
+      context.canvas.height = canvasHeight;
+      context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+      eraserContext.canvas.width = canvasWidth;
+      eraserContext.canvas.height = canvasHeight;
+      eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
+    }
+  else
+    {  //this means width is limiting dimension.
+      var canvasWidth = avalibleWidth;
+      var canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
+      canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
+      context.canvas.width = canvasWidth;
+      context.canvas.height = canvasHeight;
+      context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+      eraserContext.canvas.width = canvasWidth;
+      eraserContext.canvas.height = canvasHeight;
+      eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
+    }
 }
 
 
