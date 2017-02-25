@@ -13,15 +13,18 @@ window.addEventListener('touchend', tend);
 window.addEventListener('touchmove', tmove);
 window.addEventListener('touchcancel', tcancel);
 window.addEventListener('mousedown', mdown);
-window.addEventListener('mousemove', mmove);
+//window.addEventListener('mousemove', mmove);
 window.addEventListener('mouseup', mup);
 
 window.addEventListener('resize', onWindowResize);
+
+
 
 //window.addEventListener('load', onWindowLoad);
 //window.addEventListener('did-finish-load', onWindowLoad);
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
+var allLoaded = false;
 
 // This is the context used for drawing the image on the canvas:
 var context;
@@ -33,7 +36,45 @@ var eraserContext;
 var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
 
 
+// Some variables used in drawing:
+var canUseTool;
+var tool = 'pen';
+var prevX = 'NA';
+var prevY = 'NA';
+var instrumentWidth = 5;
+var instrumentColor = 'rgba(78, 78, 255, 1.0)';
 
+var maxNumberOfPages = 250;
+var intervarForRepainting = 80;
+var globalIntervalVarForFunction = null;
+var tempCanvasForInterval = 'NA';
+var tempCanvasForPasting = 'NA';
+var tempCanvasForCopyPasteStorage = 'NA';
+var copiedSectionOfCanvas = 'NA';
+var tempX = 'NA';
+var tempY = 'NA';
+var areaSelected = false;
+var tempTool = 'NOT APPLICABLE';
+
+var textToInsert = '';
+
+var imagesChangedSinceOpen = false;
+
+var tempImageForWindowResize;
+
+var locationToCheckWhenPushingDataIntoLocalStorage;
+
+var counterForRestoringImages;
+
+var arrayOfDataURLsForRestoringDocument;
+
+// var testObjectForStoringGlobalFunctions = {};
+
+var maxUndoHistory = 31;  // This needs to be 1 higher than the actual number of operations desired.
+var imageArrayForUndo = new Array(maxUndoHistory);
+var currentPlaceInUndoArray;
+
+// This is for re-sizing the drawing area:
 var tempForTimer;
 
 var arrayOfCurrentImages = new Array(1);
@@ -61,16 +102,70 @@ ipcRenderer.on('close-button-clicked', () => {
 });
 
 ipcRenderer.on('app-finished-loading', () => {
-  //console.log('loading done mainwindow js');
   document.documentElement.style.overflow = 'hidden';
   adjustSizeOfMenuButtonsToScreenSize();
   initializeGlobalVariables();
   initializeCanvas();
 });
 
+function continueAfterAppFinishedLoading1(){
+  initializeEventListenersForCanvas();
+  allLoaded = true;
+}
+
 function initializeGlobalVariables(){
   context = document.getElementById('canvas1').getContext('2d');
   eraserContext = document.getElementById('eraserCanvas').getContext('2d');
+}
+
+function initializeEventListenersForCanvas(){
+  // These add the event listeners to the canvas, and pass the appropriate information off to the applicable
+  // function. I feel that we can safely ignore multi-touch, as the intended audience uses a pen anyway,
+  // which is only 1 touch. However, one should also be able to use a mouse if no touch input is available.
+  document.getElementById('canvas1').addEventListener('mousedown', function(e){
+    instrumentDown(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  });
+
+  document.getElementById('canvas1').addEventListener('touchstart', function(e){
+    if(e.touches.length == 1)
+    {
+      instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+      e.preventDefault();
+    }
+    else
+    {
+      instrumentUp(prevX, prevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+    }
+  });
+
+  document.getElementById('canvas1').addEventListener('mousemove', function(e){
+    instrumentMoved(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  });
+
+  document.getElementById('canvas1').addEventListener('touchmove', function(e){
+    instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+    e.preventDefault();
+  });
+
+  document.getElementById('canvas1').addEventListener('mouseup', function(e){
+    instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  });
+
+  document.getElementById('canvas1').addEventListener('mouseleave', function(e){
+    instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  });
+
+  document.getElementById('canvas1').addEventListener('touchend', function(e){
+    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+  });
+
+  document.getElementById('canvas1').addEventListener('touchleave', function(e){
+    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+  });
+
+  document.getElementById('canvas1').addEventListener('touchcancel', function(e){
+    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+  });
 }
 
 function initializeCanvas(){
@@ -88,8 +183,230 @@ function initializeCanvas(){
     arrayOfOriginalImagesX[0] = image.naturalWidth;
     arrayOfOriginalImagesY[0] = image.naturalHeight;
     //clearUndoHistory();
+    continueAfterAppFinishedLoading1();
   }, false);
   image.src = 'images/Blank_White_Page.png';
+}
+
+// Here is the instrumentDown method. It accepts the x and y coordinates of where the tool/instrument started
+// touching the page. I am certain that eventually, this method will call other methods that correspond
+// to the applicable tools that are available. This is because each tool will likely need to handle the
+// event differently.
+function instrumentDown(x, y)
+{
+  // Make sure we know that they may have changed the images(s):
+  safeToClose = false;
+  tempImageForWindowResize = null;
+  
+  // Obviously we want to close the dropdowns regardless of what tool is active.
+  closeDropdowns();
+  
+  //And obviously, we can do things with our tool now:
+  canUseTool = true;
+  
+  // Now let's pass the event off to the applicable method:
+  switch(tool) {
+  case 'pen':
+    penToolMethod(x, y, 'down');
+    break;
+  case 'eraser':
+    //eraserToolMethod(x, y, 'down');
+    break;
+  case 'line':
+    //lineToolMethod(x, y, 'down');
+    break;
+  case 'select':
+    //selectToolMethod(x, y, 'down');
+    break;
+  case 'text':
+    //textToolMethod(x, y, 'down');
+    break;
+  case 'identify':
+    //identifyToolMethod(x, y, 'down');
+    break;
+  case 'dot':
+    //dotToolMethod(x, y, 'down');
+    break;
+  case 'PASTE':
+    //pasteToolMethod(x, y, 'down');
+    break;
+  case 'NA':
+    break;
+  default:
+      console.log('ERROR: Invalid tool in instrumentDown method: ' + tool);
+  }
+}
+
+// Here is the instrumentMoved method, which runs every time our tool is moved. Eventually, I am sure this
+// will call multiple methods for the applicable tool, as each tool will likely need to react differently
+// to the event.
+function instrumentMoved(x, y)
+{
+  if(canUseTool) // Note: This validation is critical here. Make sure to put future method calls inside of this if structure.
+  {
+    
+    // Now let's pass the event off to the applicable method:
+    switch(tool) {
+    case 'pen':
+      penToolMethod(x, y, 'move');
+      break;
+    case 'eraser':
+      //eraserToolMethod(x, y, 'move');
+      break;
+    case 'line':
+      //lineToolMethod(x, y, 'move');
+      break;
+    case 'select':
+      //selectToolMethod(x, y, 'move');
+      break;
+    case 'text':
+      //textToolMethod(x, y, 'move');
+      break;
+    case 'identify':
+      //identifyToolMethod(x, y, 'move');
+      break;
+    case 'dot':
+      //dotToolMethod(x, y, 'move');
+      break;
+    case 'PASTE':
+      //pasteToolMethod(x, y, 'move');
+      break;
+    case 'NA':
+      break;
+    default:
+        console.log('ERROR: Invalid tool in instrumentMoved method: ' + tool);
+    }
+  }
+}
+
+// Here is the instrumentUp method. This runs every time our tool is picked up off of the page, leaves
+// the drawing area, or is canceled by multiple touches on the screen at once. Here again, it is likely that 
+// this method will eventually call multiple other methods for the applicable tools, as each tool will
+// probably need to handle the event differently.
+function instrumentUp(x, y)
+{
+  if(canUseTool) // Here again, this validation is critical. All future method calls must go inside this if structure
+  {
+    
+ // Now let's pass the event off to the applicable method:
+    switch(tool) {
+    case 'pen':
+      penToolMethod(x, y, 'up');
+      //pushStateIntoUndoArray();
+      break;
+    case 'eraser':
+      //eraserToolMethod(x, y, 'up');
+      //pushStateIntoUndoArray();
+      break;
+    case 'line':
+      //lineToolMethod(x, y, 'up');
+      //pushStateIntoUndoArray();
+      break;
+    case 'select':
+      //selectToolMethod(x, y, 'up');
+      break;
+    case 'text':
+      //textToolMethod(x, y, 'up');
+      //pushStateIntoUndoArray();
+      break;
+    case 'identify':
+      //identifyToolMethod(x, y, 'up');
+      break;
+    case 'dot':
+      //dotToolMethod(x, y, 'up');
+      //pushStateIntoUndoArray();
+      break;
+    case 'PASTE':
+      //pasteToolMethod(x, y, 'up');
+      //pushStateIntoUndoArray();
+      break;
+    case 'NA':
+      break;
+    default:
+        console.log('ERROR: Invalid tool in instrumentUp method: ' + tool);
+    }
+  }
+  
+  // Although it may seem counter-intuitive to have this OUTSIDE the validation, I wanted to make sure that 
+  // regardless of whether the tool can be used or not; if this method is called, we need to make absolutely
+  // sure that more drawing/action CANNOT take place. Remember, this may be called on multi-touch, so we
+  // don't want stray lines appearing where they were not intended.
+  canUseTool = false;
+}
+
+// Here are the functions that actually do the action that each tool needs to do. I have put them in the
+// same order that they are in the tool dropdown:
+
+
+// Here is the penToolMethod. It handles drawing on the canvas:
+function penToolMethod(x, y, phase){
+  var temp1 = instrumentColor.split(',');
+  var temp2 = temp1[3].substring(1, (temp1[3].length - 1));
+  var colorNotTransparent;
+  if(temp2 == '1.0' || temp2 == '1'){
+    colorNotTransparent = true;
+  }
+  else{
+    colorNotTransparent = false;
+  }
+  switch(phase){
+  case 'down':
+    
+    // These make sense here, because this is the start of drawing, so this point is really only significant
+    // as the start of the line drawn when the instrument is moved.
+    prevX = x;
+    prevY = y;
+    
+    break;
+  case 'move':
+    
+    context.strokeStyle = instrumentColor;
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    
+    if(colorNotTransparent){
+      context.beginPath();
+      context.moveTo(prevX, prevY);
+      context.lineTo(x, y);
+      context.stroke();
+    }
+    
+    context.beginPath();
+    context.arc(x, y, (instrumentWidth - 0.3) / 2, 0, 2 * Math.PI, false);
+    context.fillStyle = instrumentColor;
+    context.fill();
+    
+    // And of course, the coordinates of the end of this movement need to become the coordinates of the
+    // beginning of the next action.
+    prevX = x;
+    prevY = y;
+    
+    break;
+  case 'up':
+    
+    context.strokeStyle = instrumentColor;
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    
+    if(colorNotTransparent){
+      context.beginPath();
+      context.moveTo(prevX, prevY);
+      context.lineTo(x, y);
+      context.stroke();
+    }
+    
+    context.beginPath();
+    context.arc(x, y, instrumentWidth / 2, 0, 2 * Math.PI, false);
+    context.fillStyle = instrumentColor;
+    context.fill();
+
+    prevX = 'NA';
+    prevY = 'NA';
+    
+    break;
+    default:
+      console.log('ERROR: Invalid phase in penToolMethod: ' + phase);
+  }
 }
 
 // Here is the function that executes when the user wants to close the program.
@@ -97,7 +414,7 @@ function initializeCanvas(){
 function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('maximize-main-win');
-    var ret = dialog.showMessageBox({ title: 'Warning:', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1 });
+    var ret = dialog.showMessageBox({ title: 'Warning:', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
     if(ret == 0){
       ipcRenderer.send('terminate-this-app');
@@ -121,6 +438,18 @@ function onWindowResize()
 
 function fixThingsAfterRezizeIsDone(){
   adjustSizeOfMenuButtonsToScreenSize();
+  if(allLoaded){
+    if(tempImageForWindowResize == null){
+      tempImageForWindowResize = new Image();
+      tempImageForWindowResize.src = context.canvas.toDataURL('image/png');
+      resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1], tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
+      adjustSizeOfMenuButtonsToScreenSize();
+    }
+    else{
+      resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1], tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
+      adjustSizeOfMenuButtonsToScreenSize();
+    }
+  }
 }
 
 // If the user clicks on a blank area of the window, the dropdowns should probably close:
