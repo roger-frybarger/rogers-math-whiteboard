@@ -413,8 +413,8 @@ function penToolMethod(x, y, phase){
 // It essentially checks to see if it is safe to close the app, and warns the user if it isn't.
 function userWantsToClose(){
   if(!safeToClose){
-    ipcRenderer.send('maximize-main-win');
-    var ret = dialog.showMessageBox({ title: 'Warning:', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
+    ipcRenderer.send('focus-main-win');
+    var ret = dialog.showMessageBox({ title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
     if(ret == 0){
       ipcRenderer.send('terminate-this-app');
@@ -425,7 +425,6 @@ function userWantsToClose(){
     ipcRenderer.send('terminate-this-app');
   }
 }
-
 
 function onWindowResize()
 {

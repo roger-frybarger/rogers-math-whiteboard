@@ -10,6 +10,20 @@ let win;
 // This is critical for enabeling touch events:
 app.commandLine.appendSwitch('touch-events', 'enabled');
 
+var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+  // Someone tried to run a second instance, we should focus our window.
+  if (win) {
+    if (win.isMinimized()) win.restore();
+    win.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+  return;
+}
+
+
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600, minWidth: 730, minHeight: 550, icon: __dirname + '/images/icons/scribble-128.png', frame: false});
@@ -71,6 +85,10 @@ ipcMain.on('terminate-this-app', () => {
 
 ipcMain.on('maximize-main-win', () => {
   win.maximize();
+});
+
+ipcMain.on('focus-main-win', () => {
+  win.focus();
 });
 
 ipcMain.on('minimize-main-win', () => {
