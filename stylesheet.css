@@ -280,18 +280,24 @@ body {
 }
 
 .modalDialogTest > div {
-	width: 600px;
-  height: 500px;
+	//width: 600px;
+  //height: 500px;
+  min-width: 600px;
+  min-height: 500px;
+  max-width: 80vw;
+  max-height: 80vh;
 	position: relative;
-	margin: 10% auto;
+	margin: 4% auto;
 	padding: 5px 20px 13px 20px;
 	border-radius: 5px 5px 5px 5px;
 	background: #FF4621;
+  //overflow: auto;
+  //display: inline-block;
   
 }
 
 .modalBoxContent {
-  height: 70%;
+  max-height: 50vh;
   overflow: auto;
 }
 
