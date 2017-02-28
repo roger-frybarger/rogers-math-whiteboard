@@ -684,3 +684,10 @@ function test(){
   
   console.log('rtdytrdytrdytrd');
 }
+
+function test2(){
+  
+  console.log('rtdytrdytrdytrd2');
+
+  document.getElementById('openModalCloseBtnTest').click();  //Clicking the close btn on dialoug after we are done with it.
+}

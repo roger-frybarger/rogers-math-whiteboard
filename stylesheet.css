@@ -260,6 +260,20 @@ body {
 
 
 
+::-webkit-scrollbar {
+  width: 60px;
+}
+::-webkit-scrollbar-button {
+  background: #F1F1F1;
+}
+::-webkit-scrollbar-track-piece {
+  background: #F1F1F1;
+}
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  height: 110px;
+}
+
 .modalDialogTest {
 	position: fixed;
 	font-family: sans-serif;
@@ -267,7 +281,7 @@ body {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background: rgba(0,0,0,0.8);
+	background: rgba(0,0,0,0.7);
 	z-index: 99999;
 	opacity:0;
 	transition: opacity 40ms ease-in;
@@ -280,29 +294,26 @@ body {
 }
 
 .modalDialogTest > div {
-	//width: 600px;
-  //height: 500px;
-  min-width: 600px;
-  min-height: 500px;
   max-width: 80vw;
   max-height: 80vh;
 	position: relative;
-	margin: 4% auto;
-	padding: 5px 20px 13px 20px;
+  margin-top: 8vh;
+  margin-right: 10vw;
+  margin-left: 10vw;
+  margin-bottom: auto;
+	padding: 5px 20px 70px 20px;
 	border-radius: 5px 5px 5px 5px;
 	background: #FF4621;
-  //overflow: auto;
-  //display: inline-block;
-  
 }
 
 .modalBoxContent {
   max-height: 50vh;
   overflow: auto;
+  padding: 0px 20px 0px 20px;
 }
 
 .modalDialogTest h2 {
-	padding: 0px 48px 0px 0px;
+	padding: 0px 48px 0px 20px;
 }
 
 .closeTest {
@@ -318,15 +329,35 @@ body {
 	border-radius: 0px 5px 0px 0px;
 }
 
-.modalBoxCloseBtnImage {
-  background: url('images/icons/close.png');
-}
-
 .closeTest:hover {
   background: #0000FF;
   color: white;
 }
 
+.modalBoxCloseBtnImage {
+  background: url('images/icons/close.png');
+}
+
 .modalBoxCloseBtnImage:hover {
   background-position: -48px 0px;
+}
+
+.modalBoxOkBtnTest {
+	background: #009DA0;
+	position: absolute;
+	text-align: center;
+  right: -0px;
+	bottom: -0px;
+  height: 40px;
+	width: 48px;
+	text-decoration: none;
+  border-radius: 0px 0px 5px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalBoxOkBtnTest:hover {
+  background: #0000FF;
+  color: white;
 }
