@@ -274,36 +274,36 @@ body {
   height: 110px;
 }
 
-.modalDialogTest {
-	position: fixed;
-	font-family: sans-serif;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background: rgba(0,0,0,0.7);
-	z-index: 99999;
-	opacity:0;
-	transition: opacity 40ms ease-in;
-	pointer-events: none;
+.modalDialogs {
+  position: fixed;
+  font-family: sans-serif;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 99999;
+  opacity:0;
+  transition: opacity 40ms ease-in;
+  pointer-events: none;
 }
 
-.modalDialogTest:target {
-	opacity:1;
-	pointer-events: auto;
+.modalDialogs:target {
+  opacity:1;
+  pointer-events: auto;
 }
 
-.modalDialogTest > div {
+.modalDialogs > div {
   max-width: 80vw;
   max-height: 80vh;
-	position: relative;
+  position: relative;
   margin-top: 8vh;
   margin-right: 10vw;
   margin-left: 10vw;
   margin-bottom: auto;
-	padding: 5px 20px 70px 20px;
-	border-radius: 5px 5px 5px 5px;
-	background: #FF4621;
+  padding: 5px 20px 70px 20px;
+  border-radius: 5px 5px 5px 5px;
+  background: #FF4621;
 }
 
 .modalBoxContent {
@@ -312,45 +312,45 @@ body {
   padding: 0px 20px 0px 20px;
 }
 
-.modalDialogTest h2 {
-	padding: 0px 48px 0px 20px;
+.modalDialogs h2 {
+  padding: 0px 48px 0px 20px;
 }
 
-.closeTest {
-	background: #009DA0;
-	position: absolute;
-	text-align: center;
+.modalDialogsCloseBtns {
+  background: #009DA0;
+  position: absolute;
+  text-align: center;
   right: -0px;
-	top: -0px;
+  top: -0px;
   height: 40px;
-	width: 48px;
-	text-decoration: none;
-	font-weight: bold;
-	border-radius: 0px 5px 0px 0px;
+  width: 48px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 0px 5px 0px 0px;
 }
 
-.closeTest:hover {
+.modalDialogsCloseBtns:hover {
   background: #0000FF;
   color: white;
 }
 
-.modalBoxCloseBtnImage {
+.modalDialogsCloseBtns img {
   background: url('images/icons/close.png');
 }
 
-.modalBoxCloseBtnImage:hover {
+.modalDialogsCloseBtns img:hover {
   background-position: -48px 0px;
 }
 
 .modalBoxOkBtnTest {
-	background: #009DA0;
-	position: absolute;
-	text-align: center;
+  background: #009DA0;
+  position: absolute;
+  text-align: center;
   right: -0px;
-	bottom: -0px;
+  bottom: -0px;
   height: 40px;
-	width: 48px;
-	text-decoration: none;
+  width: 48px;
+  text-decoration: none;
   border-radius: 0px 0px 5px 0px;
   display: flex;
   justify-content: center;

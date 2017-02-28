@@ -36,6 +36,8 @@ function createWindow () {
   }));
   
   win.maximize();
+  
+  global.theMainWindow = win; //This allows us to get a refference to the main window in the render process.
 
   // Open the DevTools.  -- Comment this out before releasing the final version.
   win.webContents.openDevTools();

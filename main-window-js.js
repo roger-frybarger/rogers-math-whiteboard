@@ -3,7 +3,9 @@ const {ipcRenderer} = require('electron');
 const {dialog} = require('electron').remote;
 
 
-
+const remote = require('electron').remote;
+var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a refference to the main window so we can use
+// it for dialoug boxes.
 
 
 
@@ -414,7 +416,7 @@ function penToolMethod(x, y, phase){
 function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('focus-main-win');
-    var ret = dialog.showMessageBox({ title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
     if(ret == 0){
       ipcRenderer.send('terminate-this-app');
@@ -689,5 +691,5 @@ function test2(){
   
   console.log('rtdytrdytrdytrd2');
 
-  document.getElementById('openModalCloseBtnTest').click();  //Clicking the close btn on dialoug after we are done with it.
+  document.getElementById('openModalTestCloseBtn').click();  //Clicking the close btn on dialoug after we are done with it.
 }

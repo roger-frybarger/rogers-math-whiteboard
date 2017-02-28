@@ -29,10 +29,10 @@
         <li class="dropdown">
           <a class="dropbtn" onclick="fileBtnFunction();" id="fileBtn">File</a>
             <div class="dropdown-content" id="fileDropdown">
-              <a id="reMaximizeBtn">Re-Maximize</a>
+              <a id="reMaximizeBtn" onclick="ipcRenderer.send('maximize-main-win');">Re-Maximize</a>
               <a id="openImagesBtn">Open Images</a>
               <a id="saveImagesBtn">Save Images</a>
-              <a id="fileCloseBtn">Close</a>
+              <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn">Delete Page</a>
               <a id="helpBtn">Help</a>
               <a id="aboutBtn">About</a>
@@ -102,17 +102,16 @@
     <div id="eraserCanvasDiv">
       <canvas id="eraserCanvas" width="2200" height="1700"></canvas>
     </div>
-    <div>
-      <div id="openModalTest" class="modalDialogTest">
-        <div>
-          <a id="openModalCloseBtnTest" href="#closeTest" title="Close" class="closeTest"><img class="modalBoxCloseBtnImage" src="images/icons/transparent.png"></a>
-          <h2>Modal Box</h2>
-          <div class="modalBoxContent">
-            <p>This is a sample modal box that can be created using the powers of CSS3.</p>
-            
-          </div>
-          <a onclick="test2();" title="" class="modalBoxOkBtnTest">OK</a>
+    <div id="openModalTest" class="modalDialogs">
+      <div>
+        <a id="openModalTestCloseBtn" href="#closeTest" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <h2>Modal Box</h2>
+        <div class="modalBoxContent">
+          <!--Here is where the content of the modal box will go:-->
+          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
+          
         </div>
+        <a onclick="test2();" title="" class="modalBoxOkBtnTest">OK</a>
       </div>
     </div>
   </body>
