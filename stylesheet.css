@@ -252,7 +252,75 @@ body {
 }
 
 #canvasDiv {
-    position: absolute;
-    top: 40px;
-    left: 150px;
+  position: absolute;
+  top: 40px;
+  left: 150px;
+}
+
+
+
+
+.modalDialogTest {
+	position: fixed;
+	font-family: sans-serif;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+	z-index: 99999;
+	opacity:0;
+	transition: opacity 40ms ease-in;
+	pointer-events: none;
+}
+
+.modalDialogTest:target {
+	opacity:1;
+	pointer-events: auto;
+}
+
+.modalDialogTest > div {
+	width: 600px;
+  height: 500px;
+	position: relative;
+	margin: 10% auto;
+	padding: 5px 20px 13px 20px;
+	border-radius: 5px 5px 5px 5px;
+	background: #FF4621;
+  
+}
+
+.modalBoxContent {
+  height: 70%;
+  overflow: auto;
+}
+
+.modalDialogTest h2 {
+	padding: 0px 48px 0px 0px;
+}
+
+.closeTest {
+	background: #009DA0;
+	position: absolute;
+	text-align: center;
+  right: -0px;
+	top: -0px;
+  height: 40px;
+	width: 48px;
+	text-decoration: none;
+	font-weight: bold;
+	border-radius: 0px 5px 0px 0px;
+}
+
+.modalBoxCloseBtnImage {
+  background: url('images/icons/close.png');
+}
+
+.closeTest:hover {
+  background: #0000FF;
+  color: white;
+}
+
+.modalBoxCloseBtnImage:hover {
+  background-position: -48px 0px;
 }
