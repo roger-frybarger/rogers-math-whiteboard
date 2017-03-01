@@ -691,5 +691,5 @@ function test2(){
   
   console.log('rtdytrdytrdytrd2');
 
-  document.getElementById('openModalTestCloseBtn').click();  //Clicking the close btn on dialoug after we are done with it.
+  document.getElementById('otherColorDialogCloseBtn').click();  //Clicking the close btn on dialoug after we are done with it.
 }
