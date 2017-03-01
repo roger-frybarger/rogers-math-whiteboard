@@ -690,6 +690,150 @@ function test(){
 function test2(){
   
   console.log('rtdytrdytrdytrd2');
+  
+  console.log(context);
 
-  document.getElementById('otherColorDialogCloseBtn').click();  //Clicking the close btn on dialoug after we are done with it.
+  document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
+
+// ********* Below is the javascript related to the modal dialogs: **********
+// Variables that need to be global but are still only realted to the applicable dialog
+// are named beginning with the innitials of the dialoug's id.
+// Functions are also named starting with the same innitials.
+
+// Here is the code for the otherColorDialog:
+
+var OCDColor = 'rgba(78, 78, 255, 1.0)';
+var OCDRed = 78;
+var OCDGreen = 78;
+var OCDBlue = 78;
+var OCDAlpha = 1.0;
+var OCDvalid = true;
+
+function OCDReadyOtherColorDialog(){
+
+  document.getElementById('OCDRedTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+
+}
+
+function OCDValidateInputAndUpdateIfApplicable(){
+  var tempRed = parseInt(document.getElementById('OCDRedTextBox').value);
+  var tempGreen = parseInt(document.getElementById('OCDGreenTextBox').value);
+  var tempBlue = parseInt(document.getElementById('OCDBlueTextBox').value);
+  var tempAlpha = parseInt(document.getElementById('OCDTransparencyTextBox').value);
+  
+  var redIsGood = false;
+  var greenIsGood = false;
+  var blueIsGood = false;
+  var alphaIsGood = false;
+
+  if(isNaN(tempRed)){
+    redIsGood = false;
+    document.getElementById('OCDRedTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempRed < 0){
+    redIsGood = false;
+    document.getElementById('OCDRedTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempRed > 255){
+    redIsGood = false;
+    document.getElementById('OCDRedTextBox').style.backgroundColor = 'red';
+  }
+  else{
+    redIsGood = true;
+    document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
+  }
+  
+  if(isNaN(tempGreen)){
+    greenIsGood = false;
+    document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempGreen < 0){
+    greenIsGood = false;
+    document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempGreen > 255){
+    greenIsGood = false;
+    document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
+  }
+  else{
+    greenIsGood = true;
+    document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
+  }
+  
+  if(isNaN(tempBlue)){
+    blueIsGood = false;
+    document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempBlue < 0){
+    blueIsGood = false;
+    document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempBlue > 255){
+    blueIsGood = false;
+    document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
+  }
+  else{
+    blueIsGood = true;
+    document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
+  }
+  
+  if(isNaN(tempAlpha)){
+    alphaIsGood = false;
+    document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempAlpha < 0){
+    alphaIsGood = false;
+    document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
+  }
+  else if(tempAlpha > 100){
+    alphaIsGood = false;
+    document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
+  }
+  else{
+    alphaIsGood = true;
+    document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
+  }
+  
+  if(redIsGood && greenIsGood && blueIsGood && alphaIsGood){
+    OCDvalid = true;
+    OCDRed = tempRed;
+    OCDGreen = tempGreen;
+    OCDBlue = tempBlue;
+    OCDAlpha = 1.0 - (tempAlpha / 100);
+    OCDColor = 'rgba(' + OCDRed + ', ' + OCDGreen + ', ' + OCDBlue + ', ' + OCDAlpha + ')';
+    OCDUpdateExample();
+  }
+  else{
+    OCDvalid = false;
+  }
+}
+
+function OCDUpdateExample(){
+  var canvas = document.getElementById('OCDColorChosenExampleCanvas');
+  var context = canvas.getContext('2d');
+  context.rect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = 'white';
+  context.fill();
+  
+  context.font = '20px sans-serif';
+  context.fillStyle = 'black';
+  context.fillText('I\'m Transparent!', 15, 25);
+  
+  context.rect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = OCDColor;
+  context.fill();
+}
+
+function OCDOkBtnFunction(){
+  
+  console.log('rtdytrdytrdytrd2');
+  
+  console.log(context);
+
+  document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }

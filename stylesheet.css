@@ -162,8 +162,10 @@ body {
 }
 
 
-
-
+/*
+ * Below is the css that describes the verticalButtonBar from a general perspective:
+ * Remember that much of this is changed via JavaScript when the main window is opened or resized.
+*/
 
 #verticalButtonBar {
   list-style-type: none;
@@ -205,6 +207,14 @@ body {
   display: block;
 }
 
+
+/*
+ * Below is the css that describes the items below the verticalButtonBar & the main canvas.
+ * Here again, remember that some of this is changed via JavaScript when the 
+ * main window is opened or resized. The min & max values for the pageTextBox
+ * are also changed when pages are added or deleted.
+ * The eraser canvas is assigned its location via JavaScript.
+*/
 
 #pageTextBoxDivID {
   margin: 0;
@@ -258,7 +268,9 @@ body {
 }
 
 
-
+/*
+ * Below is the css that describes the modal windows from a general perspective:
+*/
 
 ::-webkit-scrollbar {
   width: 60px;
@@ -342,7 +354,7 @@ body {
   background-position: -48px 0px;
 }
 
-.modalBoxOkBtnTest {
+.modalBoxOkBtns {
   background: #009DA0;
   position: absolute;
   text-align: center;
@@ -357,14 +369,38 @@ body {
   align-items: center;
 }
 
-.modalBoxOkBtnTest:hover {
+.modalBoxOkBtns:hover {
   background: #0000FF;
   color: white;
 }
 
-
+/*
+ * Below is the css that is speciffic to the otherColorDialog:
+*/
 
 #otherColorDialog > div {
   background: #009DA0;
 }
 
+#OCDColorChosenLabel {
+  position: absolute;
+  text-align: center;
+  left: -0px;
+  bottom: -0px;
+  height: 40px;
+  width: 140px;
+  margin: 0px;
+  border-radius: 0px 0px 0px 5px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#OCDColorChosenExampleCanvas {
+  position: absolute;
+  text-align: center;
+  left: 140px;
+  bottom: -0px;
+  height: 40px;
+  width: 200px;
+}
