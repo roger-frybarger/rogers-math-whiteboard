@@ -10,13 +10,13 @@ var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a 
 
 
 //window.addEventListener('touchstart', (evt) => console.log(evt.touches[0]));
-window.addEventListener('touchstart', tstart);
-window.addEventListener('touchend', tend);
-window.addEventListener('touchmove', tmove);
-window.addEventListener('touchcancel', tcancel);
-window.addEventListener('mousedown', mdown);
+//window.addEventListener('touchstart', tstart);
+//window.addEventListener('touchend', tend);
+//window.addEventListener('touchmove', tmove);
+//window.addEventListener('touchcancel', tcancel);
+//window.addEventListener('mousedown', mdown);
 //window.addEventListener('mousemove', mmove);
-window.addEventListener('mouseup', mup);
+//window.addEventListener('mouseup', mup);
 
 window.addEventListener('resize', onWindowResize);
 
@@ -717,6 +717,53 @@ function OCDReadyOtherColorDialog(){
   document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
   document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
   document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  
+  document.getElementById('OCDRedTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDGreenTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDBlueTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDTransparencyTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function(e){
+    var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+    //console.log(e.pageX - offset.left);
+    //console.log(e.pageY - offset.top);
+    OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
+  });
+
+  document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function(e){
+    if(e.touches.length == 1)
+    {
+      var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+      //console.log(e.pageX - offset.left);
+      //console.log(e.pageY - offset.top);
+      OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      //onInstrumentDown(e.changedTouches[0].pageX - 20, e.changedTouches[0].pageY - 90);
+      e.preventDefault();
+    }
+  });
 
   // Create the color wheel for them to choose from:
   var canvas = document.getElementById('OCDPickerCanvas');
@@ -762,6 +809,34 @@ function OCDReadyOtherColorDialog(){
   OCDValidateInputAndUpdateIfApplicable();
   OCDUpdateExample();
   
+}
+
+function OCDOnInstrumentDown(x, y){
+  if(x < 0){x = 0;}
+  if(y < 0){y = 0;}
+  
+  var canvas = document.getElementById('OCDPickerCanvas');
+  var context = canvas.getContext('2d');
+  var temp = context.getImageData(x, y, 1, 1);
+  OCDRed = temp.data[0];
+  OCDGreen = temp.data[1];
+  OCDBlue = temp.data[2];
+  OCDAlpha = 1.0;
+  OCDColor = 'rgba(' + OCDRed + ', ' + OCDGreen + ', ' + OCDBlue + ', ' + OCDAlpha + ')';
+  
+  document.getElementById('OCDRedTextBox').value = OCDRed;
+  document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
+  document.getElementById('OCDGreenTextBox').value = OCDGreen;
+  document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
+  document.getElementById('OCDBlueTextBox').value = OCDBlue;
+  document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
+  temp = 100 - (parseInt(OCDAlpha * 100));
+  document.getElementById('OCDTransparencyTextBox').value = temp;
+  document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
+  document.getElementById('OCDRedTextBox').select();
+  
+  OCDValidateInputAndUpdateIfApplicable();
+  OCDUpdateExample();
 }
 
 function OCDValidateInputAndUpdateIfApplicable(){
@@ -879,4 +954,31 @@ function OCDOkBtnFunction(){
     instrumentColor = OCDColor;
     document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
+}
+
+
+
+
+// This function was taken from: http://stackoverflow.com/a/26230989
+// I appreciate basil's work!!! It works perfectly where nothing else did!
+// It essentially returns the current location of the top left corner of 
+// the applicable element regardless of where it is in the scrollable
+// area. The corrdinates returned are relative to the top left corner of
+// the main window. This is great for the modal dialogs.
+function getCoords(elem) { // crossbrowser version
+    var box = elem.getBoundingClientRect();
+
+    var body = document.body;
+    var docEl = document.documentElement;
+
+    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+    var clientTop = docEl.clientTop || body.clientTop || 0;
+    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+    var top  = box.top +  scrollTop - clientTop;
+    var left = box.left + scrollLeft - clientLeft;
+
+    return { top: Math.round(top), left: Math.round(left) };
 }

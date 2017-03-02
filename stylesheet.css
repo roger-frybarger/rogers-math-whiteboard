@@ -419,3 +419,10 @@ body {
   height: 40px;
   width: 200px;
 }
+
+.OCDInputBoxes {
+  font-size: 40px;
+  width: 85px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
