@@ -718,6 +718,50 @@ function OCDReadyOtherColorDialog(){
   document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
   document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
 
+  // Create the color wheel for them to choose from:
+  var canvas = document.getElementById('OCDPickerCanvas');
+  var context = canvas.getContext('2d');
+  var x = canvas.width / 2;
+  var y = canvas.height / 2;
+  var radius = 175;
+  context.rect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = 'white';
+  context.fill();
+  for(var angle = 0; angle <= 360; angle += 1){
+      var startAngle = (angle - 1) * Math.PI / 180;
+      var endAngle = (angle + 1) * Math.PI / 180;
+      context.beginPath();
+      context.moveTo(x, y);
+      context.arc(x, y, radius, startAngle, endAngle);
+      context.closePath();
+      var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
+      gradient.addColorStop(0,'hsl('+angle+', 10%, 100%)');
+      gradient.addColorStop(1,'hsl('+angle+', 100%, 50%)');
+      context.fillStyle = gradient;
+      context.fill();
+  }
+  
+  var value = instrumentColor.split(',');
+  OCDRed = parseInt(value[0].substring(5));
+  OCDGreen = parseInt(value[1].substring(1));
+  OCDBlue = parseInt(value[2].substring(1));
+  var temp = value[3].substring(1);
+  OCDAlpha = parseFloat(temp.substring(0, temp.length - 1));
+  
+  document.getElementById('OCDRedTextBox').value = OCDRed;
+  document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
+  document.getElementById('OCDGreenTextBox').value = OCDGreen;
+  document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
+  document.getElementById('OCDBlueTextBox').value = OCDBlue;
+  document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
+  temp = 100 - (parseInt(OCDAlpha * 100));
+  document.getElementById('OCDTransparencyTextBox').value = temp;
+  document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
+  document.getElementById('OCDRedTextBox').select();
+  
+  OCDValidateInputAndUpdateIfApplicable();
+  OCDUpdateExample();
+  
 }
 
 function OCDValidateInputAndUpdateIfApplicable(){
@@ -831,9 +875,8 @@ function OCDUpdateExample(){
 
 function OCDOkBtnFunction(){
   
-  console.log('rtdytrdytrdytrd2');
-  
-  console.log(context);
-
-  document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  if (OCDvalid){
+    instrumentColor = OCDColor;
+    document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  }
 }

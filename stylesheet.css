@@ -274,6 +274,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 60px;
+  height:60px;
 }
 ::-webkit-scrollbar-button {
   background: #F1F1F1;
@@ -285,6 +286,19 @@ body {
   background: #000000;
   height: 110px;
 }
+::-webkit-scrollbar-button:vertical:increment {
+  background-image: url('images/icons/scrollbar_btn_down.png');
+}
+::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url('images/icons/scrollbar_btn_up.png');
+}
+::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url('images/icons/scrollbar_btn_right.png');
+}
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url('images/icons/scrollbar_btn_left.png');
+}
+
 
 .modalDialogs {
   position: fixed;
@@ -321,7 +335,8 @@ body {
 .modalBoxContent {
   max-height: 50vh;
   overflow: auto;
-  padding: 0px 20px 0px 20px;
+  padding: 20px 20px 0px 20px;
+  border: 2px solid black;
 }
 
 .modalDialogs h2 {
