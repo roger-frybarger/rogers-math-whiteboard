@@ -702,6 +702,8 @@ function test2(){
 // are named beginning with the innitials of the dialoug's id.
 // Functions are also named starting with the same innitials.
 
+// Here is the code for the settingsDialog:
+
 // Here is the code for the otherColorDialog:
 
 var OCDColor = 'rgba(78, 78, 255, 1.0)';
@@ -959,12 +961,27 @@ function OCDOkBtnFunction(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // This function was taken from: http://stackoverflow.com/a/26230989
 // I appreciate basil's work!!! It works perfectly where nothing else did!
 // It essentially returns the current location of the top left corner of 
 // the applicable element regardless of where it is in the scrollable
 // area. The corrdinates returned are relative to the top left corner of
-// the main window. This is great for the modal dialogs.
+// the main window. This is great for the modal dialogs, because once
+// this location is known, the combination of it and the location of the
+// click can be used to calculate the location of the click on the element.
 function getCoords(elem) { // crossbrowser version
     var box = elem.getBoundingClientRect();
 

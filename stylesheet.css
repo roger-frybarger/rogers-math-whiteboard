@@ -426,3 +426,7 @@ body {
   margin-top: 4px;
   margin-bottom: 4px;
 }
+
+#OCDSmallerLabel {
+  font-size: 15px;
+}
