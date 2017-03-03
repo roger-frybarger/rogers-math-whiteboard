@@ -108,7 +108,15 @@ ipcRenderer.on('app-finished-loading', () => {
   adjustSizeOfMenuButtonsToScreenSize();
   initializeGlobalVariables();
   initializeCanvas();
+  initializeEventListenersForExternalDialogs();
+  setUpGUIOnStartup();
 });
+
+function setUpGUIOnStartup(){
+  document.getElementById('colorBtn').style.color = instrumentColor;
+  document.getElementById('toolBtn').innerHTML = 'Tool: P';
+  document.getElementById('sizeBtn').innerHTML = 'Size: M';
+}
 
 function continueAfterAppFinishedLoading1(){
   initializeEventListenersForCanvas();
@@ -167,6 +175,69 @@ function initializeEventListenersForCanvas(){
 
   document.getElementById('canvas1').addEventListener('touchcancel', function(e){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+  });
+}
+
+/*
+ * Here is the function that innitializes the event listeners for all of the external dialogs.
+ * It has to be run only once on startup since runnung it in the code for each window will result
+ * in the same functions being added to the events again each time the dialog is opened,
+ * which results in noticable slowness.
+*/
+function initializeEventListenersForExternalDialogs(){
+  
+  // Here are the event listeners for the otherColorDialog:
+  
+  document.getElementById('OCDRedTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  
+  document.getElementById('OCDRedTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDGreenTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDBlueTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDTransparencyTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OCDOkBtnFunction();
+    }
+  });
+  
+  document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function(e){
+    var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+    //console.log(e.pageX - offset.left);
+    //console.log(e.pageY - offset.top);
+    OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
+  });
+
+  document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function(e){
+    if(e.touches.length == 1)
+    {
+      var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+      //console.log(e.pageX - offset.left);
+      //console.log(e.pageY - offset.top);
+      OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      //onInstrumentDown(e.changedTouches[0].pageX - 20, e.changedTouches[0].pageY - 90);
+      e.preventDefault();
+    }
   });
 }
 
@@ -715,58 +786,6 @@ var OCDvalid = true;
 
 function OCDReadyOtherColorDialog(){
 
-  document.getElementById('OCDRedTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  
-  document.getElementById('OCDRedTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
-  
-  document.getElementById('OCDGreenTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
-  
-  document.getElementById('OCDBlueTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
-  
-  document.getElementById('OCDTransparencyTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
-  
-  document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function(e){
-    var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-    //console.log(e.pageX - offset.left);
-    //console.log(e.pageY - offset.top);
-    OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
-  });
-
-  document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function(e){
-    if(e.touches.length == 1)
-    {
-      var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-      //console.log(e.pageX - offset.left);
-      //console.log(e.pageY - offset.top);
-      OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      //onInstrumentDown(e.changedTouches[0].pageX - 20, e.changedTouches[0].pageY - 90);
-      e.preventDefault();
-    }
-  });
-
   // Create the color wheel for them to choose from:
   var canvas = document.getElementById('OCDPickerCanvas');
   var context = canvas.getContext('2d');
@@ -954,6 +973,7 @@ function OCDOkBtnFunction(){
   
   if (OCDvalid){
     instrumentColor = OCDColor;
+    document.getElementById('colorBtn').style.color = instrumentColor;
     document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
 }
