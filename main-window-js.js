@@ -760,11 +760,11 @@ function test(){
 
 function test2(){
   
-  console.log('rtdytrdytrdytrd2');
+  //console.log('rtdytrdytrdytrd2');
   
-  console.log(context);
+  //console.log(context);
 
-  document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  //document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }
 
 
