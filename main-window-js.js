@@ -775,6 +775,15 @@ function test2(){
 
 // Here is the code for the settingsDialog:
 
+function SDReadySettingsDialog(){
+  
+}
+
+function SDOkBtnFunction(){
+  console.log('Settings Function');
+  document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
 // Here is the code for the otherColorDialog:
 
 var OCDColor = 'rgba(78, 78, 255, 1.0)';

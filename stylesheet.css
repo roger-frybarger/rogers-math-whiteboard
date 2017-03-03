@@ -329,7 +329,7 @@ body {
   margin-bottom: auto;
   padding: 5px 20px 70px 20px;
   border-radius: 5px 5px 5px 5px;
-  background: #FF4621;
+  background: #009DA0;
 }
 
 .modalBoxContent {
@@ -393,9 +393,6 @@ body {
  * Below is the css that is speciffic to the otherColorDialog:
 */
 
-#otherColorDialog > div {
-  background: #009DA0;
-}
 
 #OCDColorChosenLabel {
   position: absolute;
@@ -429,4 +426,12 @@ body {
 
 #OCDSmallerLabel {
   font-size: 15px;
+}
+
+/*
+ * Below is the css that is speciffic to the otherColorDialog:
+*/
+
+#SDSaveBtn {
+  width: 70px;
 }

@@ -11,7 +11,7 @@
       <ul>
         <!--These are the entries in the top nav bar. They each have to have the transparent image as the
         source because if that is removed, a border will be shown no matter how they are styled in the css-->
-        <li><a href="#" onclick="test();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
+        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="test();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="test();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="test();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
@@ -111,18 +111,20 @@
     
     <!--Here is the settings dialog-->
     
-    <div id="openModalTest" class="modalDialogs">
+    <div id="settingsDialog" class="modalDialogs">
       <div>
-        <a id="openModalTestCloseBtn" href="#closeTest" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
-        <h2>Modal Box</h2>
+        <a id="SDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <h2>Settings:</h2>
         <div class="modalBoxContent">
           <!--Here is where the content of the modal box will go:-->
           <p>This is a sample modal box that can be created using the powers of CSS3.</p>
           
         </div>
-        <a onclick="test2();" title="" class="modalBoxOkBtnTest">OK</a>
+        <a id="SDSaveBtn" onclick="SDOkBtnFunction();" title="" class="modalBoxOkBtns">Save</a>
       </div>
     </div>
+    
+    <!--Here is the other color dialog-->
     
     <div id="otherColorDialog" class="modalDialogs">
       <div>
