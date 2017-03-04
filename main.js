@@ -2,6 +2,7 @@ const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');
 const ipcMain = require('electron').ipcMain;
+const globalShortcut = require('electron').globalShortcut;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -60,6 +61,21 @@ function createWindow () {
     //win.webContents.send('app-finished-loading');
   });
   
+  win.on('focus', registerShortcuts);
+  win.on('blur', unregisterShortcuts);
+  registerShortcuts();
+}
+
+function registerShortcuts () {
+  globalShortcut.register('CommandOrControl+z', function () {
+    win.webContents.send('ctrl-z-pressed');
+  });
+}
+
+function unregisterShortcuts () {
+  globalShortcut.unregister('CommandOrControl+z', function () {
+    win.webContents.send('ctrl-z-pressed');
+  });
 }
 
 // This method will be called when Electron has finished

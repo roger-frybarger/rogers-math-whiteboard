@@ -116,8 +116,15 @@
         <a id="SDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>Settings:</h2>
         <div class="modalBoxContent">
-          <!--Here is where the content of the modal box will go:-->
-          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
+          <p>Note: Since this app is designed to be portable, these settings will only remain in effect until you close the app. Unfortunately, you will need to re-adjust them to your liking every time you start the app. Portability comes with its costs.</p>
+          
+          <ul id="SDUnorderedList">
+            <li><input id="SDRemoveMousePointerOnCanvas" type="checkbox" value="false"> Remove mouse pointer over drawing area</li>
+            <li>Undo History: <input type="number" id="SDUndoHistoryBox" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
+            <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
+            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (ctrl+z --> Undo, ctrl+y --> Redo, esc --> Cancel draw/select/paste/etc.)</li>
+            <li>More settings coming soon!</li>
+          </ul>
           
         </div>
         <a id="SDSaveBtn" onclick="SDOkBtnFunction();" title="" class="modalBoxOkBtns">Save</a>

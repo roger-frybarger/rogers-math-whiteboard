@@ -216,6 +216,14 @@ body {
  * The eraser canvas is assigned its location via JavaScript.
 */
 
+/*
+ * Here we are making all of the number input boxes 40px.
+*/
+
+input[type="number"] {
+  font-size: 40px;
+}
+
 #pageTextBoxDivID {
   margin: 0;
   padding: 8px 0px 8px 2px;
@@ -229,7 +237,6 @@ body {
   height: 40px;
   width: 80px;
   font-family: sans-serif;
-  font-size: 40px;
 }
 
 #goBtnDivID {
@@ -297,6 +304,18 @@ body {
 }
 ::-webkit-scrollbar-button:horizontal:decrement {
   background-image: url('images/icons/scrollbar_btn_left.png');
+}
+
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:60px;
+    height:60px;
+    background-image: url('images/icons/open_checkbox.png');
+    border-radius:5px;
+    border:2px solid #555;
+}
+input[type='checkbox']:checked {
+    background-image: url('images/icons/checked_checkbox.png');
 }
 
 
@@ -387,6 +406,18 @@ body {
 .modalBoxOkBtns:hover {
   background: #0000FF;
   color: white;
+}
+
+/*
+ * Below is the css that is speciffic to the settingsDialog:
+*/
+
+#SDUnorderedList {
+  list-style-type:none;
+}
+
+#SDUnorderedList li {
+  padding: 15px 0px 15px 0px;
 }
 
 /*

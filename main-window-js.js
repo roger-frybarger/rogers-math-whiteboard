@@ -112,6 +112,10 @@ ipcRenderer.on('app-finished-loading', () => {
   setUpGUIOnStartup();
 });
 
+ipcRenderer.on('ctrl-z-pressed', () => {
+  console.log('Undo Pressed, Active?: ', document.hasFocus());
+});
+
 function setUpGUIOnStartup(){
   document.getElementById('colorBtn').style.color = instrumentColor;
   document.getElementById('toolBtn').innerHTML = 'Tool: P';
