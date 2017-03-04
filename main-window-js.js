@@ -64,7 +64,8 @@ var imagesChangedSinceOpen = false;
 
 var tempImageForWindowResize;
 
-var locationToCheckWhenPushingDataIntoLocalStorage;
+//var locationToCheckWhenPushingDataIntoLocalStorage;
+var weGotKeyboardShortcuts = false;
 
 var counterForRestoringImages;
 
@@ -113,7 +114,15 @@ ipcRenderer.on('app-finished-loading', () => {
 });
 
 ipcRenderer.on('ctrl-z-pressed', () => {
-  console.log('Undo Pressed, Active?: ', document.hasFocus());
+  console.log('Undo Pressed');
+});
+
+ipcRenderer.on('ctrl-y-pressed', () => {
+  console.log('Redo Pressed');
+});
+
+ipcRenderer.on('esc-pressed', () => {
+  console.log('Esc Pressed');
 });
 
 function setUpGUIOnStartup(){
@@ -189,6 +198,11 @@ function initializeEventListenersForCanvas(){
  * which results in noticable slowness.
 */
 function initializeEventListenersForExternalDialogs(){
+  
+  // Here are the event listeners for the settingsDialog:
+  
+  document.getElementById('SDUndoHistoryBox').addEventListener('input', SDInputValidation, false);
+  document.getElementById('SDMaxPagesAllowedBox').addEventListener('input', SDInputValidation, false);
   
   // Here are the event listeners for the otherColorDialog:
   
@@ -777,15 +791,105 @@ function test2(){
 // are named beginning with the innitials of the dialoug's id.
 // Functions are also named starting with the same innitials.
 
+var SDValid = true;
+
 // Here is the code for the settingsDialog:
 
 function SDReadySettingsDialog(){
   
+  if(document.getElementById('canvas1').style.cursor == 'none'){
+    document.getElementById('SDRemoveMousePointerOnCanvas').checked = true;
+  }
+  else{
+    document.getElementById('SDRemoveMousePointerOnCanvas').checked = false;
+  }
+  
+  document.getElementById('SDUndoHistoryBox').value = maxUndoHistory - 1;
+  document.getElementById('SDMaxPagesAllowedBox').value = maxNumberOfPages;
+  
+  if(weGotKeyboardShortcuts){
+    document.getElementById('SDEnableKeyboardShortcuts').checked = true;
+  }
+  else{
+    document.getElementById('SDEnableKeyboardShortcuts').checked = false;
+  }
+  
+}
+
+function SDInputValidation(){
+  var rawUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value);
+  var rawMaxPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
+  var undoHistoryGood = false;
+  var maxPagesGood = false;
+  
+  if(isNaN(rawUndoHistory)){
+    undoHistoryGood = false;
+    document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'red';
+  }
+  else if(rawUndoHistory < 10){
+    undoHistoryGood = false;
+    document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'red';
+  }
+  else if(rawUndoHistory > 100){
+    undoHistoryGood = false;
+    document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'red';
+  }
+  else{
+    undoHistoryGood = true;
+    document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'white';
+  }
+  
+  if(isNaN(rawMaxPages)){
+    maxPagesGood = false;
+    document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'red';
+  }
+  else if(rawMaxPages < 200){
+    maxPagesGood = false;
+    document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'red';
+  }
+  else if(rawMaxPages > 999){
+    maxPagesGood = false;
+    document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'red';
+  }
+  else{
+    maxPagesGood = true;
+    document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'white';
+  }
+  
+  if(undoHistoryGood && maxPagesGood){
+    SDValid = true;
+  }
+  else{
+    SDValid = false;
+  }
+  
 }
 
 function SDOkBtnFunction(){
-  console.log('Settings Function');
-  document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  //console.log('Settings Function');
+  
+  if(SDValid){
+    
+    if(document.getElementById('SDRemoveMousePointerOnCanvas').checked){
+      document.getElementById('canvas1').style.cursor = 'none';
+    }
+    else{
+      document.getElementById('canvas1').style.cursor = 'default';
+    }
+    
+    maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value) + 1;
+    maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
+    
+    if(document.getElementById('SDEnableKeyboardShortcuts').checked){
+      ipcRenderer.send('user-wants-keyboard-shortcuts');
+      weGotKeyboardShortcuts = true;
+    }
+    else{
+      ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
+      weGotKeyboardShortcuts = false;
+    }
+    document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  }
 }
 
 // Here is the code for the otherColorDialog:

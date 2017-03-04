@@ -4,6 +4,8 @@ const url = require('url');
 const ipcMain = require('electron').ipcMain;
 const globalShortcut = require('electron').globalShortcut;
 
+var userWantsKeyboardShortcuts = false;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -63,19 +65,33 @@ function createWindow () {
   
   win.on('focus', registerShortcuts);
   win.on('blur', unregisterShortcuts);
-  registerShortcuts();
+  //registerShortcuts();
 }
 
-function registerShortcuts () {
-  globalShortcut.register('CommandOrControl+z', function () {
-    win.webContents.send('ctrl-z-pressed');
-  });
+function registerShortcuts() {
+  if(userWantsKeyboardShortcuts){
+    globalShortcut.register('CommandOrControl+z', passUndoInput);
+    globalShortcut.register('CommandOrControl+y', passRedoInput);
+    globalShortcut.register('Escape', passEscapeInput);
+  }
 }
 
-function unregisterShortcuts () {
-  globalShortcut.unregister('CommandOrControl+z', function () {
-    win.webContents.send('ctrl-z-pressed');
-  });
+function unregisterShortcuts() {
+  globalShortcut.unregister('CommandOrControl+z', passUndoInput);
+  globalShortcut.unregister('CommandOrControl+y', passRedoInput);
+  globalShortcut.unregister('Escape', passEscapeInput);
+}
+
+function passUndoInput() {
+  win.webContents.send('ctrl-z-pressed');
+}
+
+function passRedoInput() {
+  win.webContents.send('ctrl-y-pressed');
+}
+
+function passEscapeInput() {
+  win.webContents.send('esc-pressed');
 }
 
 // This method will be called when Electron has finished
@@ -111,4 +127,14 @@ ipcMain.on('focus-main-win', () => {
 
 ipcMain.on('minimize-main-win', () => {
   win.minimize();
+});
+
+ipcMain.on('user-wants-keyboard-shortcuts', () => {
+  userWantsKeyboardShortcuts = true;
+  registerShortcuts();
+});
+
+ipcMain.on('user-doesnt-want-keyboard-shortcuts', () => {
+  userWantsKeyboardShortcuts = false;
+  unregisterShortcuts();
 });
