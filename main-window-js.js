@@ -109,8 +109,6 @@ ipcRenderer.on('app-finished-loading', () => {
   adjustSizeOfMenuButtonsToScreenSize();
   initializeGlobalVariables();
   initializeCanvas();
-  initializeEventListenersForExternalDialogs();
-  setUpGUIOnStartup();
 });
 
 ipcRenderer.on('ctrl-z-pressed', () => {
@@ -125,20 +123,119 @@ ipcRenderer.on('esc-pressed', () => {
   console.log('Esc Pressed');
 });
 
-function setUpGUIOnStartup(){
-  document.getElementById('colorBtn').style.color = instrumentColor;
-  document.getElementById('toolBtn').innerHTML = 'Tool: P';
-  document.getElementById('sizeBtn').innerHTML = 'Size: M';
-}
-
+// This function runs after the initializeCanvas() function finishes its job.
 function continueAfterAppFinishedLoading1(){
   initializeEventListenersForCanvas();
+  initializeEventListenersForExternalDialogs();
+  setUpGUIOnStartup();
+  checkForScreenSizeIssues();
   allLoaded = true;
+}
+
+function adjustSizeOfMenuButtonsToScreenSize(){
+  //var vButtonBar = document.getElementById('verticalButtonBar');
+  //var vButtonBarButtons = vButtonBar.getElementsByTagName('a');
+  var vButtonBarButtons = getElementsByIDs(verticalBtnBarBtnIDs);
+  
+  var dropdowns = [];
+  var el = document.getElementById('fileDropdown');
+  //console.log(el);
+  dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
+  //console.log(dropdowns);
+  el = document.getElementById('colorDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  el = document.getElementById('sizeDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  el = document.getElementById('toolDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  el = document.getElementById('insertPageDropdown');
+  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
+  //console.log(dropdowns);
+
+  //var screenH = screen.height;
+  var screenH = window.innerHeight + 30;  // I know this is confusing. Originally I had planned to use screen hight, but then desided to pass in the window height instead.
+  //console.log(screenH);
+  switch (true){
+    case (screenH < 720):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '15px 0px 14px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '12px 16px';
+      }
+      
+      document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
+      
+      break;
+    case (screenH >= 720 && screenH < 854):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '20px 0px 19px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '17px 16px';
+      }
+      
+      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      
+      break;
+    case (screenH >= 854 && screenH < 960):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '26px 0px 25px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '23px 16px';
+      }
+      
+      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      
+      break;
+    case (screenH >= 960):
+      
+      for(i = 0; i < vButtonBarButtons.length; ++i){
+        vButtonBarButtons[i].style.padding = '31px 0px 30px 16px';
+      }
+      
+      for(i = 0; i < dropdowns.length; ++i){
+        dropdowns[i].style.padding = '28px 16px';
+      }
+      
+      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+      
+      break;
+    default:
+      break;
+  }
 }
 
 function initializeGlobalVariables(){
   context = document.getElementById('canvas1').getContext('2d');
   eraserContext = document.getElementById('eraserCanvas').getContext('2d');
+}
+
+function initializeCanvas(){
+  var image = new Image();
+  
+  // Maybe draw image on canvas temporarily here and get dimensions before re-drawing?
+  image.addEventListener('load', function() {
+    context.drawImage(image, 0, 0);
+    eraserContext.drawImage(image, 0, 0);
+    resizeAndLoadImagesOntoCanvases(image, image, image.naturalWidth, image.naturalHeight);
+    arrayOfCurrentImages[currentPg - 1] = new Image();
+    arrayOfCurrentImages[currentPg - 1].src = context.canvas.toDataURL('image/png');
+    arrayOfOriginalImages[currentPg - 1] = new Image();
+    arrayOfOriginalImages[currentPg - 1].src = eraserContext.canvas.toDataURL('image/png');
+    arrayOfOriginalImagesX[0] = image.naturalWidth;
+    arrayOfOriginalImagesY[0] = image.naturalHeight;
+    //clearUndoHistory();
+    continueAfterAppFinishedLoading1();
+  }, false);
+  image.src = 'images/Blank_White_Page.png';
 }
 
 function initializeEventListenersForCanvas(){
@@ -259,28 +356,29 @@ function initializeEventListenersForExternalDialogs(){
   });
 }
 
-function initializeCanvas(){
-  var image = new Image();
+function setUpGUIOnStartup(){
+  document.getElementById('colorBtn').style.color = instrumentColor;
+  document.getElementById('toolBtn').innerHTML = 'Tool: P';
+  document.getElementById('sizeBtn').innerHTML = 'Size: M';
+}
+
+function checkForScreenSizeIssues(){
+  var screenX = screen.width;
+  var screenY = screen.height;
+  //if(true){
+  if(screenX < 800 || screenY < 600){
+    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error');
+    ipcRenderer.send('terminate-this-app');
+  }
+  //if(true){
+  if(screenX > 1920 || screenY > 1080){
   
-  // Maybe draw image on canvas temporarily here and get dimensions before re-drawing?
-  image.addEventListener('load', function() {
-    context.drawImage(image, 0, 0);
-    eraserContext.drawImage(image, 0, 0);
-    resizeAndLoadImagesOntoCanvases(image, image, image.naturalWidth, image.naturalHeight);
-    arrayOfCurrentImages[currentPg - 1] = new Image();
-    arrayOfCurrentImages[currentPg - 1].src = context.canvas.toDataURL('image/png');
-    arrayOfOriginalImages[currentPg - 1] = new Image();
-    arrayOfOriginalImages[currentPg - 1].src = eraserContext.canvas.toDataURL('image/png');
-    arrayOfOriginalImagesX[0] = image.naturalWidth;
-    arrayOfOriginalImagesY[0] = image.naturalHeight;
-    //clearUndoHistory();
-    continueAfterAppFinishedLoading1();
-  }, false);
-  image.src = 'images/Blank_White_Page.png';
+    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution will result in a larger file size, and will require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution.', 'Warning');
+  }
 }
 
 // Here is the instrumentDown method. It accepts the x and y coordinates of where the tool/instrument started
-// touching the page. I am certain that eventually, this method will call other methods that correspond
+// touching the main canvas. I am certain that eventually, this method will call other methods that correspond
 // to the applicable tools that are available. This is because each tool will likely need to handle the
 // event differently.
 function instrumentDown(x, y)
@@ -644,86 +742,7 @@ function getElementsByIDs(ids){
   return elems; 
 }
 
-function adjustSizeOfMenuButtonsToScreenSize(){
-  //var vButtonBar = document.getElementById('verticalButtonBar');
-  //var vButtonBarButtons = vButtonBar.getElementsByTagName('a');
-  var vButtonBarButtons = getElementsByIDs(verticalBtnBarBtnIDs);
-  
-  var dropdowns = [];
-  var el = document.getElementById('fileDropdown');
-  //console.log(el);
-  dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
-  //console.log(dropdowns);
-  el = document.getElementById('colorDropdown');
-  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
-  el = document.getElementById('sizeDropdown');
-  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
-  el = document.getElementById('toolDropdown');
-  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
-  el = document.getElementById('insertPageDropdown');
-  dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
-  //console.log(dropdowns);
 
-  //var screenH = screen.height;
-  var screenH = window.innerHeight + 30;  // I know this is confusing. Originally I had planned to use screen hight, but then desided to pass in the window height instead.
-  //console.log(screenH);
-  switch (true){
-    case (screenH < 720):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '15px 0px 14px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '12px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
-      
-      break;
-    case (screenH >= 720 && screenH < 854):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '20px 0px 19px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '17px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
-      
-      break;
-    case (screenH >= 854 && screenH < 960):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '26px 0px 25px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '23px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
-      
-      break;
-    case (screenH >= 960):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '31px 0px 30px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '28px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
-      
-      break;
-    default:
-      break;
-  }
-}
 
 
 // Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
