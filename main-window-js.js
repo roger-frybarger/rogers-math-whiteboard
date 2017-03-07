@@ -357,7 +357,7 @@ function initializeEventListenersForExternalDialogs(){
 }
 
 function setUpGUIOnStartup(){
-  document.getElementById('colorBtn').style.color = instrumentColor;
+  updateColorOfColorBtn();
   document.getElementById('toolBtn').innerHTML = 'Tool: P';
   document.getElementById('sizeBtn').innerHTML = 'Size: M';
 }
@@ -1109,9 +1109,15 @@ function OCDOkBtnFunction(){
   
   if (OCDvalid){
     instrumentColor = OCDColor;
-    document.getElementById('colorBtn').style.color = instrumentColor;
+    updateColorOfColorBtn();
     document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
+}
+
+// Here is the code for the otherColorDialog:
+
+function OSDReadyOtherSizeDialog(){
+  
 }
 
 
@@ -1123,8 +1129,29 @@ function OCDOkBtnFunction(){
 
 
 
+function updateColorOfColorBtn(){
+  document.getElementById('colorBtn').style.color = instrumentColor;
+}
 
-
+function updateTextOfSizeBtn(){
+  switch(instrumentWidth){
+    case 2:
+      document.getElementById('sizeBtn').innerHTML = 'Size: S';
+    break;
+    case 5:
+      document.getElementById('sizeBtn').innerHTML = 'Size: M';
+    break;
+    case 10:
+      document.getElementById('sizeBtn').innerHTML = 'Size: L';
+    break;
+    default:
+      document.getElementById('sizeBtn').innerHTML = 'Size: ' + instrumentWidth;
+    break;
+    
+  }
+  
+  document.getElementById('colorBtn').style.color = instrumentColor;
+}
 
 
 

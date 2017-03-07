@@ -466,3 +466,11 @@ input[type='checkbox']:checked {
 #SDSaveBtn {
   width: 70px;
 }
+
+/*
+ * Below is the css that is speciffic to the otherSizeDialog:
+*/
+
+#OSDSizeTextBox {
+  width: 150px;
+}

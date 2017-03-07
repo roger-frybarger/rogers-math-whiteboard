@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Roger's Math Whiteboard</title>
     <script type="text/javascript" src="main-window-js.js"></script>
+    <!--Note that all of the "onclick" attributes in this file seem to be executing in the same context as the above file.-->
     <link type="text/css" rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
@@ -53,20 +54,20 @@
         <li>
           <a class="dropbtn" onclick="colorBtnFunction();" id="colorBtn">Color</a>
             <div class="dropdown-content" id="colorDropdown">
-              <a id="blackBtn">Black</a>
-              <a id="redBtn">Red</a>
-              <a id="greenBtn">Green</a>
-              <a id="blueBtn">Blue</a>
+              <a id="blackBtn" onclick="instrumentColor = 'rgba(0, 0, 0, 1.0)'; updateColorOfColorBtn();">Black</a>
+              <a id="redBtn" onclick="instrumentColor = 'rgba(255, 0, 0, 1.0)'; updateColorOfColorBtn();">Red</a>
+              <a id="greenBtn" onclick="instrumentColor = 'rgba(0, 109, 0, 1.0)'; updateColorOfColorBtn();">Green</a>
+              <a id="blueBtn" onclick="instrumentColor = 'rgba(78, 78, 255, 1.0)'; updateColorOfColorBtn();">Blue</a>
               <a href="#otherColorDialog" onclick="OCDReadyOtherColorDialog();" id="otherColorBtn">Other Color</a>
             </div>
         </li>
         <li>
           <a class="dropbtn" onclick="sizeBtnFunction();" id="sizeBtn">Size</a>
             <div class="dropdown-content" id="sizeDropdown">
-              <a id="smallSizeBtn">Small</a>
-              <a id="mediumSizeBtn">Medium</a>
-              <a id="largeSizeBtn">Large</a>
-              <a id="otherSizeBtn" onclick="test2();" >Other Size</a>
+              <a id="smallSizeBtn" onclick="instrumentWidth = 2; updateTextOfSizeBtn();">Small</a>
+              <a id="mediumSizeBtn" onclick="instrumentWidth = 5; updateTextOfSizeBtn();">Medium</a>
+              <a id="largeSizeBtn" onclick="instrumentWidth = 10; updateTextOfSizeBtn();">Large</a>
+              <a href ="#otherSizeDialog" onclick="test2();" id="otherSizeBtn">Other Size</a>
             </div>
         </li>
         <li>
@@ -157,5 +158,20 @@
         <a onclick="OCDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
       </div>
     </div>
+    
+    <!--Here is the other size dialog-->
+    
+    <div id="otherSizeDialog" class="modalDialogs">
+      <div>
+        <a id="OSDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <h2>New Size:</h2>
+        <div class="modalBoxContent">
+          <input type="number" class="OCDInputBoxes" id="OSDSizeTextBox" min="2" max="2000">
+          <p>Min: 2, Max: 2000. Medium = 5</p>
+        </div>
+        <a onclick="test2();" title="" class="modalBoxOkBtns">OK</a>
+      </div>
+    </div>
+    
   </body>
 </html>
