@@ -354,6 +354,18 @@ function initializeEventListenersForExternalDialogs(){
       e.preventDefault();
     }
   });
+  
+  // Here are the event listeners for the otherSizeDialog:
+  
+  document.getElementById('OSDSizeTextBox').addEventListener('input', OSDValidateInput, false);
+  
+    document.getElementById('OSDSizeTextBox').addEventListener('keydown', function (e) {
+    var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OSDOkBtnFunction();
+    }
+  });
+  
 }
 
 function setUpGUIOnStartup(){
@@ -841,15 +853,7 @@ function SDInputValidation(){
   var undoHistoryGood = false;
   var maxPagesGood = false;
   
-  if(isNaN(rawUndoHistory)){
-    undoHistoryGood = false;
-    document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'red';
-  }
-  else if(rawUndoHistory < 10){
-    undoHistoryGood = false;
-    document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'red';
-  }
-  else if(rawUndoHistory > 100){
+  if(isNaN(rawUndoHistory) || rawUndoHistory < 10 || rawUndoHistory > 100){
     undoHistoryGood = false;
     document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'red';
   }
@@ -858,15 +862,7 @@ function SDInputValidation(){
     document.getElementById('SDUndoHistoryBox').style.backgroundColor = 'white';
   }
   
-  if(isNaN(rawMaxPages)){
-    maxPagesGood = false;
-    document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'red';
-  }
-  else if(rawMaxPages < 200){
-    maxPagesGood = false;
-    document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'red';
-  }
-  else if(rawMaxPages > 999){
+  if(isNaN(rawMaxPages) || rawMaxPages < 200 || rawMaxPages > 999){
     maxPagesGood = false;
     document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'red';
   }
@@ -918,7 +914,7 @@ var OCDRed = 78;
 var OCDGreen = 78;
 var OCDBlue = 78;
 var OCDAlpha = 1.0;
-var OCDvalid = true;
+var OCDValid = true;
 
 function OCDReadyOtherColorDialog(){
 
@@ -1007,15 +1003,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
   var blueIsGood = false;
   var alphaIsGood = false;
 
-  if(isNaN(tempRed)){
-    redIsGood = false;
-    document.getElementById('OCDRedTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempRed < 0){
-    redIsGood = false;
-    document.getElementById('OCDRedTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempRed > 255){
+  if(isNaN(tempRed) || tempRed < 0 || tempRed > 255){
     redIsGood = false;
     document.getElementById('OCDRedTextBox').style.backgroundColor = 'red';
   }
@@ -1024,15 +1012,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
     document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
   }
   
-  if(isNaN(tempGreen)){
-    greenIsGood = false;
-    document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempGreen < 0){
-    greenIsGood = false;
-    document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempGreen > 255){
+  if(isNaN(tempGreen) || tempGreen < 0 || tempGreen > 255){
     greenIsGood = false;
     document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
   }
@@ -1041,15 +1021,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
     document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
   }
   
-  if(isNaN(tempBlue)){
-    blueIsGood = false;
-    document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempBlue < 0){
-    blueIsGood = false;
-    document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempBlue > 255){
+  if(isNaN(tempBlue) || tempBlue < 0 || tempBlue > 255){
     blueIsGood = false;
     document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
   }
@@ -1058,15 +1030,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
     document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
   }
   
-  if(isNaN(tempAlpha)){
-    alphaIsGood = false;
-    document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempAlpha < 0){
-    alphaIsGood = false;
-    document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
-  }
-  else if(tempAlpha > 100){
+  if(isNaN(tempAlpha) || tempAlpha < 0 || tempAlpha > 100){
     alphaIsGood = false;
     document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
   }
@@ -1076,7 +1040,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
   }
   
   if(redIsGood && greenIsGood && blueIsGood && alphaIsGood){
-    OCDvalid = true;
+    OCDValid = true;
     OCDRed = tempRed;
     OCDGreen = tempGreen;
     OCDBlue = tempBlue;
@@ -1085,7 +1049,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
     OCDUpdateExample();
   }
   else{
-    OCDvalid = false;
+    OCDValid = false;
   }
 }
 
@@ -1107,18 +1071,43 @@ function OCDUpdateExample(){
 
 function OCDOkBtnFunction(){
   
-  if (OCDvalid){
+  if (OCDValid){
     instrumentColor = OCDColor;
     updateColorOfColorBtn();
     document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
 }
 
-// Here is the code for the otherColorDialog:
+// Here is the code for the otherSizeDialog:
+
+var OSDValid = true;
 
 function OSDReadyOtherSizeDialog(){
-  
+  document.getElementById('OSDSizeTextBox').value = instrumentWidth;
+  document.getElementById('OSDSizeTextBox').select();
 }
+
+function OSDValidateInput(){
+  var rawInput = parseInt(document.getElementById('OSDSizeTextBox').value);
+  if(isNaN(rawInput) || rawInput < 2 || rawInput > 2000){
+    OSDValid = false;
+    document.getElementById('OSDSizeTextBox').style.backgroundColor = 'red';
+  }
+  else{
+    OSDValid = true;
+    document.getElementById('OSDSizeTextBox').style.backgroundColor = 'white';
+  }
+}
+
+function OSDOkBtnFunction(){
+  
+  if (OSDValid){
+    instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value);
+    updateTextOfSizeBtn();
+    document.getElementById('OSDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  }
+}
+
 
 
 
