@@ -42,13 +42,13 @@
         <li>
           <a class="dropbtn" onclick="toolBtnFunction();" id="toolBtn">Tool</a>
             <div class="dropdown-content" id="toolDropdown">
-              <a id="penToolBtn">Pen</a>
-              <a id="eraserToolBtn">Eraser</a>
-              <a id="lineToolBtn">Straight Line</a>
-              <a id="selectToolBtn">Select</a>
+              <a id="penToolBtn" onclick="tool = 'pen'; updateTextOfToolBtn();">Pen</a>
+              <a id="eraserToolBtn" onclick="tool = 'eraser'; updateTextOfToolBtn();">Eraser</a>
+              <a id="lineToolBtn" onclick="tool = 'line'; updateTextOfToolBtn();">Straight Line</a>
+              <a id="selectToolBtn" onclick="tool = 'select'; updateTextOfToolBtn();">Select</a>
               <a id="insertTextToolBtn">Insert Text</a>
-              <a id="identifierToolBtn">Identifier</a>
-              <a id="dotToolBtn">Dot</a>
+              <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
+              <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
             </div>
         </li>
         <li>
