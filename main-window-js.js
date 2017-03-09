@@ -109,6 +109,7 @@ ipcRenderer.on('app-finished-loading', () => {
   adjustSizeOfMenuButtonsToScreenSize();
   initializeGlobalVariables();
   initializeCanvas();
+  // Since we have to wait for an image to load, the startup process continues on in the continueAfterAppFinishedLoading1 function.
 });
 
 ipcRenderer.on('ctrl-z-pressed', () => {
@@ -1467,6 +1468,43 @@ function dotIntervalPaintingFunction(){
 }
 
 
+
+
+
+
+
+
+
+function copyBtnFunction(){
+  if(areaSelected == true){
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    var drawingX = Math.min(tempX, prevX);
+    var drawingY = Math.min(tempY, prevY);
+    var drawingWidth = Math.abs(tempX - prevX);
+    var drawingHeight = Math.abs(tempY - prevY);
+    copiedSectionOfCanvas = 'NA';
+    copiedSectionOfCanvas = new Image();
+    copiedSectionOfCanvas = context.getImageData(drawingX, drawingY, drawingWidth, drawingHeight);
+    
+    prevX = 'NA';
+    prevY = 'NA';
+    tempX = 'NA';
+    tempY = 'NA';
+    areaSelected = false;
+  }
+  else{
+    tellUserToSelectAnAreaFirst();
+  }
+}
+
+
+
+
+function tellUserToSelectAnAreaFirst(){
+  // open up a window telling the user to select an area.
+  alert('Please use the Select tool to select a region first.', '');
+}
 
 
 
