@@ -430,7 +430,7 @@ function instrumentDown(x, y)
     dotToolMethod(x, y, 'down');
     break;
   case 'PASTE':
-    //pasteToolMethod(x, y, 'down');
+    pasteToolMethod(x, y, 'down');
     break;
   case 'NA':
     break;
@@ -471,7 +471,7 @@ function instrumentMoved(x, y)
       dotToolMethod(x, y, 'move');
       break;
     case 'PASTE':
-      //pasteToolMethod(x, y, 'move');
+      pasteToolMethod(x, y, 'move');
       break;
     case 'NA':
       break;
@@ -519,7 +519,7 @@ function instrumentUp(x, y)
       //pushStateIntoUndoArray();
       break;
     case 'PASTE':
-      //pasteToolMethod(x, y, 'up');
+      pasteToolMethod(x, y, 'up');
       //pushStateIntoUndoArray();
       break;
     case 'NA':
@@ -608,6 +608,7 @@ function penToolMethod(x, y, phase){
     break;
     default:
       console.log('ERROR: Invalid phase in penToolMethod: ' + phase);
+    break;
   }
 }
 
@@ -670,6 +671,7 @@ function lineToolMethod(x, y, phase){
     break;
     default:
       console.log('ERROR: Invalid phase in lineToolMethod: ' + phase);
+    break;
   }
 }
 
@@ -732,6 +734,7 @@ function selectToolMethod(x, y, phase){
     break;
     default:
       console.log('ERROR: Invalid phase in selectToolMethod: ' + phase);
+    break;
   }
 }
 
@@ -775,6 +778,7 @@ function identifyToolMethod(x, y, phase){
     break;
     default:
       console.log('ERROR: Invalid phase in identifierToolMethod: ' + phase);
+    break;
   }
 }
 
@@ -820,7 +824,53 @@ function dotToolMethod(x, y, phase){
     
     break;
     default:
-      console.log('ERROR: Invalid phase in identifierToolMethod: ' + phase);
+      console.log('ERROR: Invalid phase in dotToolMethod: ' + phase);
+    break;
+  }
+}
+
+// Here is the pasteToolMethod. It handles pasting onto the canvas:
+function pasteToolMethod(x, y, phase){
+  if(copiedSectionOfCanvas != 'NA'){
+    switch(phase){
+    case 'down':
+      
+      //      1. save current canvas into tempCanvasForInterval.
+      //      2. save x & y into prevX & prevY.
+      //      3. start interval which every 1/4 second does...
+      //         a. repaints the tempCanvasForInterval onto the real canvas.
+      //         b. paints the image in copiedSectionOfCanvas onto the canvas at prevX, prevY.
+      tempCanvasForInterval = 'NA';
+      tempCanvasForInterval = new Image();
+      tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+      prevX = x;
+      prevY = y;
+      tempX = x;
+      tempY = y;
+      globalIntervalVarForFunction = setTimeout(pasteIntervalPaintingFunction, intervarForRepainting);
+      
+      break;
+    case 'move':
+      
+      // Update prevX & prevY with the current values of x & y.
+      prevX = x;
+      prevY = y;
+      
+      break;
+    case 'up':
+      
+      //      1. Stop interval function.
+      //      2. Paint tempCanvasForInterval onto the real canvas.
+      //      3. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
+      clearTimeout(globalIntervalVarForFunction);
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
+      
+      break;
+      default:
+        console.log('ERROR: Invalid phase in pasteToolMethod: ' + phase);
+      break;
+    }
   }
 }
 
@@ -1398,6 +1448,9 @@ function updateTextOfToolBtn(){
     case 'dot':
       document.getElementById('toolBtn').innerHTML = 'Tool: D';
     break;
+    case 'PASTE':
+      document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
+    break;
     default:
       console.log('ERROR: Invalid tool. Cant update tool btn text: ' + tool);
     break;
@@ -1467,6 +1520,14 @@ function dotIntervalPaintingFunction(){
   globalIntervalVarForFunction = setTimeout(dotIntervalPaintingFunction, intervarForRepainting);
 }
 
+//Here is the function that makes the paste tool work:
+function pasteIntervalPaintingFunction(){
+  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+  
+  context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
+  
+  globalIntervalVarForFunction = setTimeout(pasteIntervalPaintingFunction, intervarForRepainting);
+}
 
 
 
@@ -1474,6 +1535,9 @@ function dotIntervalPaintingFunction(){
 
 
 
+
+// Below are the functions that execute whenever the applicable buttons are clicked.
+// They are in order from right to left.
 
 function copyBtnFunction(){
   if(areaSelected == true){
@@ -1497,6 +1561,147 @@ function copyBtnFunction(){
     tellUserToSelectAnAreaFirst();
   }
 }
+
+function pasteBtnFunction(){
+  if(copiedSectionOfCanvas != 'NA'){
+    tool = 'PASTE';
+    updateTextOfToolBtn();
+  }
+}
+
+function drawRectangleBtnFunction(){
+  if(areaSelected == true){
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    
+    context.strokeStyle = instrumentColor;
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.beginPath();
+    context.moveTo(tempX, tempY);
+    context.lineTo(prevX, tempY);
+    context.lineTo(prevX, prevY);
+    context.lineTo(tempX, prevY);
+    context.closePath();
+    context.stroke();
+    
+    prevX = 'NA';
+    prevY = 'NA';
+    tempX = 'NA';
+    tempY = 'NA';
+    areaSelected = false;
+    //pushStateIntoUndoArray();
+  }
+  else{
+    tellUserToSelectAnAreaFirst();
+  }
+}
+
+function fillRectangleBtnFunction(){
+  if(areaSelected == true){
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    var drawingX = Math.min(tempX, prevX);
+    var drawingY = Math.min(tempY, prevY);
+    var drawingWidth = Math.abs(tempX - prevX);
+    var drawingHeight = Math.abs(tempY - prevY);
+    context.fillStyle = instrumentColor;
+    context.fillRect(drawingX, drawingY, drawingWidth, drawingHeight);
+    
+    prevX = 'NA';
+    prevY = 'NA';
+    tempX = 'NA';
+    tempY = 'NA';
+    areaSelected = false;
+    //pushStateIntoUndoArray();
+  }
+  else{
+    tellUserToSelectAnAreaFirst();
+  }
+}
+
+function drawEllipseBtnFunction(){
+  if(areaSelected == true){
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    
+    var widthOfSelection = Math.abs(tempX - prevX);
+    var heightOfSelection = Math.abs(tempY - prevY);
+    var minRadius = parseInt(Math.min(widthOfSelection, heightOfSelection) / 2);
+    var minX = Math.min(tempX, prevX);
+    var minY = Math.min(tempY, prevY);
+    var centerOfSelectionX = minX + (parseInt(widthOfSelection / 2));
+    var centerOfSelectionY = minY + (parseInt(heightOfSelection / 2));
+    var xScaleFactor;
+    var yScaleFactor;
+    var longerDimention;
+    if(widthOfSelection < heightOfSelection){
+      // width (x) is limiting:
+      xScaleFactor = 1;
+      longerDimention = heightOfSelection / 2;
+      yScaleFactor = longerDimention / minRadius;
+    }
+    else{
+      // height (y) is limiting or same:
+      yScaleFactor = 1;
+      longerDimention = widthOfSelection / 2;
+      xScaleFactor = longerDimention / minRadius;
+    }
+    
+    context.save();
+    context.translate(centerOfSelectionX, centerOfSelectionY);
+    context.scale(xScaleFactor, yScaleFactor);
+    context.beginPath();
+    context.arc(0, 0, minRadius, 0, 2 * Math.PI, false);
+    context.restore();
+    context.lineWidth = instrumentWidth;
+    context.strokeStyle = instrumentColor;
+    context.stroke();
+    
+    prevX = 'NA';
+    prevY = 'NA';
+    tempX = 'NA';
+    tempY = 'NA';
+    areaSelected = false;
+    //pushStateIntoUndoArray();
+  }
+  else{
+    tellUserToSelectAnAreaFirst();
+  }
+}
+
+function fillEllipseBtnFunction(){
+  if(areaSelected == true){
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    var drawingX = Math.min(tempX, prevX);
+    var drawingY = Math.min(tempY, prevY);
+    var rw = (Math.abs(tempX - prevX)) / 2;
+    var rh = (Math.abs(tempY - prevY)) / 2;
+    context.beginPath();
+    context.fillStyle = instrumentColor;
+    context.ellipse((drawingX + rw), (drawingY + rh), rw, rh, 0, 0, Math.PI*2, false);
+    context.fill();
+    
+    prevX = 'NA';
+    prevY = 'NA';
+    tempX = 'NA';
+    tempY = 'NA';
+    areaSelected = false;
+    //pushStateIntoUndoArray();
+  }
+  else{
+    tellUserToSelectAnAreaFirst();
+  }
+}
+
+
+
+
+
+
+
+
 
 
 
