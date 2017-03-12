@@ -421,6 +421,17 @@ input[type='checkbox']:checked {
 }
 
 /*
+ * Below is the css that is speciffic to the insertTextDialog:
+*/
+
+.ITDBtn {
+  background: #009DA0;
+  //height: 40px;
+  //width: 48px;
+  padding: 80px 80px 80px 80px;
+}
+
+/*
  * Below is the css that is speciffic to the otherColorDialog:
 */
 

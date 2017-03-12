@@ -13,8 +13,8 @@
         <!--These are the entries in the top nav bar. They each have to have the transparent image as the
         source because if that is removed, a border will be shown no matter how they are styled in the css-->
         <li><a href="#settingsDialog" onclick="SDReadySettingsDialog();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="test();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="test();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
+        <li><a href="#" onclick="undoBtnFunction();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
+        <li><a href="#" onclick="redoBtnFunction();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="copyBtnFunction();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="pasteBtnFunction();"><img class="topLeftButtons" id="pasteBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="drawRectangleBtnFunction();"><img class="topLeftButtons" id="drawRectangleBtn" src="images/icons/transparent.png"></a></li>
@@ -46,7 +46,7 @@
               <a id="eraserToolBtn" onclick="tool = 'eraser'; updateTextOfToolBtn();">Eraser</a>
               <a id="lineToolBtn" onclick="tool = 'line'; updateTextOfToolBtn();">Straight Line</a>
               <a id="selectToolBtn" onclick="tool = 'select'; updateTextOfToolBtn();">Select</a>
-              <a id="insertTextToolBtn">Insert Text</a>
+              <a href ="#insertTextDialog" onclick="test2();" id="insertTextToolBtn">Insert Text</a>
               <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
               <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
             </div>
@@ -129,6 +129,103 @@
           
         </div>
         <a id="SDSaveBtn" onclick="SDOkBtnFunction();" title="" class="modalBoxOkBtns">Save</a>
+      </div>
+    </div>
+    
+    <!--Here is the insert text dialog-->
+    
+    <div id="insertTextDialog" class="modalDialogs">
+      <div>
+        <a id="ITDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <h2>Insert Text:</h2>
+        <div class="modalBoxContent">
+          
+          <a class="ITDBtn" onclick="test2();" id="plusBtn">+</a>
+          <a class="ITDBtn" onclick="test2();" id="minusBtn">-</a>
+          <a class="ITDBtn" onclick="test2();" id="dotBtn">&#8226</a>
+          <a class="ITDBtn" onclick="test2();" id="multiplicationBtn">&times</a>
+          <a class="ITDBtn" onclick="test2();" id="divisionBtn">&divide</a>
+          <a class="ITDBtn" onclick="test2();" id="lessThanBtn">&lt</a>
+          <a class="ITDBtn" onclick="test2();" id="greaterThanBtn">&gt</a>
+          <a class="ITDBtn" onclick="test2();" id="lessThanOrEqualBtn">&#8804</a>
+          <a class="ITDBtn" onclick="test2();" id="greaterThanOrEqualBtn">&#8805</a>
+          <a class="ITDBtn" onclick="test2();" id="equalBtn">=</a>
+          <a class="ITDBtn" onclick="test2();" id="notEqualBtn">&#8800</a>
+          <a class="ITDBtn" onclick="test2();" id="plusOrMinusBtn">&#177</a>
+          <a class="ITDBtn" onclick="test2();" id="absoluteValueBtn">|</a>
+          <a class="ITDBtn" onclick="test2();" id="radicalBtn">&#8730</a>
+          <a class="ITDBtn" onclick="test2();" id="cubeRootBtn">&#8731</a>
+          <a class="ITDBtn" onclick="test2();" id="fourthRootBtn">&#8732</a>
+          <a class="ITDBtn" onclick="test2();" id="unionBtn">U</a>
+          <a class="ITDBtn" onclick="test2();" id="intersectionBtn">&#8745</a>
+          <a class="ITDBtn" onclick="test2();" id="infinityBtn">&#8734</a>
+          <a class="ITDBtn" onclick="test2();" id="piBtn">&#960</a>
+          <a class="ITDBtn" onclick="test2();" id="almostEqualBtn">&#8776</a>
+          <a class="ITDBtn" onclick="test2();" id="iBtn">i</a>
+          <a class="ITDBtn" onclick="test2();" id="eBtn">e</a>
+          <a class="ITDBtn" onclick="test2();" id="deltaBtn">&#916</a>
+          <a class="ITDBtn" onclick="test2();" id="summBtn">&#931</a>
+          <a class="ITDBtn" onclick="test2();" id="integralBtn">&#8747</a>
+          <a class="ITDBtn" onclick="test2();" id="alphaBtn">&#945</a>
+          <a class="ITDBtn" onclick="test2();" id="betaBtn">&#946</a>
+          <a class="ITDBtn" onclick="test2();" id="gammaBtn">&#947</a>
+          <a class="ITDBtn" onclick="test2();" id="angleBtn">&#8736</a>
+          <a class="ITDBtn" onclick="test2();" id="thetaBtn">&#952</a>
+          <a class="ITDBtn" onclick="test2();" id="muBtn">&#956</a>
+          <a class="ITDBtn" onclick="test2();" id="smallSigmaBtn">&#963</a>
+          <a class="ITDBtn" onclick="test2();" id="emptySetBtn">&#8709</a>
+          <a class="ITDBtn" onclick="test2();" id="elementOfBtn">&#8712</a>
+          <a class="ITDBtn" onclick="test2();" id="measuredAngleBtn">&#8737</a>
+          <a class="ITDBtn" onclick="test2();" id="degreesCelsiusBtn">&#8451</a>
+          <a class="ITDBtn" onclick="test2();" id="degreesFahrenheitBtn">&#8457</a>
+          <a class="ITDBtn" onclick="test2();" id="degreeBtn">&#176</a>
+          <a class="ITDBtn" onclick="test2();" id="leftFloorBtn">&#8970</a>
+          <a class="ITDBtn" onclick="test2();" id="rightFloorBtn">&#8971</a>
+          <a class="ITDBtn" onclick="test2();" id="carotBtn">^</a>
+          <a class="ITDBtn" onclick="test2();" id="leftCeilingBtn">&#8968</a>
+          <a class="ITDBtn" onclick="test2();" id="rightCeilingBtn">&#8969</a>
+          <a class="ITDBtn" onclick="test2();" id="openParenthisisBtn">(</a>
+          <a class="ITDBtn" onclick="test2();" id="closeParenthisisBtn">)</a>
+          <a class="ITDBtn" onclick="test2();" id="openBracketBtn">[</a>
+          <a class="ITDBtn" onclick="test2();" id="closeBracketBtn">]</a>
+          <a class="ITDBtn" onclick="test2();" id="openSquiggleBtn">{</a>
+          <a class="ITDBtn" onclick="test2();" id="closeSquiggleBtn">}</a>
+          <a class="ITDBtn" onclick="test2();" id="squaredBtn">&#178</a>
+          <a class="ITDBtn" onclick="test2();" id="cubedBtn">&#179</a>
+          <a class="ITDBtn" onclick="test2();" id="colonBtn">:</a>
+          <a class="ITDBtn" onclick="test2();" id="semicolonBtn">;</a>
+          <a class="ITDBtn" onclick="test2();" id="factorialBtn">!</a>
+          <a class="ITDBtn" onclick="test2();" id="dolarSymbolBtn">$</a>
+          <a class="ITDBtn" onclick="test2();" id="percentSymbolBtn">%</a>
+          <a class="ITDBtn" onclick="test2();" id="asteriskSymbolBtn">*</a>
+          <a class="ITDBtn" onclick="test2();" id="divisionSlashBtn">/</a>
+          <a class="ITDBtn" onclick="test2();" id="commaBtn">,</a>
+          <a class="ITDBtn" onclick="test2();" id="apostraphyBtn">'</a>
+          <a class="ITDBtn" onclick="test2();" id="tildeBtn">~</a>
+          <a class="ITDBtn" onclick="test2();" id="underscoreBtn">_</a>
+          <a class="ITDBtn" onclick="test2();" id="1Btn">1</a>
+          <a class="ITDBtn" onclick="test2();" id="2Btn">2</a>
+          <a class="ITDBtn" onclick="test2();" id="3Btn">3</a>
+          <a class="ITDBtn" onclick="test2();" id="4Btn">4</a>
+          <a class="ITDBtn" onclick="test2();" id="5Btn">5</a>
+          <a class="ITDBtn" onclick="test2();" id="6Btn">6</a>
+          <a class="ITDBtn" onclick="test2();" id="7Btn">7</a>
+          <a class="ITDBtn" onclick="test2();" id="8Btn">8</a>
+          <a class="ITDBtn" onclick="test2();" id="9Btn">9</a>
+          <a class="ITDBtn" onclick="test2();" id="0Btn">0</a>
+          <a class="ITDBtn" onclick="test2();" id="aBtn">a</a>
+          <a class="ITDBtn" onclick="test2();" id="bBtn">b</a>
+          <a class="ITDBtn" onclick="test2();" id="cBtn">c</a>
+          <a class="ITDBtn" onclick="test2();" id="hBtn">h</a>
+          <a class="ITDBtn" onclick="test2();" id="lBtn">l</a>
+          <a class="ITDBtn" onclick="test2();" id="mBtn">m</a>
+          <a class="ITDBtn" onclick="test2();" id="tBtn">t</a>
+          <a class="ITDBtn" onclick="test2();" id="xBtn">x</a>
+          <a class="ITDBtn" onclick="test2();" id="yBtn">y</a>
+          <a class="ITDBtn" onclick="test2();" id="zBtn">z</a>
+          
+        </div>
+        <a onclick="test2();" title="" class="modalBoxOkBtns">OK</a>
       </div>
     </div>
     

@@ -233,7 +233,7 @@ function initializeCanvas(){
     arrayOfOriginalImages[currentPg - 1].src = eraserContext.canvas.toDataURL('image/png');
     arrayOfOriginalImagesX[0] = image.naturalWidth;
     arrayOfOriginalImagesY[0] = image.naturalHeight;
-    //clearUndoHistory();
+    clearUndoHistory();
     continueAfterAppFinishedLoading1();
   }, false);
   image.src = 'images/Blank_White_Page.png';
@@ -494,15 +494,15 @@ function instrumentUp(x, y)
     switch(tool) {
     case 'pen':
       penToolMethod(x, y, 'up');
-      //pushStateIntoUndoArray();
+      pushStateIntoUndoArray();
       break;
     case 'eraser':
       eraserToolMethod(x, y, 'up');
-      //pushStateIntoUndoArray();
+      pushStateIntoUndoArray();
       break;
     case 'line':
       lineToolMethod(x, y, 'up');
-      //pushStateIntoUndoArray();
+      pushStateIntoUndoArray();
       break;
     case 'select':
       selectToolMethod(x, y, 'up');
@@ -516,11 +516,11 @@ function instrumentUp(x, y)
       break;
     case 'dot':
       dotToolMethod(x, y, 'up');
-      //pushStateIntoUndoArray();
+      pushStateIntoUndoArray();
       break;
     case 'PASTE':
       pasteToolMethod(x, y, 'up');
-      //pushStateIntoUndoArray();
+      pushStateIntoUndoArray();
       break;
     case 'NA':
       break;
@@ -942,47 +942,47 @@ function closeDropdowns(buttonName){
   }
 }
 
-function tstart(event){
+//function tstart(event){
   
-  console.log('touchstart');
+  //console.log('touchstart');
   
-}
+//}
 
-function tend(event){
+//function tend(event){
   
-  console.log('touchend');
+  //console.log('touchend');
   
-}
+//}
 
-function tmove(event){
+//function tmove(event){
   
-  console.log('touchmove');
+  //console.log('touchmove');
   
-}
+//}
 
-function tcancel(event){
+//function tcancel(event){
   
-  console.log('touchcancel');
+  //console.log('touchcancel');
   
-}
+//}
 
-function mdown(event){
+//function mdown(event){
   
-  console.log('mousedown');
+  //console.log('mousedown');
   
-}
+//}
 
-function mmove(event){
+//function mmove(event){
   
-  console.log('mousemove');
+  //console.log('mousemove');
   
-}
+//}
 
-function mup(event){
+//function mup(event){
   
-  console.log('mouseup');
+  //console.log('mouseup');
   
-}
+//}
 
 function fileBtnFunction(){
   closeDropdowns('fileDropdown');
@@ -1380,7 +1380,7 @@ function OSDOkBtnFunction(){
 
 
 
-
+// ***************************** END OF CODE FOR OTHER WINDOWS!!!
 
 
 
@@ -1539,6 +1539,24 @@ function pasteIntervalPaintingFunction(){
 // Below are the functions that execute whenever the applicable buttons are clicked.
 // They are in order from right to left.
 
+function undoBtnFunction(){
+  if(currentPlaceInUndoArray > 0){
+    if(imageArrayForUndo[currentPlaceInUndoArray - 1] != null){
+      --currentPlaceInUndoArray;
+      resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+    }
+  }
+}
+
+function redoBtnFunction(){
+  if(currentPlaceInUndoArray < imageArrayForUndo.length - 1){
+    if(imageArrayForUndo[currentPlaceInUndoArray + 1] != null){
+      ++currentPlaceInUndoArray;
+      resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+    }
+  }
+}
+
 function copyBtnFunction(){
   if(areaSelected == true){
     
@@ -1590,7 +1608,7 @@ function drawRectangleBtnFunction(){
     tempX = 'NA';
     tempY = 'NA';
     areaSelected = false;
-    //pushStateIntoUndoArray();
+    pushStateIntoUndoArray();
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -1613,7 +1631,7 @@ function fillRectangleBtnFunction(){
     tempX = 'NA';
     tempY = 'NA';
     areaSelected = false;
-    //pushStateIntoUndoArray();
+    pushStateIntoUndoArray();
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -1663,7 +1681,7 @@ function drawEllipseBtnFunction(){
     tempX = 'NA';
     tempY = 'NA';
     areaSelected = false;
-    //pushStateIntoUndoArray();
+    pushStateIntoUndoArray();
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -1688,7 +1706,7 @@ function fillEllipseBtnFunction(){
     tempX = 'NA';
     tempY = 'NA';
     areaSelected = false;
-    //pushStateIntoUndoArray();
+    pushStateIntoUndoArray();
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -1697,6 +1715,53 @@ function fillEllipseBtnFunction(){
 
 
 
+
+
+
+
+function pushStateIntoUndoArray(){
+  //console.log(currentPlaceInUndoArray + ' ' + imageArrayForUndo.length);
+  if(currentPlaceInUndoArray != imageArrayForUndo.length - 1){
+    //console.log('just undone and moved on');
+    // This means they have just undone something, and are going on from there, so we have to get the remainder
+    // of the undo array, (if applicable), and make the undo array just contain that. Then re-set the 
+    // currentPlaceInUndoArray to imageArrayForUndo.length - 1, and also push in the current state.
+    
+    var tempArray = imageArrayForUndo.slice(0, currentPlaceInUndoArray + 1);
+    var currentImage = new Image();
+    currentImage.src = context.canvas.toDataURL('image/png');
+    imageArrayForUndo.fill(null);
+    for(var i = 0; i < tempArray.length; ++i){
+      imageArrayForUndo.push(tempArray[i]);
+      imageArrayForUndo.shift();
+    }
+    imageArrayForUndo.push(currentImage);
+    imageArrayForUndo.shift();
+    currentPlaceInUndoArray = imageArrayForUndo.length - 1;
+    
+  }
+  else{
+    //console.log('tipical storage');
+    var tempImageForInserting = new Image();
+    tempImageForInserting.src = context.canvas.toDataURL('image/png');
+    imageArrayForUndo.push(tempImageForInserting);
+    imageArrayForUndo.shift();
+  }
+  
+  //pushDataIntoLocalStorage(context.canvas.toDataURL('image/png'), currentPg - 1, arrayOfCurrentImages.length);
+  
+}
+
+function clearUndoHistory(){
+  // 1. fill array with nulls, 2. grab current image and insert it in last slot, 3. re-set 
+  // currentPlaceInUndoArray to imageArrayForUndo.length - 1
+  imageArrayForUndo.fill(null);
+  var tempImageForInserting = new Image();
+  tempImageForInserting.src = context.canvas.toDataURL('image/png');
+  imageArrayForUndo.push(tempImageForInserting);
+  imageArrayForUndo.shift();
+  currentPlaceInUndoArray = imageArrayForUndo.length - 1;
+}
 
 
 
