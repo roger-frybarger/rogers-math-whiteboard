@@ -1079,7 +1079,7 @@ function test(){
 
 function test2(){
   
-  //console.log('rtdytrdytrdytrd2');
+  console.log('test2 happening');
   
   //console.log(context);
 

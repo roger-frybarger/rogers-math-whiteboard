@@ -348,7 +348,7 @@ input[type='checkbox']:checked {
   margin-bottom: auto;
   padding: 5px 20px 70px 20px;
   border-radius: 5px 5px 5px 5px;
-  background: #009DA0;
+  background: #428cFF;
 }
 
 .modalBoxContent {
@@ -363,7 +363,7 @@ input[type='checkbox']:checked {
 }
 
 .modalDialogsCloseBtns {
-  background: #009DA0;
+  background: #428cFF;
   position: absolute;
   text-align: center;
   right: -0px;
@@ -389,7 +389,7 @@ input[type='checkbox']:checked {
 }
 
 .modalBoxOkBtns {
-  background: #009DA0;
+  background: #428cFF;
   position: absolute;
   text-align: center;
   right: -0px;
@@ -425,10 +425,17 @@ input[type='checkbox']:checked {
 */
 
 .ITDBtn {
-  background: #009DA0;
-  //height: 40px;
-  //width: 48px;
-  padding: 80px 80px 80px 80px;
+  background: #3C7FE7;
+  padding: 11px 25px 11px 25px;
+  border: 1px solid transparent;
+  margin: 0px 3px 0px 3px;
+  line-height: 60px;
+  font-size: 20px;
+}
+
+.ITDBtn:hover {
+  background: #0000FF;
+  color: white;
 }
 
 /*
