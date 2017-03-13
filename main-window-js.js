@@ -299,43 +299,43 @@ function initializeEventListenersForExternalDialogs(){
   
   // Here are the event listeners for the settingsDialog:
   
-  document.getElementById('SDUndoHistoryBox').addEventListener('input', SDInputValidation, false);
-  document.getElementById('SDMaxPagesAllowedBox').addEventListener('input', SDInputValidation, false);
+  //document.getElementById('SDUndoHistoryBox').addEventListener('input', SDInputValidation, false);
+  //document.getElementById('SDMaxPagesAllowedBox').addEventListener('input', SDInputValidation, false);
   
   // Here are the event listeners for the otherColorDialog:
   
-  document.getElementById('OCDRedTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  //document.getElementById('OCDRedTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  //document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  //document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
+  //document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
   
-  document.getElementById('OCDRedTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
+  //document.getElementById('OCDRedTextBox').addEventListener('keydown', function (e) {
+    //var key = e.which || e.keyCode;
+    //if (key === 13) { // 13 is enter
+      //OCDOkBtnFunction();
+    //}
+  //});
   
-  document.getElementById('OCDGreenTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
+  //document.getElementById('OCDGreenTextBox').addEventListener('keydown', function (e) {
+    //var key = e.which || e.keyCode;
+    //if (key === 13) { // 13 is enter
+      //OCDOkBtnFunction();
+    //}
+  //});
   
-  document.getElementById('OCDBlueTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
+  //document.getElementById('OCDBlueTextBox').addEventListener('keydown', function (e) {
+    //var key = e.which || e.keyCode;
+    //if (key === 13) { // 13 is enter
+      //OCDOkBtnFunction();
+    //}
+  //});
   
-  document.getElementById('OCDTransparencyTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OCDOkBtnFunction();
-    }
-  });
+  //document.getElementById('OCDTransparencyTextBox').addEventListener('keydown', function (e) {
+    //var key = e.which || e.keyCode;
+    //if (key === 13) { // 13 is enter
+      //OCDOkBtnFunction();
+    //}
+  //});
   
   document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function(e){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
@@ -1077,9 +1077,9 @@ function test(){
   console.log('rtdytrdytrdytrd');
 }
 
-function test2(){
+function test2(v){
   
-  console.log('test2 happening');
+  console.log('test2 happening ' + v);
   
   //console.log(context);
 
@@ -1114,7 +1114,7 @@ function SDReadySettingsDialog(){
   else{
     document.getElementById('SDEnableKeyboardShortcuts').checked = false;
   }
-  
+  SDInputValidation();
 }
 
 function SDInputValidation(){
@@ -1176,6 +1176,65 @@ function SDOkBtnFunction(){
     document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
 }
+
+// Here is the code for the insertTextDialog:
+
+var ITDValid = true;
+
+function ITDAddCharacter(chr){
+  var textBox = document.getElementById('ITDTextBox');
+  var alreadyThere = textBox.value;
+  var sStart = textBox.selectionStart;
+  var sEnd = textBox.selectionEnd;
+  var beforeSelection = alreadyThere.substring(0, sStart);
+  var afterSelection = alreadyThere.substring(sEnd);
+  textBox.value = beforeSelection + chr + afterSelection;
+  textBox.focus();
+  textBox.setSelectionRange(sStart + 1, sStart + 1);
+  ITDValidationFunction();
+}
+
+function ITDBackspace(){
+  var textBox = document.getElementById('ITDTextBox');
+  var alreadyThere = textBox.value;
+  var sStart = textBox.selectionStart;
+  var sEnd = textBox.selectionEnd;
+  if(sStart == sEnd){
+    var beforeSelection = alreadyThere.substring(0, sStart - 1);
+    var afterSelection = alreadyThere.substring(sEnd);
+    textBox.value = beforeSelection + afterSelection;
+    textBox.focus();
+    textBox.setSelectionRange(sStart - 1, sStart - 1);
+    ITDValidationFunction();
+  }
+  else{
+    var beforeSelection = alreadyThere.substring(0, sStart);
+    var afterSelection = alreadyThere.substring(sEnd);
+    textBox.value = beforeSelection + afterSelection;
+    textBox.focus();
+    textBox.setSelectionRange(sStart, sStart);
+    ITDValidationFunction();
+  }
+}
+
+function ITDClear(){
+  document.getElementById('ITDTextBox').value = '';
+  document.getElementById('ITDTextBox').focus();
+  ITDValidationFunction();
+}
+
+function ITDValidationFunction(){
+  var input = document.getElementById('ITDTextBox').value
+  if(input.length < 1){
+    ITDValid = false;
+    document.getElementById('ITDTextBox').style.backgroundColor = 'red';
+  }
+  else{
+    ITDValid = true;
+    document.getElementById('ITDTextBox').style.backgroundColor = 'white';
+  }
+}
+
 
 // Here is the code for the otherColorDialog:
 
@@ -1345,6 +1404,13 @@ function OCDOkBtnFunction(){
     instrumentColor = OCDColor;
     updateColorOfColorBtn();
     document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  }
+}
+
+function OCDCheckForEnter(e){
+  var key = e.which || e.keyCode;
+  if (key === 13) { // 13 is enter
+    OCDOkBtnFunction();
   }
 }
 

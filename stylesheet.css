@@ -408,6 +408,20 @@ input[type='checkbox']:checked {
   color: white;
 }
 
+.modalBoxKeypadBtns {
+  background: #3C7FE7;
+  padding: 11px 25px 11px 25px;
+  border: 1px solid transparent;
+  margin: 0px 3px 0px 3px;
+  line-height: 60px;
+  font-size: 20px;
+}
+
+.modalBoxKeypadBtns:hover {
+  background: #0000FF;
+  color: white;
+}
+
 /*
  * Below is the css that is speciffic to the settingsDialog:
 */
@@ -426,16 +440,56 @@ input[type='checkbox']:checked {
 
 .ITDBtn {
   background: #3C7FE7;
-  padding: 11px 25px 11px 25px;
-  border: 1px solid transparent;
-  margin: 0px 3px 0px 3px;
-  line-height: 60px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 20px;
+  position: absolute;
 }
 
 .ITDBtn:hover {
   background: #0000FF;
   color: white;
+}
+
+#ITDTextLabel {
+  position: absolute;
+  left: 20px;
+  margin: 0px;
+  bottom: -0px;
+  height: 40px;
+  width: 48px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 20px;
+}
+
+#ITDTextBox {
+  position: absolute;
+  left: 70px;
+  bottom: -0px;
+  height: 34px;
+  width: 200px;
+  font-size: 20px;
+}
+
+#ITDBackspaceBtn {
+  //position: absolute;
+  left: 282px;
+  bottom: -0px;
+  height: 40px;
+  width: 130px;
+}
+
+#ITDClearBtn {
+  //position: absolute;
+  left: 420px;
+  bottom: -0px;
+  height: 40px;
+  width: 90px;
 }
 
 /*

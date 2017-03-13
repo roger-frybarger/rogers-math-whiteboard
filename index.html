@@ -107,8 +107,8 @@
     <!--Below is the html code for all of the modal dialog boxes that pop up and allow access to functionality not avaliable
     in the main user interface. These follow a strict naming convention. All ids of all elements related to a particular 
     dialog must start with the innitials of the id of that dialog. Any classes must also start with the innitials of the id 
-    of the applicable dialog unless of course they are part of all the dialogs. They are in order from the settings dialog
-    down through to the other dialogs.-->
+    of the applicable dialog unless of course they are meant to be avaliable globaly to all dialogs. They are in order from
+    the settings dialog down through to the other dialogs.-->
     
     <!--Here is the settings dialog-->
     
@@ -121,8 +121,8 @@
           
           <ul id="SDUnorderedList">
             <li><input id="SDRemoveMousePointerOnCanvas" type="checkbox" value="false"> Remove mouse pointer over drawing area</li>
-            <li>Undo History: <input type="number" id="SDUndoHistoryBox" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
-            <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
+            <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
+            <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
             <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (ctrl+z --> Undo, ctrl+y --> Redo, esc --> Cancel draw/select/paste/etc.)</li>
             <li>More settings coming soon!</li>
           </ul>
@@ -140,91 +140,95 @@
         <h2>Insert Text:</h2>
         <div class="modalBoxContent">
           
-          <a class="ITDBtn" onclick="test2();" id="plusBtn">+</a>
-          <a class="ITDBtn" onclick="test2();" id="minusBtn">-</a>
-          <a class="ITDBtn" onclick="test2();" id="dotBtn">&#8226</a>
-          <a class="ITDBtn" onclick="test2();" id="multiplicationBtn">&times</a>
-          <a class="ITDBtn" onclick="test2();" id="divisionBtn">&divide</a>
-          <a class="ITDBtn" onclick="test2();" id="lessThanBtn">&lt</a>
-          <a class="ITDBtn" onclick="test2();" id="greaterThanBtn">&gt</a>
-          <a class="ITDBtn" onclick="test2();" id="lessThanOrEqualBtn">&#8804</a>
-          <a class="ITDBtn" onclick="test2();" id="greaterThanOrEqualBtn">&#8805</a>
-          <a class="ITDBtn" onclick="test2();" id="equalBtn">=</a>
-          <a class="ITDBtn" onclick="test2();" id="notEqualBtn">&#8800</a>
-          <a class="ITDBtn" onclick="test2();" id="plusOrMinusBtn">&#177</a>
-          <a class="ITDBtn" onclick="test2();" id="absoluteValueBtn">|</a>
-          <a class="ITDBtn" onclick="test2();" id="radicalBtn">&#8730</a>
-          <a class="ITDBtn" onclick="test2();" id="cubeRootBtn">&#8731</a>
-          <a class="ITDBtn" onclick="test2();" id="fourthRootBtn">&#8732</a>
-          <a class="ITDBtn" onclick="test2();" id="unionBtn">U</a>
-          <a class="ITDBtn" onclick="test2();" id="intersectionBtn">&#8745</a>
-          <a class="ITDBtn" onclick="test2();" id="infinityBtn">&#8734</a>
-          <a class="ITDBtn" onclick="test2();" id="piBtn">&#960</a>
-          <a class="ITDBtn" onclick="test2();" id="almostEqualBtn">&#8776</a>
-          <a class="ITDBtn" onclick="test2();" id="iBtn">i</a>
-          <a class="ITDBtn" onclick="test2();" id="eBtn">e</a>
-          <a class="ITDBtn" onclick="test2();" id="deltaBtn">&#916</a>
-          <a class="ITDBtn" onclick="test2();" id="summBtn">&#931</a>
-          <a class="ITDBtn" onclick="test2();" id="integralBtn">&#8747</a>
-          <a class="ITDBtn" onclick="test2();" id="alphaBtn">&#945</a>
-          <a class="ITDBtn" onclick="test2();" id="betaBtn">&#946</a>
-          <a class="ITDBtn" onclick="test2();" id="gammaBtn">&#947</a>
-          <a class="ITDBtn" onclick="test2();" id="angleBtn">&#8736</a>
-          <a class="ITDBtn" onclick="test2();" id="thetaBtn">&#952</a>
-          <a class="ITDBtn" onclick="test2();" id="muBtn">&#956</a>
-          <a class="ITDBtn" onclick="test2();" id="smallSigmaBtn">&#963</a>
-          <a class="ITDBtn" onclick="test2();" id="emptySetBtn">&#8709</a>
-          <a class="ITDBtn" onclick="test2();" id="elementOfBtn">&#8712</a>
-          <a class="ITDBtn" onclick="test2();" id="measuredAngleBtn">&#8737</a>
-          <a class="ITDBtn" onclick="test2();" id="degreesCelsiusBtn">&#8451</a>
-          <a class="ITDBtn" onclick="test2();" id="degreesFahrenheitBtn">&#8457</a>
-          <a class="ITDBtn" onclick="test2();" id="degreeBtn">&#176</a>
-          <a class="ITDBtn" onclick="test2();" id="leftFloorBtn">&#8970</a>
-          <a class="ITDBtn" onclick="test2();" id="rightFloorBtn">&#8971</a>
-          <a class="ITDBtn" onclick="test2();" id="carotBtn">^</a>
-          <a class="ITDBtn" onclick="test2();" id="leftCeilingBtn">&#8968</a>
-          <a class="ITDBtn" onclick="test2();" id="rightCeilingBtn">&#8969</a>
-          <a class="ITDBtn" onclick="test2();" id="openParenthisisBtn">(</a>
-          <a class="ITDBtn" onclick="test2();" id="closeParenthisisBtn">)</a>
-          <a class="ITDBtn" onclick="test2();" id="openBracketBtn">[</a>
-          <a class="ITDBtn" onclick="test2();" id="closeBracketBtn">]</a>
-          <a class="ITDBtn" onclick="test2();" id="openSquiggleBtn">{</a>
-          <a class="ITDBtn" onclick="test2();" id="closeSquiggleBtn">}</a>
-          <a class="ITDBtn" onclick="test2();" id="squaredBtn">&#178</a>
-          <a class="ITDBtn" onclick="test2();" id="cubedBtn">&#179</a>
-          <a class="ITDBtn" onclick="test2();" id="colonBtn">:</a>
-          <a class="ITDBtn" onclick="test2();" id="semicolonBtn">;</a>
-          <a class="ITDBtn" onclick="test2();" id="factorialBtn">!</a>
-          <a class="ITDBtn" onclick="test2();" id="dolarSymbolBtn">$</a>
-          <a class="ITDBtn" onclick="test2();" id="percentSymbolBtn">%</a>
-          <a class="ITDBtn" onclick="test2();" id="asteriskSymbolBtn">*</a>
-          <a class="ITDBtn" onclick="test2();" id="divisionSlashBtn">/</a>
-          <a class="ITDBtn" onclick="test2();" id="commaBtn">,</a>
-          <a class="ITDBtn" onclick="test2();" id="apostraphyBtn">'</a>
-          <a class="ITDBtn" onclick="test2();" id="tildeBtn">~</a>
-          <a class="ITDBtn" onclick="test2();" id="underscoreBtn">_</a><br>
-          <a class="ITDBtn" onclick="test2();" id="1Btn">1</a>
-          <a class="ITDBtn" onclick="test2();" id="2Btn">2</a>
-          <a class="ITDBtn" onclick="test2();" id="3Btn">3</a>
-          <a class="ITDBtn" onclick="test2();" id="4Btn">4</a>
-          <a class="ITDBtn" onclick="test2();" id="5Btn">5</a>
-          <a class="ITDBtn" onclick="test2();" id="6Btn">6</a>
-          <a class="ITDBtn" onclick="test2();" id="7Btn">7</a>
-          <a class="ITDBtn" onclick="test2();" id="8Btn">8</a>
-          <a class="ITDBtn" onclick="test2();" id="9Btn">9</a>
-          <a class="ITDBtn" onclick="test2();" id="0Btn">0</a><br>
-          <a class="ITDBtn" onclick="test2();" id="aBtn">a</a>
-          <a class="ITDBtn" onclick="test2();" id="bBtn">b</a>
-          <a class="ITDBtn" onclick="test2();" id="cBtn">c</a>
-          <a class="ITDBtn" onclick="test2();" id="hBtn">h</a>
-          <a class="ITDBtn" onclick="test2();" id="lBtn">l</a>
-          <a class="ITDBtn" onclick="test2();" id="mBtn">m</a>
-          <a class="ITDBtn" onclick="test2();" id="tBtn">t</a>
-          <a class="ITDBtn" onclick="test2();" id="xBtn">x</a>
-          <a class="ITDBtn" onclick="test2();" id="yBtn">y</a>
-          <a class="ITDBtn" onclick="test2();" id="zBtn">z</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">+</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">-</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8226</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&times</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&divide</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter('<');">&lt</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter('>');">&gt</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8804</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8805</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">=</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8800</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#177</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">|</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8730</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8731</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8732</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">U</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8745</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8734</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#960</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8776</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">i</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">e</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#916</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#931</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8747</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#945</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#946</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#947</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8736</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#952</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#956</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#963</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8709</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8712</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8737</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8451</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8457</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#176</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8970</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8971</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">^</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8968</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8969</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">(</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">)</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">[</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">]</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">{</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">}</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#178</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#179</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">:</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">!</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">$</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">%</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">*</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">/</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">,</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">'</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">~</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">_</a><br>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">1</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">2</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">3</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">4</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">5</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">6</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">7</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">8</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">9</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">0</a><br>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">a</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">b</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">c</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">h</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">l</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">m</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">t</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">x</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">y</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">z</a>
           
         </div>
+        <p id="ITDTextLabel">Text:</p>
+        <input type="text" oninput="ITDValidationFunction()" id="ITDTextBox" size="20" autofocus>
+        <a class="ITDBtn" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
+        <a class="ITDBtn" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
         <a onclick="test2();" title="" class="modalBoxOkBtns">OK</a>
       </div>
     </div>
@@ -240,10 +244,10 @@
           <canvas id="OCDPickerCanvas" width="350" height="350"></canvas>
           <div>
             <div id="OCDColorValuesInputDiv">
-              Red:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" id="OCDRedTextBox" min="0" max="255"><br>
-              Green:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" id="OCDGreenTextBox" min="0" max="255"><br>
-              Blue:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" id="OCDBlueTextBox" min="0" max="255"><br>
-              Transparency: <input type="number" class="OCDInputBoxes" id="OCDTransparencyTextBox" min="0" max="100">%<br>
+              Red:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" oninput="OCDValidateInputAndUpdateIfApplicable();" onkeydown="OCDCheckForEnter(event);" id="OCDRedTextBox" min="0" max="255"><br>
+              Green:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" oninput="OCDValidateInputAndUpdateIfApplicable();" onkeydown="OCDCheckForEnter(event);" id="OCDGreenTextBox" min="0" max="255"><br>
+              Blue:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" oninput="OCDValidateInputAndUpdateIfApplicable();" onkeydown="OCDCheckForEnter(event);" id="OCDBlueTextBox" min="0" max="255"><br>
+              Transparency: <input type="number" class="OCDInputBoxes" oninput="OCDValidateInputAndUpdateIfApplicable();" onkeydown="OCDCheckForEnter(event);" id="OCDTransparencyTextBox" min="0" max="100">%<br>
               <p id="OCDSmallerLabel"> 0% = Not transparent. 95% to 99% works well for highlighting.
               </p>
             </div>
