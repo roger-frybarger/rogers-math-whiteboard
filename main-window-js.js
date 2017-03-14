@@ -47,7 +47,6 @@ var instrumentWidth = 5;
 var instrumentColor = 'rgba(78, 78, 255, 1.0)';
 
 var maxNumberOfPages = 250;
-var intervarForRepainting = 80;
 var globalIntervalVarForFunction = null;
 var tempCanvasForInterval = 'NA';
 var tempCanvasForPasting = 'NA';
@@ -113,7 +112,22 @@ ipcRenderer.on('ctrl-y-pressed', () => {
 });
 
 ipcRenderer.on('esc-pressed', () => {
-  console.log('Esc Pressed');
+  //console.log('Esc Pressed');
+  cancelSelect();
+  if(canUseTool){
+    if(tool == 'line' || tool == 'select' || tool == 'text' || tool == 'identify' || tool == 'dot' || tool == 'PASTE'){
+      // Paint the temporary canvas onto the the real canvas:
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      // Disable the tool:
+      canUseTool = false;
+      // Do some cleanup:
+      prevX = 'NA';
+      prevY = 'NA';
+      tempX = 'NA';
+      tempY = 'NA';
+      areaSelected = false;
+    }
+  }
 });
 
 ipcRenderer.on('app-finished-loading', () => {
@@ -632,10 +646,6 @@ function lineToolMethod(x, y, phase){
     
     //      1. save current canvas into tempCanvasForInterval.
     //      2. save x & y into tempX, tempY, prevX & prevY.
-    //      3. start interval which every 1/4 second does...
-    //         a. repaints the tempCanvasForInterval onto the real canvas.
-    //         b. paints an opaque gray line of set size onto the canvas between the tempX, tempY; and prevX, prevY.
-    
     tempCanvasForInterval = 'NA';
     tempCanvasForInterval = new Image();
     tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
@@ -643,22 +653,31 @@ function lineToolMethod(x, y, phase){
     prevY = y;
     tempX = x;
     tempY = y;
-    globalIntervalVarForFunction = setTimeout(lineIntervalPaintingFunction, intervarForRepainting);
     
     break;
   case 'move':
     
-    // Update prevX & prevY with the current values of x & y.
+    // 1. Update prevX & prevY with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint an opaque gray line of set size onto the canvas between the tempX, tempY; and prevX, prevY.
     prevX = x;
     prevY = y;
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    
+    context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.beginPath();
+    context.moveTo(tempX, tempY);
+    context.lineTo(prevX, prevY);
+    context.stroke();
     
     break;
   case 'up':
     
-    //      1. Stop interval function.
-    //      2. Paint tempCanvasForInterval onto the real canvas.
-    //      3. draw line on real canvas using instrumentColor and instrumentWidth.
-    clearTimeout(globalIntervalVarForFunction);
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. draw line on real canvas using instrumentColor and instrumentWidth.
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     context.strokeStyle = instrumentColor;
     context.lineJoin = 'round';
@@ -683,9 +702,6 @@ function selectToolMethod(x, y, phase){
     //      1. call cancelSelect(); if there is already an area selected.
     //      2. save x & y into tempX, tempY, prevX & prevY.
     //      3. save canvas into tempCanvasForInterval.
-    //      3. start interval which every 1/4 second does...
-    //         a. repaints the tempCanvasForInterval onto the real canvas.
-    //         b. paints 4 opaque gray lines of set size onto the canvas between the tempX, tempY; and prevX, prevY.
     cancelSelect();
     prevX = x;
     prevY = y;
@@ -694,25 +710,35 @@ function selectToolMethod(x, y, phase){
     tempCanvasForInterval = 'NA';
     tempCanvasForInterval = new Image();
     tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
-    globalIntervalVarForFunction = setTimeout(selectIntervalPaintingFunction, intervarForRepainting);
     
     break;
   case 'move':
     
-    // Update prevX & prevY with the current values of x & y.
+    // 1. Update prevX & prevY with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint 4 opaque gray lines of set size onto the canvas between the tempX, tempY; and prevX, prevY.
     prevX = x;
     prevY = y;
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    context.lineJoin = 'round';
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(tempX, tempY);
+    context.lineTo(prevX, tempY);
+    context.lineTo(prevX, prevY);
+    context.lineTo(tempX, prevY);
+    context.closePath();
+    context.stroke();
     
     break;
   case 'up':
     
-    //      1. Stop interval function.
-    //      2. Paint tempCanvasForInterval onto the real canvas.
-    //      3. draw 4 opaque gray lines of set size onto the canvas between the tempX, tempY; and prevX, prevY.
-    //      4. set areaSelected to true, and keep the values in tempCanvasForInterval, tempX, tempY; and prevX, prevY.
-    //      5. Calculate width & height of area selected. If either of them are 0, call cancelSelect.
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. draw 4 opaque gray lines of set size onto the canvas between the tempX, tempY; and prevX, prevY.
+    //      3. set areaSelected to true, and keep the values in tempCanvasForInterval, tempX, tempY; and prevX, prevY.
+    //      4. Calculate width & height of area selected. If either of them are 0, call cancelSelect.
     areaSelected = true;
-    clearTimeout(globalIntervalVarForFunction);
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
     context.lineJoin = 'round';
@@ -745,32 +771,35 @@ function textToolMethod(x, y, phase){
     
     //      1. save current canvas into tempCanvasForInterval.
     //      2. save x & y into prevX & prevY.
-    //      3. start interval which every 1/4 second does...
-    //         a. repaints the tempCanvasForInterval onto the real canvas.
-    //         b. paints the text in textToInsert onto the canvas at prevX, prevY.
+    //      3. draw the first piece of text where it belongs.
     tempCanvasForInterval = 'NA';
     tempCanvasForInterval = new Image();
     tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
     prevX = x;
     prevY = y;
-    //globalIntervalVarForFunction = setTimeout(textIntervalPaintingFunction, intervarForRepainting);
-    globalIntervalVarForFunction = setInterval(textIntervalPaintingFunction, intervarForRepainting);
+    
+    context.font = (instrumentWidth + 8) + 'px sans-serif';
+    context.fillStyle = instrumentColor;
+    context.fillText(textToInsert, prevX, prevY);
     
     break;
   case 'move':
     
     // Update prevX & prevY with the current values of x & y.
+    // Paint the temporary canvas onto the the real canvas:
+    // Draw the text:
     prevX = x;
     prevY = y;
-    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.font = (instrumentWidth + 8) + 'px sans-serif';
+    context.fillStyle = instrumentColor;
+    context.fillText(textToInsert, prevX, prevY);
+        
     break;
   case 'up':
     
-    //      1. Stop interval function.
-    //      2. Paint tempCanvasForInterval onto the real canvas.
-    //      3. paint the text onto the canvas at prevX, prevY.
-    //clearTimeout(globalIntervalVarForFunction);
-    clearInterval(globalIntervalVarForFunction);
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. paint the text onto the canvas at prevX, prevY.
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     context.font = (instrumentWidth + 8) + 'px sans-serif';
     context.fillStyle = instrumentColor;
@@ -789,31 +818,37 @@ function identifyToolMethod(x, y, phase){
     
     //      1. save current canvas into tempCanvasForInterval.
     //      2. save x & y into prevX & prevY.
-    //      3. start interval which every 1/4 second does...
-    //         a. repaints the tempCanvasForInterval onto the real canvas.
-    //         b. paints a dot using instrumentColor & InstrumentWidth onto the canvas at prevX, prevY.
+    //      3. Draw a dot where the mouse went down
     
     tempCanvasForInterval = 'NA';
     tempCanvasForInterval = new Image();
     tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
     prevX = x;
     prevY = y;
-    globalIntervalVarForFunction = setTimeout(identifierIntervalPaintingFunction, intervarForRepainting);
+    context.beginPath();
+    context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
+    context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    context.fill();
     
     break;
   case 'move':
     
-    // Update prevX & prevY with the current values of x & y.
+    // 1. Update prevX & prevY with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint a dot using fixed color & InstrumentWidth onto the canvas at prevX, prevY.
     prevX = x;
     prevY = y;
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.beginPath();
+    context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
+    context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    context.fill();
     
     break;
   case 'up':
     
-    //      1. Stop interval function.
-    //      2. Paint tempCanvasForInterval onto the real canvas.
+    //      Paint tempCanvasForInterval onto the real canvas.
     
-    clearTimeout(globalIntervalVarForFunction);
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
     break;
@@ -830,34 +865,39 @@ function dotToolMethod(x, y, phase){
     
     //      1. save current canvas into tempCanvasForInterval.
     //      2. save x & y into prevX & prevY.
-    //      3. start interval which every 1/4 second does...
-    //         a. repaints the tempCanvasForInterval onto the real canvas.
-    //         b. paints a dot using instrumentColor & InstrumentWidth onto the canvas at prevX, prevY.
+    //      3. paint a dot on the canvas where the mouse went down
     
     tempCanvasForInterval = 'NA';
     tempCanvasForInterval = new Image();
     tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
     prevX = x;
     prevY = y;
-    globalIntervalVarForFunction = setTimeout(dotIntervalPaintingFunction, intervarForRepainting);
+    context.beginPath();
+    context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
+    context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    context.fill();
     
     break;
   case 'move':
     
-    // Update prevX & prevY with the current values of x & y.
+    // 1. Update prevX & prevY with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint a dot using fixed color & InstrumentWidth onto the canvas at prevX, prevY.
     prevX = x;
     prevY = y;
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.beginPath();
+    context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
+    context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    context.fill();
     
     break;
   case 'up':
     
-    //      1. Stop interval function.
-    //      2. Paint tempCanvasForInterval onto the real canvas.
-    //      3. put a dot at prevX, prevY.
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. put a dot at prevX, prevY using instrumentColor.
     
-    clearTimeout(globalIntervalVarForFunction);
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-    
     context.beginPath();
     context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
     context.fillStyle = instrumentColor;
@@ -878,9 +918,8 @@ function pasteToolMethod(x, y, phase){
       
       //      1. save current canvas into tempCanvasForInterval.
       //      2. save x & y into prevX & prevY.
-      //      3. start interval which every 1/4 second does...
-      //         a. repaints the tempCanvasForInterval onto the real canvas.
-      //         b. paints the image in copiedSectionOfCanvas onto the canvas at prevX, prevY.
+      //      3. Put the copied section on the canvas where the mouse went down.
+      
       tempCanvasForInterval = 'NA';
       tempCanvasForInterval = new Image();
       tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
@@ -888,22 +927,24 @@ function pasteToolMethod(x, y, phase){
       prevY = y;
       tempX = x;
       tempY = y;
-      globalIntervalVarForFunction = setTimeout(pasteIntervalPaintingFunction, intervarForRepainting);
+      context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
       
       break;
     case 'move':
       
-      // Update prevX & prevY with the current values of x & y.
+      // 1. Update prevX & prevY with the current values of x & y.
+      // 2. repaint the tempCanvasForInterval onto the real canvas.
+      // 3. paint the image in copiedSectionOfCanvas onto the canvas at prevX, prevY.
       prevX = x;
       prevY = y;
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
       
       break;
     case 'up':
       
-      //      1. Stop interval function.
-      //      2. Paint tempCanvasForInterval onto the real canvas.
-      //      3. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
-      clearTimeout(globalIntervalVarForFunction);
+      //      1. Paint tempCanvasForInterval onto the real canvas.
+      //      2. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
       
@@ -1148,7 +1189,6 @@ function SDReadySettingsDialog(){
   
   document.getElementById('SDUndoHistoryBox').value = maxUndoHistory - 1;
   document.getElementById('SDMaxPagesAllowedBox').value = maxNumberOfPages;
-  document.getElementById('SDRepaintingDelayBox').value = intervarForRepainting;
   
   if(weGotKeyboardShortcuts){
     document.getElementById('SDEnableKeyboardShortcuts').checked = true;
@@ -1217,7 +1257,6 @@ function SDOkBtnFunction(){
     
     maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value) + 1;
     maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
-    intervarForRepainting = parseInt(document.getElementById('SDRepaintingDelayBox').value);
     
     if(document.getElementById('SDEnableKeyboardShortcuts').checked){
       ipcRenderer.send('user-wants-keyboard-shortcuts');
@@ -1611,86 +1650,86 @@ function updateTextOfToolBtn(){
 
 
 // Here is the function that makes the line tool work on the timeout
-function lineIntervalPaintingFunction(){
-  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+//function lineIntervalPaintingFunction(){
+  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
   
-  context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
-  context.lineJoin = 'round';
-  context.lineWidth = instrumentWidth;
-  context.beginPath();
-  context.moveTo(tempX, tempY);
-  context.lineTo(prevX, prevY);
-  context.stroke();
+  //context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
+  //context.lineJoin = 'round';
+  //context.lineWidth = instrumentWidth;
+  //context.beginPath();
+  //context.moveTo(tempX, tempY);
+  //context.lineTo(prevX, prevY);
+  //context.stroke();
   
-  globalIntervalVarForFunction = setTimeout(lineIntervalPaintingFunction, intervarForRepainting);
-}
+  //globalIntervalVarForFunction = setTimeout(lineIntervalPaintingFunction, intervarForRepainting);
+//}
 
 //Here is the function that makes the select tool work:
-function selectIntervalPaintingFunction(){
-  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+//function selectIntervalPaintingFunction(){
+  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
   
-  context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
-  context.lineJoin = 'round';
-  context.lineWidth = 1;
-  context.beginPath();
-  context.moveTo(tempX, tempY);
-  context.lineTo(prevX, tempY);
-  context.lineTo(prevX, prevY);
-  context.lineTo(tempX, prevY);
-  context.closePath();
-  context.stroke();
+  //context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+  //context.lineJoin = 'round';
+  //context.lineWidth = 1;
+  //context.beginPath();
+  //context.moveTo(tempX, tempY);
+  //context.lineTo(prevX, tempY);
+  //context.lineTo(prevX, prevY);
+  //context.lineTo(tempX, prevY);
+  //context.closePath();
+  //context.stroke();
   
-  globalIntervalVarForFunction = setTimeout(selectIntervalPaintingFunction, intervarForRepainting);
-}
+  //globalIntervalVarForFunction = setTimeout(selectIntervalPaintingFunction, intervarForRepainting);
+//}
 
 // Here is the function that makes the text tool work:
-function textIntervalPaintingFunction(){
-  console.log('\n************Begin***********\n');
-  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  console.log('Drew Org');
+//function textIntervalPaintingFunction(){
+  //console.log('\n************Begin***********\n');
+  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+  //console.log('Drew Org');
   
-  context.font = (instrumentWidth + 8) + 'px sans-serif';
-  context.fillStyle = instrumentColor;
-  context.fillText(textToInsert, prevX, prevY);
-  console.log('Drew Obj');
+  //context.font = (instrumentWidth + 8) + 'px sans-serif';
+  //context.fillStyle = instrumentColor;
+  //context.fillText(textToInsert, prevX, prevY);
+  //console.log('Drew Obj');
   
-  //globalIntervalVarForFunction = null;
-  //globalIntervalVarForFunction = setTimeout(textIntervalPaintingFunction, intervarForRepainting);
-  console.log('Set Timer');
-  console.log('\n************End***********\n');
-}
+  ////globalIntervalVarForFunction = null;
+  ////globalIntervalVarForFunction = setTimeout(textIntervalPaintingFunction, intervarForRepainting);
+  //console.log('Set Timer');
+  //console.log('\n************End***********\n');
+//}
 
 // Here is the function that makes the identifier tool work:
-function identifierIntervalPaintingFunction(){
-  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+//function identifierIntervalPaintingFunction(){
+  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
   
-  context.beginPath();
-  context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
-  context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  context.fill();
+  //context.beginPath();
+  //context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
+  //context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  //context.fill();
   
-  globalIntervalVarForFunction = setTimeout(identifierIntervalPaintingFunction, intervarForRepainting);
-}
+  //globalIntervalVarForFunction = setTimeout(identifierIntervalPaintingFunction, intervarForRepainting);
+//}
 
-function dotIntervalPaintingFunction(){
-  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+//function dotIntervalPaintingFunction(){
+  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
   
-  context.beginPath();
-  context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
-  context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  context.fill();
+  //context.beginPath();
+  //context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
+  //context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  //context.fill();
   
-  globalIntervalVarForFunction = setTimeout(dotIntervalPaintingFunction, intervarForRepainting);
-}
+  //globalIntervalVarForFunction = setTimeout(dotIntervalPaintingFunction, intervarForRepainting);
+//}
 
 //Here is the function that makes the paste tool work:
-function pasteIntervalPaintingFunction(){
-  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+//function pasteIntervalPaintingFunction(){
+  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
   
-  context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
+  //context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
   
-  globalIntervalVarForFunction = setTimeout(pasteIntervalPaintingFunction, intervarForRepainting);
-}
+  //globalIntervalVarForFunction = setTimeout(pasteIntervalPaintingFunction, intervarForRepainting);
+//}
 
 
 
