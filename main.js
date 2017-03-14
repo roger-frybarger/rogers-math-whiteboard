@@ -138,3 +138,11 @@ ipcMain.on('user-doesnt-want-keyboard-shortcuts', () => {
   userWantsKeyboardShortcuts = false;
   unregisterShortcuts();
 });
+
+ipcMain.on('launch-dev-tools', () => {
+  win.webContents.openDevTools({mode: 'undocked'});
+});
+
+ipcMain.on('close-dev-tools', () => {
+  win.webContents.closeDevTools();
+});

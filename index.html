@@ -123,7 +123,9 @@
             <li><input id="SDRemoveMousePointerOnCanvas" type="checkbox" value="false"> Remove mouse pointer over drawing area</li>
             <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
             <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
-            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> esc --> Cancel draw/select/paste/etc.)</li>
+            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> esc --> Cancel draw/select/paste/etc, <br> alt+p --> Pen, <br> alt+e --> Eraser, <br> alt+l --> Straight Line, <br> alt+s --> Select, <br> alt+i --> Identifier, <br> alt+d --> Dot,)</li>
+            <li><a onclick="ipcRenderer.send('launch-dev-tools');" class="SDBtns">Launch Dev Tools</a></li>
+            <li><a onclick="ipcRenderer.send('close-dev-tools');" class="SDBtns">Close Dev Tools</a><p>(The dev tools window can be useful if you encounter issues with this program. While you may not be able to solve these issues yourself, any error messages you find in the dev tools window, (found in red under the "Console" tab), can definitely help me solve the problem. Feel free to email them to me, along with a description of the problem you are encountering, and the version of this program you are using. My email address is: <input type="text" value="rogersmathwhiteboard@gmail.com" style="width: 260px;text-align:center;" readonly> I will respond as my time allows.)</p></li>
             <li>More settings coming soon!</li>
           </ul>
           
@@ -228,7 +230,7 @@
           
         </div>
         <p id="ITDTextLabel">Text:</p>
-        <input type="text" oninput="ITDValidationFunction()" id="ITDTextBox" size="20" autofocus>
+        <input type="text" oninput="ITDValidationFunction()" onkeydown="ITDCheckForEnter(event);" id="ITDTextBox" size="20" autofocus>
         <a class="ITDBtn" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
         <a class="ITDBtn" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
         <a onclick="ITDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
@@ -271,6 +273,18 @@
         <div class="modalBoxContent">
           <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
           <p>Min: 2, Max: 2000. Medium = 5</p>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">1</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">2</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">3</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">4</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">5</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">6</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">7</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">8</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">9</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">0</a><br>
+          <a class="modalBoxKeypadBtns" onclick="OSDBackspace();">Backspace</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDClear();">Clear</a><br>
         </div>
         <a onclick="OSDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
       </div>

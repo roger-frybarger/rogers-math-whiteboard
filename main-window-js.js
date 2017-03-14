@@ -4,26 +4,42 @@ const {dialog} = require('electron').remote;
 
 
 const remote = require('electron').remote;
+const Menu = remote.Menu;
 var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a refference to the main window so we can use
 // it for dialoug boxes.
 
+// This enables the right-click menu over the text boxes. I found it at:
+// https://github.com/electron/electron/issues/4068
+const InputMenu = Menu.buildFromTemplate([{
+        label: 'Undo',
+        role: 'undo',
+    }, {
+        label: 'Redo',
+        role: 'redo',
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Cut',
+        role: 'cut',
+    }, {
+        label: 'Copy',
+        role: 'copy',
+    }, {
+        label: 'Paste',
+        role: 'paste',
+    }, {
+        type: 'separator',
+    }, {
+        label: 'Select all',
+        role: 'selectall',
+    },
+]);
 
 
-//window.addEventListener('touchstart', (evt) => console.log(evt.touches[0]));
-//window.addEventListener('touchstart', tstart);
-//window.addEventListener('touchend', tend);
-//window.addEventListener('touchmove', tmove);
-//window.addEventListener('touchcancel', tcancel);
-//window.addEventListener('mousedown', mdown);
-//window.addEventListener('mousemove', mmove);
-//window.addEventListener('mouseup', mup);
 
 window.addEventListener('resize', onWindowResize);
 
 
-
-//window.addEventListener('load', onWindowLoad);
-//window.addEventListener('did-finish-load', onWindowLoad);
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
@@ -301,6 +317,26 @@ function initializeEventListenersForCanvas(){
   document.getElementById('canvas1').addEventListener('touchcancel', function(e){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
   });
+  
+  // This enables the right-click menu over the text boxes. I found it at:
+  // https://github.com/electron/electron/issues/4068
+  
+  document.body.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      let node = e.target;
+
+      while (node) {
+          if (node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
+              InputMenu.popup(remote.getCurrentWindow());
+              break;
+          }
+          node = node.parentNode;
+      }
+  });
+    
+  
 }
 
 /*
@@ -311,46 +347,7 @@ function initializeEventListenersForCanvas(){
 */
 function initializeEventListenersForExternalDialogs(){
   
-  // Here are the event listeners for the settingsDialog:
-  
-  //document.getElementById('SDUndoHistoryBox').addEventListener('input', SDInputValidation, false);
-  //document.getElementById('SDMaxPagesAllowedBox').addEventListener('input', SDInputValidation, false);
-  
   // Here are the event listeners for the otherColorDialog:
-  
-  //document.getElementById('OCDRedTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  //document.getElementById('OCDGreenTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  //document.getElementById('OCDBlueTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  //document.getElementById('OCDTransparencyTextBox').addEventListener('input', OCDValidateInputAndUpdateIfApplicable, false);
-  
-  //document.getElementById('OCDRedTextBox').addEventListener('keydown', function (e) {
-    //var key = e.which || e.keyCode;
-    //if (key === 13) { // 13 is enter
-      //OCDOkBtnFunction();
-    //}
-  //});
-  
-  //document.getElementById('OCDGreenTextBox').addEventListener('keydown', function (e) {
-    //var key = e.which || e.keyCode;
-    //if (key === 13) { // 13 is enter
-      //OCDOkBtnFunction();
-    //}
-  //});
-  
-  //document.getElementById('OCDBlueTextBox').addEventListener('keydown', function (e) {
-    //var key = e.which || e.keyCode;
-    //if (key === 13) { // 13 is enter
-      //OCDOkBtnFunction();
-    //}
-  //});
-  
-  //document.getElementById('OCDTransparencyTextBox').addEventListener('keydown', function (e) {
-    //var key = e.which || e.keyCode;
-    //if (key === 13) { // 13 is enter
-      //OCDOkBtnFunction();
-    //}
-  //});
-  
   document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function(e){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
     //console.log(e.pageX - offset.left);
@@ -370,16 +367,6 @@ function initializeEventListenersForExternalDialogs(){
     }
   });
   
-  // Here are the event listeners for the otherSizeDialog:
-  
-  //document.getElementById('OSDSizeTextBox').addEventListener('input', OSDValidateInput, false);
-  
-  //document.getElementById('OSDSizeTextBox').addEventListener('keydown', function (e) {
-    //var key = e.which || e.keyCode;
-    //if (key === 13) { // 13 is enter
-      //OSDOkBtnFunction();
-    //}
-  //});
   
 }
 
@@ -1024,47 +1011,7 @@ function closeDropdowns(buttonName){
   }
 }
 
-//function tstart(event){
-  
-  //console.log('touchstart');
-  
-//}
 
-//function tend(event){
-  
-  //console.log('touchend');
-  
-//}
-
-//function tmove(event){
-  
-  //console.log('touchmove');
-  
-//}
-
-//function tcancel(event){
-  
-  //console.log('touchcancel');
-  
-//}
-
-//function mdown(event){
-  
-  //console.log('mousedown');
-  
-//}
-
-//function mmove(event){
-  
-  //console.log('mousemove');
-  
-//}
-
-//function mup(event){
-  
-  //console.log('mouseup');
-  
-//}
 
 function fileBtnFunction(){
   closeDropdowns('fileDropdown');
@@ -1202,10 +1149,8 @@ function SDReadySettingsDialog(){
 function SDInputValidation(){
   var rawUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value);
   var rawMaxPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
-  var rawRepaintingDelay = parseInt(document.getElementById('SDRepaintingDelayBox').value);
   var undoHistoryGood = false;
   var maxPagesGood = false;
-  var repaintingDelayGood = false;
   
   if(isNaN(rawUndoHistory) || rawUndoHistory < 10 || rawUndoHistory > 100){
     undoHistoryGood = false;
@@ -1225,16 +1170,7 @@ function SDInputValidation(){
     document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'white';
   }
   
-  if(isNaN(rawRepaintingDelay) || rawRepaintingDelay < 20 || rawRepaintingDelay > 1000){
-    repaintingDelayGood = false;
-    document.getElementById('SDRepaintingDelayBox').style.backgroundColor = 'red';
-  }
-  else{
-    repaintingDelayGood = true;
-    document.getElementById('SDRepaintingDelayBox').style.backgroundColor = 'white';
-  }
-  
-  if(undoHistoryGood && maxPagesGood && repaintingDelayGood){
+  if(undoHistoryGood && maxPagesGood){
     SDValid = true;
   }
   else{
@@ -1284,6 +1220,8 @@ var ITDValid = true;
 function ITDReadyInsertTextDialog(){
   document.getElementById('ITDTextBox').value = textToInsert;
   ITDValidationFunction();
+  document.getElementById('ITDTextBox').focus();
+  document.getElementById('ITDTextBox').select();
 }
 
 function ITDAddCharacter(chr){
@@ -1346,6 +1284,13 @@ function ITDOkBtnFunction(){
     tool = 'text';
     updateTextOfToolBtn();
     document.getElementById('ITDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  }
+}
+
+function ITDCheckForEnter(e){
+  var key = e.which || e.keyCode;
+  if (key === 13) { // 13 is enter
+    ITDOkBtnFunction();
   }
 }
 
@@ -1537,6 +1482,26 @@ function OSDReadyOtherSizeDialog(){
   document.getElementById('OSDSizeTextBox').select();
 }
 
+function OSDAddCharacter(chr){
+  var textBox = document.getElementById('OSDSizeTextBox');
+  var alreadyThere = textBox.value;
+  textBox.value = alreadyThere + chr;
+  OSDValidateInput();
+}
+
+function OSDBackspace(){
+  var textBox = document.getElementById('OSDSizeTextBox');
+  var alreadyThere = textBox.value;
+  textBox.value = alreadyThere.substring(0, alreadyThere.length-1);
+  OSDValidateInput();
+}
+
+function OSDClear(){
+  document.getElementById('OSDSizeTextBox').value = '';
+  document.getElementById('OSDSizeTextBox').focus();
+  OSDValidateInput();
+}
+
 function OSDValidateInput(){
   var rawInput = parseInt(document.getElementById('OSDSizeTextBox').value);
   if(isNaN(rawInput) || rawInput < 2 || rawInput > 2000){
@@ -1644,93 +1609,6 @@ function updateTextOfToolBtn(){
     
   }
 }
-
-
-
-
-
-// Here is the function that makes the line tool work on the timeout
-//function lineIntervalPaintingFunction(){
-  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  
-  //context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
-  //context.lineJoin = 'round';
-  //context.lineWidth = instrumentWidth;
-  //context.beginPath();
-  //context.moveTo(tempX, tempY);
-  //context.lineTo(prevX, prevY);
-  //context.stroke();
-  
-  //globalIntervalVarForFunction = setTimeout(lineIntervalPaintingFunction, intervarForRepainting);
-//}
-
-//Here is the function that makes the select tool work:
-//function selectIntervalPaintingFunction(){
-  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  
-  //context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
-  //context.lineJoin = 'round';
-  //context.lineWidth = 1;
-  //context.beginPath();
-  //context.moveTo(tempX, tempY);
-  //context.lineTo(prevX, tempY);
-  //context.lineTo(prevX, prevY);
-  //context.lineTo(tempX, prevY);
-  //context.closePath();
-  //context.stroke();
-  
-  //globalIntervalVarForFunction = setTimeout(selectIntervalPaintingFunction, intervarForRepainting);
-//}
-
-// Here is the function that makes the text tool work:
-//function textIntervalPaintingFunction(){
-  //console.log('\n************Begin***********\n');
-  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  //console.log('Drew Org');
-  
-  //context.font = (instrumentWidth + 8) + 'px sans-serif';
-  //context.fillStyle = instrumentColor;
-  //context.fillText(textToInsert, prevX, prevY);
-  //console.log('Drew Obj');
-  
-  ////globalIntervalVarForFunction = null;
-  ////globalIntervalVarForFunction = setTimeout(textIntervalPaintingFunction, intervarForRepainting);
-  //console.log('Set Timer');
-  //console.log('\n************End***********\n');
-//}
-
-// Here is the function that makes the identifier tool work:
-//function identifierIntervalPaintingFunction(){
-  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  
-  //context.beginPath();
-  //context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
-  //context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  //context.fill();
-  
-  //globalIntervalVarForFunction = setTimeout(identifierIntervalPaintingFunction, intervarForRepainting);
-//}
-
-//function dotIntervalPaintingFunction(){
-  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  
-  //context.beginPath();
-  //context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
-  //context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  //context.fill();
-  
-  //globalIntervalVarForFunction = setTimeout(dotIntervalPaintingFunction, intervarForRepainting);
-//}
-
-//Here is the function that makes the paste tool work:
-//function pasteIntervalPaintingFunction(){
-  //context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-  
-  //context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
-  
-  //globalIntervalVarForFunction = setTimeout(pasteIntervalPaintingFunction, intervarForRepainting);
-//}
-
 
 
 
