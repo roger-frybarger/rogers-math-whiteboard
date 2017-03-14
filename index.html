@@ -46,7 +46,7 @@
               <a id="eraserToolBtn" onclick="tool = 'eraser'; updateTextOfToolBtn();">Eraser</a>
               <a id="lineToolBtn" onclick="tool = 'line'; updateTextOfToolBtn();">Straight Line</a>
               <a id="selectToolBtn" onclick="tool = 'select'; updateTextOfToolBtn();">Select</a>
-              <a href ="#insertTextDialog" onclick="test2();" id="insertTextToolBtn">Insert Text</a>
+              <a href ="#insertTextDialog" onclick="ITDReadyInsertTextDialog();" id="insertTextToolBtn">Insert Text</a>
               <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
               <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
             </div>
@@ -121,9 +121,10 @@
           
           <ul id="SDUnorderedList">
             <li><input id="SDRemoveMousePointerOnCanvas" type="checkbox" value="false"> Remove mouse pointer over drawing area</li>
-            <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
-            <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
-            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (ctrl+z --> Undo, ctrl+y --> Redo, esc --> Cancel draw/select/paste/etc.)</li>
+            <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
+            <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
+            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> esc --> Cancel draw/select/paste/etc.)</li>
+            <li>Repainting Delay: <input type="number" id="SDRepaintingDelayBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="80" min="20" max="1000">Milliseconds.  Min: 20, Max: 1000. <br> (This is used as the refresh rate in tools that allow you to move something around on the screen without actually marking up the drawing. A lower setting will result in a higher refresh rate, while a higher value will result in a lower refresh rate.)<br></li>
             <li>More settings coming soon!</li>
           </ul>
           
@@ -212,7 +213,8 @@
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">7</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">8</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">9</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">0</a><br>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">0</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">.</a><br>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">a</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">b</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">c</a>
@@ -223,13 +225,14 @@
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">x</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">y</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">z</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(' ');">Space</a>
           
         </div>
         <p id="ITDTextLabel">Text:</p>
         <input type="text" oninput="ITDValidationFunction()" id="ITDTextBox" size="20" autofocus>
         <a class="ITDBtn" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
         <a class="ITDBtn" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
-        <a onclick="test2();" title="" class="modalBoxOkBtns">OK</a>
+        <a onclick="ITDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
       </div>
     </div>
     
@@ -267,7 +270,7 @@
         <a id="OSDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>New Size:</h2>
         <div class="modalBoxContent">
-          <input type="number" class="OCDInputBoxes" id="OSDSizeTextBox" min="2" max="2000">
+          <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
           <p>Min: 2, Max: 2000. Medium = 5</p>
         </div>
         <a onclick="OSDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>

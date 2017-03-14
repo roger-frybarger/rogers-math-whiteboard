@@ -104,14 +104,6 @@ ipcRenderer.on('close-button-clicked', () => {
   userWantsToClose();
 });
 
-ipcRenderer.on('app-finished-loading', () => {
-  document.documentElement.style.overflow = 'hidden';
-  adjustSizeOfMenuButtonsToScreenSize();
-  initializeGlobalVariables();
-  initializeCanvas();
-  // Since we have to wait for an image to load, the startup process continues on in the continueAfterAppFinishedLoading1 function.
-});
-
 ipcRenderer.on('ctrl-z-pressed', () => {
   console.log('Undo Pressed');
 });
@@ -122,6 +114,14 @@ ipcRenderer.on('ctrl-y-pressed', () => {
 
 ipcRenderer.on('esc-pressed', () => {
   console.log('Esc Pressed');
+});
+
+ipcRenderer.on('app-finished-loading', () => {
+  document.documentElement.style.overflow = 'hidden';
+  adjustSizeOfMenuButtonsToScreenSize();
+  initializeGlobalVariables();
+  initializeCanvas();
+  // Since we have to wait for an image to load, the startup process continues on in the continueAfterAppFinishedLoading1 function.
 });
 
 // This function runs after the initializeCanvas() function finishes its job.
@@ -358,14 +358,14 @@ function initializeEventListenersForExternalDialogs(){
   
   // Here are the event listeners for the otherSizeDialog:
   
-  document.getElementById('OSDSizeTextBox').addEventListener('input', OSDValidateInput, false);
+  //document.getElementById('OSDSizeTextBox').addEventListener('input', OSDValidateInput, false);
   
-    document.getElementById('OSDSizeTextBox').addEventListener('keydown', function (e) {
-    var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OSDOkBtnFunction();
-    }
-  });
+  //document.getElementById('OSDSizeTextBox').addEventListener('keydown', function (e) {
+    //var key = e.which || e.keyCode;
+    //if (key === 13) { // 13 is enter
+      //OSDOkBtnFunction();
+    //}
+  //});
   
 }
 
@@ -386,7 +386,7 @@ function checkForScreenSizeIssues(){
   //if(true){
   if(screenX > 1920 || screenY > 1080){
   
-    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution will result in a larger file size, and will require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution.', 'Warning');
+    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning');
   }
 }
 
@@ -421,7 +421,7 @@ function instrumentDown(x, y)
     selectToolMethod(x, y, 'down');
     break;
   case 'text':
-    //textToolMethod(x, y, 'down');
+    textToolMethod(x, y, 'down');
     break;
   case 'identify':
     identifyToolMethod(x, y, 'down');
@@ -462,7 +462,7 @@ function instrumentMoved(x, y)
       selectToolMethod(x, y, 'move');
       break;
     case 'text':
-      //textToolMethod(x, y, 'move');
+      textToolMethod(x, y, 'move');
       break;
     case 'identify':
       identifyToolMethod(x, y, 'move');
@@ -508,8 +508,8 @@ function instrumentUp(x, y)
       selectToolMethod(x, y, 'up');
       break;
     case 'text':
-      //textToolMethod(x, y, 'up');
-      //pushStateIntoUndoArray();
+      textToolMethod(x, y, 'up');
+      pushStateIntoUndoArray();
       break;
     case 'identify':
       identifyToolMethod(x, y, 'up');
@@ -738,8 +738,49 @@ function selectToolMethod(x, y, phase){
   }
 }
 
-
-// **********Insert Text method goes here**************
+// Here is the textToolMethod. It handles inserting text onto the canvas:
+function textToolMethod(x, y, phase){
+  switch(phase){
+  case 'down':
+    
+    //      1. save current canvas into tempCanvasForInterval.
+    //      2. save x & y into prevX & prevY.
+    //      3. start interval which every 1/4 second does...
+    //         a. repaints the tempCanvasForInterval onto the real canvas.
+    //         b. paints the text in textToInsert onto the canvas at prevX, prevY.
+    tempCanvasForInterval = 'NA';
+    tempCanvasForInterval = new Image();
+    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+    prevX = x;
+    prevY = y;
+    //globalIntervalVarForFunction = setTimeout(textIntervalPaintingFunction, intervarForRepainting);
+    globalIntervalVarForFunction = setInterval(textIntervalPaintingFunction, intervarForRepainting);
+    
+    break;
+  case 'move':
+    
+    // Update prevX & prevY with the current values of x & y.
+    prevX = x;
+    prevY = y;
+    
+    break;
+  case 'up':
+    
+    //      1. Stop interval function.
+    //      2. Paint tempCanvasForInterval onto the real canvas.
+    //      3. paint the text onto the canvas at prevX, prevY.
+    //clearTimeout(globalIntervalVarForFunction);
+    clearInterval(globalIntervalVarForFunction);
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.font = (instrumentWidth + 8) + 'px sans-serif';
+    context.fillStyle = instrumentColor;
+    context.fillText(textToInsert, prevX, prevY);
+    
+    break;
+    default:
+      console.log('ERROR: Invalid phase in textToolMethod: ' + phase);
+  }
+}
 
 // Here is the identifyToolMethod. It handles identifying areas of the canvas:
 function identifyToolMethod(x, y, phase){
@@ -1107,6 +1148,7 @@ function SDReadySettingsDialog(){
   
   document.getElementById('SDUndoHistoryBox').value = maxUndoHistory - 1;
   document.getElementById('SDMaxPagesAllowedBox').value = maxNumberOfPages;
+  document.getElementById('SDRepaintingDelayBox').value = intervarForRepainting;
   
   if(weGotKeyboardShortcuts){
     document.getElementById('SDEnableKeyboardShortcuts').checked = true;
@@ -1120,8 +1162,10 @@ function SDReadySettingsDialog(){
 function SDInputValidation(){
   var rawUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value);
   var rawMaxPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
+  var rawRepaintingDelay = parseInt(document.getElementById('SDRepaintingDelayBox').value);
   var undoHistoryGood = false;
   var maxPagesGood = false;
+  var repaintingDelayGood = false;
   
   if(isNaN(rawUndoHistory) || rawUndoHistory < 10 || rawUndoHistory > 100){
     undoHistoryGood = false;
@@ -1141,7 +1185,16 @@ function SDInputValidation(){
     document.getElementById('SDMaxPagesAllowedBox').style.backgroundColor = 'white';
   }
   
-  if(undoHistoryGood && maxPagesGood){
+  if(isNaN(rawRepaintingDelay) || rawRepaintingDelay < 20 || rawRepaintingDelay > 1000){
+    repaintingDelayGood = false;
+    document.getElementById('SDRepaintingDelayBox').style.backgroundColor = 'red';
+  }
+  else{
+    repaintingDelayGood = true;
+    document.getElementById('SDRepaintingDelayBox').style.backgroundColor = 'white';
+  }
+  
+  if(undoHistoryGood && maxPagesGood && repaintingDelayGood){
     SDValid = true;
   }
   else{
@@ -1164,6 +1217,7 @@ function SDOkBtnFunction(){
     
     maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value) + 1;
     maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
+    intervarForRepainting = parseInt(document.getElementById('SDRepaintingDelayBox').value);
     
     if(document.getElementById('SDEnableKeyboardShortcuts').checked){
       ipcRenderer.send('user-wants-keyboard-shortcuts');
@@ -1177,9 +1231,21 @@ function SDOkBtnFunction(){
   }
 }
 
+function SDCheckForEnter(e){
+  var key = e.which || e.keyCode;
+  if (key === 13) { // 13 is enter
+    SDOkBtnFunction();
+  }
+}
+
 // Here is the code for the insertTextDialog:
 
 var ITDValid = true;
+
+function ITDReadyInsertTextDialog(){
+  document.getElementById('ITDTextBox').value = textToInsert;
+  ITDValidationFunction();
+}
 
 function ITDAddCharacter(chr){
   var textBox = document.getElementById('ITDTextBox');
@@ -1232,6 +1298,15 @@ function ITDValidationFunction(){
   else{
     ITDValid = true;
     document.getElementById('ITDTextBox').style.backgroundColor = 'white';
+  }
+}
+
+function ITDOkBtnFunction(){
+  if(ITDValid){
+    textToInsert = document.getElementById('ITDTextBox').value;
+    tool = 'text';
+    updateTextOfToolBtn();
+    document.getElementById('ITDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
 }
 
@@ -1444,6 +1519,13 @@ function OSDOkBtnFunction(){
   }
 }
 
+function OSDCheckForEnter(e){
+  var key = e.which || e.keyCode;
+    if (key === 13) { // 13 is enter
+      OSDOkBtnFunction();
+    }
+}
+
 
 
 // ***************************** END OF CODE FOR OTHER WINDOWS!!!
@@ -1561,7 +1643,22 @@ function selectIntervalPaintingFunction(){
   globalIntervalVarForFunction = setTimeout(selectIntervalPaintingFunction, intervarForRepainting);
 }
 
-// *************Text interval method goes here******************
+// Here is the function that makes the text tool work:
+function textIntervalPaintingFunction(){
+  console.log('\n************Begin***********\n');
+  context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+  console.log('Drew Org');
+  
+  context.font = (instrumentWidth + 8) + 'px sans-serif';
+  context.fillStyle = instrumentColor;
+  context.fillText(textToInsert, prevX, prevY);
+  console.log('Drew Obj');
+  
+  //globalIntervalVarForFunction = null;
+  //globalIntervalVarForFunction = setTimeout(textIntervalPaintingFunction, intervarForRepainting);
+  console.log('Set Timer');
+  console.log('\n************End***********\n');
+}
 
 // Here is the function that makes the identifier tool work:
 function identifierIntervalPaintingFunction(){
