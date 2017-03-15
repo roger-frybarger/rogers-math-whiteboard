@@ -73,6 +73,12 @@ function registerShortcuts() {
     globalShortcut.register('CommandOrControl+z', passUndoInput);
     globalShortcut.register('CommandOrControl+y', passRedoInput);
     globalShortcut.register('Escape', passEscapeInput);
+    globalShortcut.register('Alt+p', passAltPInput);
+    globalShortcut.register('Alt+e', passAltEInput);
+    globalShortcut.register('Alt+l', passAltLInput);
+    globalShortcut.register('Alt+s', passAltSInput);
+    globalShortcut.register('Alt+i', passAltIInput);
+    globalShortcut.register('Alt+d', passAltDInput);
   }
 }
 
@@ -80,6 +86,12 @@ function unregisterShortcuts() {
   globalShortcut.unregister('CommandOrControl+z', passUndoInput);
   globalShortcut.unregister('CommandOrControl+y', passRedoInput);
   globalShortcut.unregister('Escape', passEscapeInput);
+  globalShortcut.unregister('Alt+p', passAltPInput);
+  globalShortcut.unregister('Alt+e', passAltEInput);
+  globalShortcut.unregister('Alt+l', passAltLInput);
+  globalShortcut.unregister('Alt+s', passAltSInput);
+  globalShortcut.unregister('Alt+i', passAltIInput);
+  globalShortcut.unregister('Alt+d', passAltDInput);
 }
 
 function passUndoInput() {
@@ -93,6 +105,31 @@ function passRedoInput() {
 function passEscapeInput() {
   win.webContents.send('esc-pressed');
 }
+
+function passAltPInput() {
+  win.webContents.send('alt-p-pressed');
+}
+
+function passAltEInput() {
+  win.webContents.send('alt-e-pressed');
+}
+
+function passAltLInput() {
+  win.webContents.send('alt-l-pressed');
+}
+
+function passAltSInput() {
+  win.webContents.send('alt-s-pressed');
+}
+
+function passAltIInput() {
+  win.webContents.send('alt-i-pressed');
+}
+
+function passAltDInput() {
+  win.webContents.send('alt-d-pressed');
+}
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

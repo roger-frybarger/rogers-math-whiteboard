@@ -120,11 +120,15 @@ ipcRenderer.on('close-button-clicked', () => {
 });
 
 ipcRenderer.on('ctrl-z-pressed', () => {
-  console.log('Undo Pressed');
+  if(canUseTool == false){
+    undoBtnFunction();
+  }
 });
 
 ipcRenderer.on('ctrl-y-pressed', () => {
-  console.log('Redo Pressed');
+  if(canUseTool == false){
+    redoBtnFunction();
+  }
 });
 
 ipcRenderer.on('esc-pressed', () => {
@@ -143,6 +147,54 @@ ipcRenderer.on('esc-pressed', () => {
       tempY = 'NA';
       areaSelected = false;
     }
+  }
+});
+
+ipcRenderer.on('alt-p-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'pen';
+    updateTextOfToolBtn();
+  }
+});
+
+ipcRenderer.on('alt-e-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'eraser';
+    updateTextOfToolBtn();
+  }
+});
+
+ipcRenderer.on('alt-l-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'line';
+    updateTextOfToolBtn();
+  }
+});
+
+ipcRenderer.on('alt-s-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'select';
+    updateTextOfToolBtn();
+  }
+});
+
+ipcRenderer.on('alt-i-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'identify';
+    updateTextOfToolBtn();
+  }
+});
+
+ipcRenderer.on('alt-d-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'dot';
+    updateTextOfToolBtn();
   }
 });
 
