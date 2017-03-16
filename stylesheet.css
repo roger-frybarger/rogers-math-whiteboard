@@ -434,6 +434,7 @@ input[type='checkbox']:checked {
   padding: 15px 0px 15px 0px;
 }
 
+/*
 .SDBtns {
   background: #3C7FE7;
   padding: 11px 25px 11px 25px;
@@ -447,6 +448,7 @@ input[type='checkbox']:checked {
   background: #0000FF;
   color: white;
 }
+*/
 
 /*
  * Below is the css that is speciffic to the insertTextDialog:

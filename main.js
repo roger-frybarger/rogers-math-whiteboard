@@ -3,6 +3,10 @@ const path = require('path');
 const url = require('url');
 const ipcMain = require('electron').ipcMain;
 const globalShortcut = require('electron').globalShortcut;
+const dialog = require('electron').dialog;
+
+const appVersion = app.getVersion();
+const osModule = require('os');
 
 var userWantsKeyboardShortcuts = false;
 
@@ -27,6 +31,12 @@ if (shouldQuit) {
 }
 
 
+// ***************UN-COMMENT BEFORE RELEASE***************
+
+//process.on('uncaughtException', function (err) {
+  //dialog.showErrorBox('An Error has Occurred in the Main Process.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Main\nStack trace:\n' + err.stack);
+//});
+
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600, minWidth: 730, minHeight: 550, icon: __dirname + '/images/icons/scribble-128.png', frame: false});
@@ -42,7 +52,7 @@ function createWindow () {
   
   global.theMainWindow = win; //This allows us to get a refference to the main window in the render process.
 
-  // Open the DevTools.  -- Comment this out before releasing the final version.
+  // Open the DevTools.  -- ***************COMMENT OUT BEFORE RELEASE***************
   win.webContents.openDevTools();
   
   //console.log('before sending');
@@ -66,32 +76,34 @@ function createWindow () {
   win.on('focus', registerShortcuts);
   win.on('blur', unregisterShortcuts);
   //registerShortcuts();
+  //dialog.showErrorBox('Title', 'Content');
 }
 
 function registerShortcuts() {
   if(userWantsKeyboardShortcuts){
-    globalShortcut.register('CommandOrControl+z', passUndoInput);
-    globalShortcut.register('CommandOrControl+y', passRedoInput);
-    globalShortcut.register('Escape', passEscapeInput);
-    globalShortcut.register('Alt+p', passAltPInput);
-    globalShortcut.register('Alt+e', passAltEInput);
-    globalShortcut.register('Alt+l', passAltLInput);
-    globalShortcut.register('Alt+s', passAltSInput);
-    globalShortcut.register('Alt+i', passAltIInput);
-    globalShortcut.register('Alt+d', passAltDInput);
+
+    var ret = globalShortcut.register('CommandOrControl+z', passUndoInput) &&
+              globalShortcut.register('CommandOrControl+y', passRedoInput) &&
+              globalShortcut.register('Escape', passEscapeInput) &&
+              globalShortcut.register('Alt+p', passAltPInput) &&
+              globalShortcut.register('Alt+e', passAltEInput) &&
+              globalShortcut.register('Alt+l', passAltLInput) &&
+              globalShortcut.register('Alt+s', passAltSInput) &&
+              globalShortcut.register('Alt+i', passAltIInput) &&
+              globalShortcut.register('Alt+d', passAltDInput);
+              //console.log(ret);
+              
+    if(!ret){
+      dialog.showErrorBox('Unable to Register Keyboard Shortcuts', 'This is likely due to another program having registered the same shortcuts.');
+      userWantsKeyboardShortcuts = false;
+      unregisterShortcuts();
+      win.webContents.send('keyboard-shortcuts-not-registered');
+    }
   }
 }
 
 function unregisterShortcuts() {
-  globalShortcut.unregister('CommandOrControl+z', passUndoInput);
-  globalShortcut.unregister('CommandOrControl+y', passRedoInput);
-  globalShortcut.unregister('Escape', passEscapeInput);
-  globalShortcut.unregister('Alt+p', passAltPInput);
-  globalShortcut.unregister('Alt+e', passAltEInput);
-  globalShortcut.unregister('Alt+l', passAltLInput);
-  globalShortcut.unregister('Alt+s', passAltSInput);
-  globalShortcut.unregister('Alt+i', passAltIInput);
-  globalShortcut.unregister('Alt+d', passAltDInput);
+  globalShortcut.unregisterAll();
 }
 
 function passUndoInput() {
@@ -134,20 +146,20 @@ function passAltDInput() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   app.quit();
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
 ipcMain.on('terminate-this-app', () => {
   win.destroy(); // necessary to bypass the repeat-quit-check in the render process.

@@ -12,7 +12,7 @@
       <ul>
         <!--These are the entries in the top nav bar. They each have to have the transparent image as the
         source because if that is removed, a border will be shown no matter how they are styled in the css-->
-        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
+        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog(); unregisterShortcutsOnModalDialogOpen();"><img id="settingsBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="undoBtnFunction();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="redoBtnFunction();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
         <li><a href="#" onclick="copyBtnFunction();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
@@ -114,7 +114,7 @@
     
     <div id="settingsDialog" class="modalDialogs">
       <div>
-        <a id="SDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="SDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>Settings:</h2>
         <div class="modalBoxContent">
           <p>Note: Since this app is designed to be portable, these settings will only remain in effect until you close the app. Unfortunately, that means you will need to re-adjust them to your liking every time you start the app. Portability comes with its costs.</p>
@@ -124,8 +124,7 @@
             <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
             <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
             <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> esc --> Cancel draw/select/paste/etc, <br> alt+p --> Pen, <br> alt+e --> Eraser, <br> alt+l --> Straight Line, <br> alt+s --> Select, <br> alt+i --> Identifier, <br> alt+d --> Dot,)</li>
-            <li><a onclick="ipcRenderer.send('launch-dev-tools');" class="SDBtns">Launch Dev Tools</a></li>
-            <li><a onclick="ipcRenderer.send('close-dev-tools');" class="SDBtns">Close Dev Tools</a><p>(The dev tools window can be useful if you encounter issues with this program. While you may not be able to solve these issues yourself, any error messages you find in the dev tools window, (found in red under the "Console" tab), can definitely help me solve the problem. Feel free to email them to me, along with a description of the problem you are encountering, and the version of this program you are using. My email address is: <input type="text" value="rogersmathwhiteboard@gmail.com" style="width: 260px;text-align:center;" readonly> I will respond as my time allows.)</p></li>
+            <li><input id="SDSilenceErrorMessages" type="checkbox" value="false"> Silence error messages. <br> (This can be useful if you are constantly being bothered by an error message while the program seems to be performing fine. However, it could also lead to further malfunctioning, which could leave the app unusable. Use with caution.)</li>
             <li>More settings coming soon!</li>
           </ul>
           

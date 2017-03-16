@@ -8,6 +8,9 @@ const Menu = remote.Menu;
 var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a refference to the main window so we can use
 // it for dialoug boxes.
 
+const appVersion = require('electron').remote.app.getVersion();
+const osModule = require('os');
+
 // This enables the right-click menu over the text boxes. I found it at:
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
@@ -38,6 +41,18 @@ const InputMenu = Menu.buildFromTemplate([{
 
 
 window.addEventListener('resize', onWindowResize);
+
+var userWantsErrorMessages = true
+
+
+
+// ***************UN-COMMENT BEFORE RELEASE***************
+
+//process.on('uncaughtException', function (err) {
+  //if(userWantsErrorMessages){
+    //dialog.showErrorBox('An Error has Occurred in the Render Process.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings screen. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + err.stack);
+  //}
+//});
 
 
 
@@ -81,6 +96,7 @@ var tempImageForWindowResize;
 
 //var locationToCheckWhenPushingDataIntoLocalStorage;
 var weGotKeyboardShortcuts = false;
+var temporarilyDisabledKeyboardShortcuts = false;
 
 var counterForRestoringImages;
 
@@ -117,6 +133,11 @@ var SideToolbarWidth = 150;
 // It essentially delegates the validation work off to the userWantsToClose() function.
 ipcRenderer.on('close-button-clicked', () => {
   userWantsToClose();
+});
+
+ipcRenderer.on('keyboard-shortcuts-not-registered', () => {
+  weGotKeyboardShortcuts = false;
+  temporarilyDisabledKeyboardShortcuts = false;
 });
 
 ipcRenderer.on('ctrl-z-pressed', () => {
@@ -1168,6 +1189,19 @@ function test2(v){
 }
 
 
+function unregisterShortcutsOnModalDialogOpen(){
+  ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
+  temporarilyDisabledKeyboardShortcuts = true;
+}
+
+function registerShortcutsOnModalDialogClose(){
+  if(temporarilyDisabledKeyboardShortcuts == true && weGotKeyboardShortcuts == true){
+    ipcRenderer.send('user-wants-keyboard-shortcuts');
+    temporarilyDisabledKeyboardShortcuts = false;
+  }
+}
+
+
 // ********* Below is the javascript related to the modal dialogs: **********
 // Variables that need to be global but are still only realted to the applicable dialog
 // are named beginning with the innitials of the dialoug's id.
@@ -1194,6 +1228,13 @@ function SDReadySettingsDialog(){
   }
   else{
     document.getElementById('SDEnableKeyboardShortcuts').checked = false;
+  }
+  
+  if(userWantsErrorMessages){
+    document.getElementById('SDSilenceErrorMessages').checked = false;
+  }
+  else{
+    document.getElementById('SDSilenceErrorMessages').checked = true;
   }
   SDInputValidation();
 }
@@ -1249,10 +1290,18 @@ function SDOkBtnFunction(){
     if(document.getElementById('SDEnableKeyboardShortcuts').checked){
       ipcRenderer.send('user-wants-keyboard-shortcuts');
       weGotKeyboardShortcuts = true;
+      temporarilyDisabledKeyboardShortcuts = false;
     }
     else{
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
       weGotKeyboardShortcuts = false;
+    }
+    
+    if(document.getElementById('SDSilenceErrorMessages').checked){
+      userWantsErrorMessages = false;
+    }
+    else{
+      userWantsErrorMessages = true;
     }
     document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
