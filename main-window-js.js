@@ -219,6 +219,15 @@ ipcRenderer.on('alt-d-pressed', () => {
   }
 });
 
+ipcRenderer.on('ctrl-a-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    tool = 'select';
+    updateTextOfToolBtn();
+    //TODO 2017-03-16_13-57: select entire drawing area,  Finish other new keyboard shortcuts, maybe fix sielence error messages.
+  }
+});
+
 ipcRenderer.on('app-finished-loading', () => {
   document.documentElement.style.overflow = 'hidden';
   adjustSizeOfMenuButtonsToScreenSize();
@@ -1024,11 +1033,15 @@ function userWantsToClose(){
     var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
     if(ret == 0){
+      ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
+      weGotKeyboardShortcuts = false;
       ipcRenderer.send('terminate-this-app');
     }
     // If the user chooses to cancel, we will do nothing and let them save the file(s) on their own.
   }
   else{
+    ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
+    weGotKeyboardShortcuts = false;
     ipcRenderer.send('terminate-this-app');
   }
 }

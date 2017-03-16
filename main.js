@@ -90,11 +90,17 @@ function registerShortcuts() {
               globalShortcut.register('Alt+l', passAltLInput) &&
               globalShortcut.register('Alt+s', passAltSInput) &&
               globalShortcut.register('Alt+i', passAltIInput) &&
-              globalShortcut.register('Alt+d', passAltDInput);
+              globalShortcut.register('Alt+d', passAltDInput) &&
+              globalShortcut.register('CommandOrControl+a', passCtrlAInput) &&
+              globalShortcut.register('CommandOrControl+Shift+a', passCtrlShiftAInput) &&
+              globalShortcut.register('CommandOrControl+c', passCtrlCInput) &&
+              globalShortcut.register('CommandOrControl+v', passCtrlVInput) &&
+              globalShortcut.register('Delete', passDeleteInput) &&
+              true;
               //console.log(ret);
               
     if(!ret){
-      dialog.showErrorBox('Unable to Register Keyboard Shortcuts', 'This is likely due to another program having registered the same shortcuts.');
+      dialog.showErrorBox('Unable to Register Keyboard Shortcuts', 'This is likely due to another program having registered some or all of the same shortcuts.');
       userWantsKeyboardShortcuts = false;
       unregisterShortcuts();
       win.webContents.send('keyboard-shortcuts-not-registered');
@@ -142,6 +148,25 @@ function passAltDInput() {
   win.webContents.send('alt-d-pressed');
 }
 
+function passCtrlAInput() {
+  win.webContents.send('ctrl-a-pressed');
+}
+
+function passCtrlShiftAInput() {
+  win.webContents.send('ctrl-shift-a-pressed');
+}
+
+function passCtrlCInput() {
+  win.webContents.send('ctrl-c-pressed');
+}
+
+function passCtrlVInput() {
+  win.webContents.send('ctrl-v-pressed');
+}
+
+function passDeleteInput() {
+  win.webContents.send('delete-pressed');
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

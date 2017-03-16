@@ -46,7 +46,7 @@
               <a id="eraserToolBtn" onclick="tool = 'eraser'; updateTextOfToolBtn();">Eraser</a>
               <a id="lineToolBtn" onclick="tool = 'line'; updateTextOfToolBtn();">Straight Line</a>
               <a id="selectToolBtn" onclick="tool = 'select'; updateTextOfToolBtn();">Select</a>
-              <a href ="#insertTextDialog" onclick="ITDReadyInsertTextDialog();" id="insertTextToolBtn">Insert Text</a>
+              <a href ="#insertTextDialog" onclick="ITDReadyInsertTextDialog(); unregisterShortcutsOnModalDialogOpen();" id="insertTextToolBtn">Insert Text</a>
               <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
               <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
             </div>
@@ -58,7 +58,7 @@
               <a id="redBtn" onclick="instrumentColor = 'rgba(255, 0, 0, 1.0)'; updateColorOfColorBtn();">Red</a>
               <a id="greenBtn" onclick="instrumentColor = 'rgba(0, 109, 0, 1.0)'; updateColorOfColorBtn();">Green</a>
               <a id="blueBtn" onclick="instrumentColor = 'rgba(78, 78, 255, 1.0)'; updateColorOfColorBtn();">Blue</a>
-              <a href="#otherColorDialog" onclick="OCDReadyOtherColorDialog();" id="otherColorBtn">Other Color</a>
+              <a href="#otherColorDialog" onclick="OCDReadyOtherColorDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherColorBtn">Other Color</a>
             </div>
         </li>
         <li>
@@ -67,7 +67,7 @@
               <a id="smallSizeBtn" onclick="instrumentWidth = 2; updateTextOfSizeBtn();">Small</a>
               <a id="mediumSizeBtn" onclick="instrumentWidth = 5; updateTextOfSizeBtn();">Medium</a>
               <a id="largeSizeBtn" onclick="instrumentWidth = 10; updateTextOfSizeBtn();">Large</a>
-              <a href ="#otherSizeDialog" onclick="OSDReadyOtherSizeDialog();" id="otherSizeBtn">Other Size</a>
+              <a href ="#otherSizeDialog" onclick="OSDReadyOtherSizeDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherSizeBtn">Other Size</a>
             </div>
         </li>
         <li>
@@ -137,7 +137,7 @@
     
     <div id="insertTextDialog" class="modalDialogs">
       <div>
-        <a id="ITDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="ITDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>Insert Text:</h2>
         <div class="modalBoxContent">
           
@@ -240,7 +240,7 @@
     
     <div id="otherColorDialog" class="modalDialogs">
       <div>
-        <a id="OCDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="OCDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>Pick a Color:</h2>
         <div class="modalBoxContent">
           
@@ -267,7 +267,7 @@
     
     <div id="otherSizeDialog" class="modalDialogs">
       <div>
-        <a id="OSDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="OSDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>New Size:</h2>
         <div class="modalBoxContent">
           <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
