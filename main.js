@@ -9,6 +9,7 @@ const appVersion = app.getVersion();
 const osModule = require('os');
 
 var userWantsKeyboardShortcuts = false;
+var userWantsErrorMessagesMain = true;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -31,11 +32,15 @@ if (shouldQuit) {
 }
 
 
-// ***************UN-COMMENT BEFORE RELEASE***************
 
-//process.on('uncaughtException', function (err) {
-  //dialog.showErrorBox('An Error has Occurred in the Main Process.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Main\nStack trace:\n' + err.stack);
-//});
+process.on('uncaughtException', function (err) {
+  if(userWantsErrorMessagesMain){
+    dialog.showErrorBox('An Error has Occurred in the Main Process.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Main\nStack trace:\n' + err.stack);
+  }
+  else{
+    console.log(err.stack);
+  }
+});
 
 function createWindow () {
   // Create the browser window.
@@ -97,10 +102,14 @@ function registerShortcuts() {
               globalShortcut.register('CommandOrControl+v', passCtrlVInput) &&
               globalShortcut.register('Delete', passDeleteInput) &&
               true;
-              //console.log(ret);
               
     if(!ret){
-      dialog.showErrorBox('Unable to Register Keyboard Shortcuts', 'This is likely due to another program having registered some or all of the same shortcuts.');
+      if(userWantsErrorMessagesMain){
+        dialog.showErrorBox('Unable to Register Keyboard Shortcuts', 'This is likely due to another program having registered some or all of the same shortcuts.');
+      }
+      else{
+        console.log('Error: Unable to Register Keyboard Shortcuts. This is likely due to another program having registered some or all of the same shortcuts.');
+      }
       userWantsKeyboardShortcuts = false;
       unregisterShortcuts();
       win.webContents.send('keyboard-shortcuts-not-registered');
@@ -219,4 +228,8 @@ ipcMain.on('launch-dev-tools', () => {
 
 ipcMain.on('close-dev-tools', () => {
   win.webContents.closeDevTools();
+});
+
+ipcMain.on('user-doesnt-want-error-messages', () => {
+  userWantsErrorMessagesMain = false;
 });

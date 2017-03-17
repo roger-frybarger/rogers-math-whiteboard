@@ -46,13 +46,16 @@ var userWantsErrorMessages = true
 
 
 
-// ***************UN-COMMENT BEFORE RELEASE***************
 
-//process.on('uncaughtException', function (err) {
-  //if(userWantsErrorMessages){
-    //dialog.showErrorBox('An Error has Occurred in the Render Process.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings screen. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + err.stack);
-  //}
-//});
+
+process.on('uncaughtException', function (err) {
+  if(userWantsErrorMessages){
+    dialog.showErrorBox('An Error has Occurred in the Render Process.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings screen. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + err.stack);
+  }
+  else{
+    throw err;
+  }
+});
 
 
 
@@ -224,7 +227,72 @@ ipcRenderer.on('ctrl-a-pressed', () => {
   if(canUseTool == false){
     tool = 'select';
     updateTextOfToolBtn();
-    //TODO 2017-03-16_13-57: select entire drawing area,  Finish other new keyboard shortcuts, maybe fix sielence error messages.
+    prevX = context.canvas.width;
+    prevY = context.canvas.height;
+    tempX = 0;
+    tempY = 0;
+    tempCanvasForInterval = 'NA';
+    tempCanvasForInterval = new Image();
+    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+    
+    areaSelected = true;
+    context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    context.lineJoin = 'round';
+    context.lineWidth = 1;
+    context.beginPath();
+    // These have to be 1 back from the edges of the canvas so they will be visible.
+    context.moveTo(tempX+1, tempY+1);
+    context.lineTo(prevX-1, tempY+1);
+    context.lineTo(prevX-1, prevY-1);
+    context.lineTo(tempX+1, prevY-1);
+    context.closePath();
+    context.stroke();
+    
+    var tempWidth = Math.abs(tempX - prevX);
+    var tempHeight = Math.abs(tempY - prevY);
+    if(tempWidth == 0 || tempHeight == 0){
+      cancelSelect();
+    }
+  }
+});
+
+ipcRenderer.on('ctrl-shift-a-pressed', () => {
+  cancelSelect();
+});
+
+ipcRenderer.on('ctrl-c-pressed', () => {
+  if(canUseTool == false){
+    copyBtnFunction();
+  }
+});
+
+ipcRenderer.on('ctrl-v-pressed', () => {
+  if(canUseTool == false){
+    cancelSelect();
+    pasteBtnFunction();
+  }
+});
+
+ipcRenderer.on('delete-pressed', () => {
+  if(canUseTool == false){
+    if(areaSelected == true){
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      var sx = Math.min(tempX, prevX);
+      var sy = Math.min(tempY, prevY);
+      var lx = Math.max(tempX, prevX);
+      var ly = Math.max(tempY, prevY);
+      var tempImageData = eraserContext.getImageData(sx, sy, lx - sx, ly - sy);
+      context.putImageData(tempImageData, sx, sy);
+      prevX = 'NA';
+      prevY = 'NA';
+      tempX = 'NA';
+      tempY = 'NA';
+      areaSelected = false;
+      pushStateIntoUndoArray();
+    }
+    else{
+      tellUserToSelectAnAreaFirst();
+    }
   }
 });
 
@@ -1312,9 +1380,11 @@ function SDOkBtnFunction(){
     
     if(document.getElementById('SDSilenceErrorMessages').checked){
       userWantsErrorMessages = false;
+      ipcRenderer.send('user-doesnt-want-error-messages');
     }
     else{
       userWantsErrorMessages = true;
+      ipcRenderer.send('user-wants-error-messages');
     }
     document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
