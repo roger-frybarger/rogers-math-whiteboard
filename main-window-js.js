@@ -1287,6 +1287,141 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
 
 
 
+
+/*
+ * Here is the code related to inserting/removing pages:
+*/
+
+function loadPage(numberOfPageToLoad){
+  // load the page that was passed in.
+  saveCurrentImageToArrayBeforeMoving();
+  currentPg = numberOfPageToLoad;
+  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+  updatePageNumsOnGui();
+  clearUndoHistory();
+}
+
+function insertTemplateAsPage(locationOfTemplate){
+  // Get the image from the string that was passed in, then call insertPageUsingImage() and pass in the image.
+  var tempImageForInserting = new Image();
+  tempImageForInserting.src = locationOfTemplate;
+  tempImageForInserting.addEventListener('load', function() {
+    insertPageUsingImage(tempImageForInserting);
+  }, false);
+}
+
+function insertPageUsingImage(img){
+  // load the image onto the screen, then into the pages arrays.
+  if(arrayOfCurrentImages.length < maxNumberOfPages){
+    safeToClose = false;
+    tempImageForWindowResize = null;
+    saveCurrentImageToArrayBeforeMoving();
+    context.drawImage(img, 0, 0);
+    eraserContext.drawImage(img, 0, 0);
+    resizeAndLoadImagesOntoCanvases(img, img, img.naturalWidth, img.naturalHeight);
+    var tempImageForInserting = new Image();
+    tempImageForInserting.src = context.canvas.toDataURL('image/png');
+    arrayOfCurrentImages.splice(currentPg, 0, tempImageForInserting);
+    
+    tempImageForInserting.src = eraserContext.canvas.toDataURL('image/png');
+    arrayOfOriginalImages.splice(currentPg, 0, tempImageForInserting);
+    arrayOfOriginalImagesX.splice(currentPg, 0, img.naturalWidth);
+    arrayOfOriginalImagesY.splice(currentPg, 0, img.naturalHeight);
+    currentPg++;
+    updatePageNumsOnGui();
+    clearUndoHistory();
+  }
+  else{
+    tellUserTheyHaveExcededMaxPages();
+  }
+}
+
+function saveCurrentImageToArrayBeforeMoving(){
+  var tempImageForInserting = new Image();
+  //console.log(context.canvas.toDataURL('image/png'));
+  tempImageForInserting.src = context.canvas.toDataURL('image/png');
+  arrayOfCurrentImages[currentPg - 1] = tempImageForInserting;
+}
+
+function tellUserTheyHaveExcededMaxPages(){
+  // Here we explain why they can't insert another page:
+  alert('Max Pages Exceededddddd please change this message!!!!!');
+}
+
+function updatePageNumsOnGui(totalNumOfPagesChanged){
+  document.getElementById('pageTextBoxID').value = currentPg;
+  document.getElementById('totalPagesDivID').innerHTML = 'Total Pages: ' + arrayOfCurrentImages.length;
+  document.getElementById('pageTextBoxID').setAttribute('max', arrayOfCurrentImages.length);
+}
+
+function pageInputBoxValidator(){
+  var input = document.getElementById('pageTextBoxID').value;
+  var tempNum = parseInt(input);
+  if(isNaN(tempNum) || tempNum > arrayOfCurrentImages.length || tempNum < 1){
+    document.getElementById('pageTextBoxID').style.backgroundColor = 'red';
+  }
+  else{
+    document.getElementById('pageTextBoxID').style.backgroundColor = 'white';
+  }
+}
+
+function pageInputBoxCheckForEnter(e){
+  var key = e.which || e.keyCode;
+  if (key === 13) { // 13 is enter
+    goBtnFunction();
+  }
+}
+
+function previousPageBtnFunction(){
+  if(currentPg > 1){
+    loadPage(currentPg - 1);
+  }
+}
+
+function nextPageBtnFunction(){
+  if(currentPg < arrayOfCurrentImages.length){
+    loadPage(currentPg + 1);
+  }
+}
+
+function goBtnFunction(){
+  var input = document.getElementById('pageTextBoxID').value;
+  var tempNum = parseInt(input);
+  if(isNaN(tempNum) || tempNum > arrayOfCurrentImages.length || tempNum < 1){
+    document.getElementById('pageTextBoxID').style.backgroundColor = 'red';
+  }
+  else{
+    document.getElementById('pageTextBoxID').style.backgroundColor = 'white';
+    loadPage(tempNum);
+  }
+}
+
+
+function deletePageBtnFunction(){
+  if(arrayOfCurrentImages.length > 1){
+    //Here we question them if they want to delete the page, and delete it if they say yes.
+    
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
+      
+    if(ret == 1){
+      //Delete page...
+      console.log('Deleting...');
+    }
+    
+  }
+  else{
+    // Here we tell them that the document must have at least one page:
+    alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.');
+  }
+}
+
+
+
+
+
+
+
+
 function test(){
   
   console.log('rtdytrdytrdytrd');

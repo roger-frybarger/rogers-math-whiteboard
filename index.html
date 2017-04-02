@@ -34,7 +34,7 @@
               <a id="openImagesBtn">Open Images</a>
               <a id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
-              <a id="deletePageBtn">Delete Page</a>
+              <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a id="helpBtn">Help</a>
               <a id="aboutBtn">About</a>
             </div>
@@ -73,7 +73,7 @@
         <li>
           <a class="dropbtn" onclick="insertPageBtnFunction();" id="insertPageBtn">Insert Page</a>
             <div class="dropdown-content" id="insertPageDropdown">
-              <a id="blankWhitePageBtn">Blank White</a>
+              <a id="blankWhitePageBtn" onclick="insertTemplateAsPage('images/Blank_White_Page.png');">Blank White</a>
               <a id="graphPaperPageBtn">Graph Paper</a>
               <a id="coordinatePlaneBtn">Coordinate</a>
               <a id="screenshotBtn">Screenshot</a>
@@ -81,18 +81,18 @@
             </div>
         </li>
         <li>
-          <a class="btn" id="previousPageBtn">Previous Page</a>
+          <a class="btn" id="previousPageBtn" onclick="previousPageBtnFunction();">Previous Page</a>
         </li>
         <li>
-          <a class="btn" id="nextPageBtn">Next Page</a>
+          <a class="btn" id="nextPageBtn" onclick="nextPageBtnFunction();">Next Page</a>
         </li>
       </ul>
     </div>
     <div id="pageTextBoxDivID">
-      Page: <input type="number" name="pageTextBox" id="pageTextBoxID" value="1" min="1" max="1"><br>
+      Page: <input type="number" name="pageTextBox" id="pageTextBoxID" oninput="pageInputBoxValidator()" onkeydown="pageInputBoxCheckForEnter(event)" value="1" min="1" max="1"><br>
     </div>
     <div id="goBtnDivID">
-      <a class="btn" id="goBtnID">Go</a>
+      <a class="btn" id="goBtnID" onclick="goBtnFunction();">Go</a>
     </div>
     <div id="totalPagesDivID">
       Total Pages: 1
@@ -229,7 +229,7 @@
           
         </div>
         <p id="ITDTextLabel">Text:</p>
-        <input type="text" oninput="ITDValidationFunction()" onkeydown="ITDCheckForEnter(event);" id="ITDTextBox" size="20" autofocus>
+        <input type="text" oninput="ITDValidationFunction();" onkeydown="ITDCheckForEnter(event);" id="ITDTextBox" size="20" autofocus>
         <a class="ITDBtn" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
         <a class="ITDBtn" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
         <a onclick="ITDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
