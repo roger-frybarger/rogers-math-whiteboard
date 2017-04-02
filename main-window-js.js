@@ -222,6 +222,38 @@ ipcRenderer.on('alt-d-pressed', () => {
   }
 });
 
+ipcRenderer.on('alt-b-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    instrumentColor = 'rgba(78, 78, 255, 1.0)';
+    updateColorOfColorBtn();
+  }
+});
+
+ipcRenderer.on('alt-k-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    instrumentColor = 'rgba(0, 0, 0, 1.0)';
+    updateColorOfColorBtn();
+  }
+});
+
+ipcRenderer.on('alt-r-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    instrumentColor = 'rgba(255, 0, 0, 1.0)';
+    updateColorOfColorBtn();
+  }
+});
+
+ipcRenderer.on('alt-g-pressed', () => {
+  cancelSelect();
+  if(canUseTool == false){
+    instrumentColor = 'rgba(0, 109, 0, 1.0)';
+    updateColorOfColorBtn();
+  }
+});
+
 ipcRenderer.on('ctrl-a-pressed', () => {
   cancelSelect();
   if(canUseTool == false){

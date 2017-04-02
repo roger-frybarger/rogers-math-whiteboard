@@ -96,6 +96,10 @@ function registerShortcuts() {
               globalShortcut.register('Alt+s', passAltSInput) &&
               globalShortcut.register('Alt+i', passAltIInput) &&
               globalShortcut.register('Alt+d', passAltDInput) &&
+              globalShortcut.register('Alt+b', passAltBInput) &&
+              globalShortcut.register('Alt+k', passAltKInput) &&
+              globalShortcut.register('Alt+r', passAltRInput) &&
+              globalShortcut.register('Alt+g', passAltGInput) &&
               globalShortcut.register('CommandOrControl+a', passCtrlAInput) &&
               globalShortcut.register('CommandOrControl+Shift+a', passCtrlShiftAInput) &&
               globalShortcut.register('CommandOrControl+c', passCtrlCInput) &&
@@ -155,6 +159,22 @@ function passAltIInput() {
 
 function passAltDInput() {
   win.webContents.send('alt-d-pressed');
+}
+
+function passAltBInput() {
+  win.webContents.send('alt-b-pressed');
+}
+
+function passAltKInput() {
+  win.webContents.send('alt-k-pressed');
+}
+
+function passAltRInput() {
+  win.webContents.send('alt-r-pressed');
+}
+
+function passAltGInput() {
+  win.webContents.send('alt-g-pressed');
 }
 
 function passCtrlAInput() {
