@@ -562,3 +562,12 @@ input[type='checkbox']:checked {
 #OSDSizeTextBox {
   width: 150px;
 }
+
+/*
+ * Below is the css that is speciffic to the otherSizeDialog:
+*/
+
+.OPDImages {
+  width: 452px;
+  height: 349px;
+}

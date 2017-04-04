@@ -1182,6 +1182,9 @@ window.onclick = function(e) {
   if(id != 'canvas1' && id != 'copyBtn' && id != 'drawRectangleBtn' && id != 'fillRectangleBtn' && id != 'drawEllipseBtn' && id != 'fillEllipseBtn' && id != 'topRightMinimizeBtn'){
     cancelSelect();
   }
+  if(id != 'pageTextBoxID' && id != 'goBtnID'){
+    updatePageNumsOnGui();
+  }
 }
 
 //Closes all the other dropdowns except for the one with the name passed in.
@@ -1348,10 +1351,12 @@ function tellUserTheyHaveExcededMaxPages(){
   alert('Max Pages Exceededddddd please change this message!!!!!');
 }
 
-function updatePageNumsOnGui(totalNumOfPagesChanged){
-  document.getElementById('pageTextBoxID').value = currentPg;
+function updatePageNumsOnGui(){
+  var box = document.getElementById('pageTextBoxID');
+  box.value = currentPg;
+  box.style.backgroundColor = 'white';
+  box.setAttribute('max', arrayOfCurrentImages.length);
   document.getElementById('totalPagesDivID').innerHTML = 'Total Pages: ' + arrayOfCurrentImages.length;
-  document.getElementById('pageTextBoxID').setAttribute('max', arrayOfCurrentImages.length);
 }
 
 function pageInputBoxValidator(){
@@ -1361,7 +1366,12 @@ function pageInputBoxValidator(){
     document.getElementById('pageTextBoxID').style.backgroundColor = 'red';
   }
   else{
-    document.getElementById('pageTextBoxID').style.backgroundColor = 'white';
+    if(tempNum != currentPg){
+      document.getElementById('pageTextBoxID').style.backgroundColor = 'yellow';
+    }
+    else{
+      document.getElementById('pageTextBoxID').style.backgroundColor = 'white';
+    }
   }
 }
 
@@ -1405,7 +1415,7 @@ function deletePageBtnFunction(){
       
     if(ret == 1){
       //Delete page...
-      console.log('Deleting...');
+      deleteCurrentPage();
     }
     
   }
@@ -1414,6 +1424,22 @@ function deletePageBtnFunction(){
     alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.');
   }
 }
+
+function deleteCurrentPage(){
+  arrayOfCurrentImages.splice(currentPg - 1, 1);
+  arrayOfOriginalImages.splice(currentPg - 1, 1);
+  arrayOfOriginalImagesX.splice(currentPg - 1, 1);
+  arrayOfOriginalImagesY.splice(currentPg - 1, 1);
+  if(currentPg > 1){
+    --currentPg;
+  }
+  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+  updatePageNumsOnGui();
+  clearUndoHistory();
+}
+
+
+
 
 
 
@@ -1880,6 +1906,19 @@ function OSDCheckForEnter(e){
       OSDOkBtnFunction();
     }
 }
+
+// Here is the code for the otherPageDialog:
+
+function OPDReadyOtherPageDialog(){
+  
+}
+
+function OPDInsertPage(e){
+  var locOfTem = e.target.src;
+  insertTemplateAsPage(locOfTem);
+  document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
 
 
 

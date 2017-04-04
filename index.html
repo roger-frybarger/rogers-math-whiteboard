@@ -74,10 +74,10 @@
           <a class="dropbtn" onclick="insertPageBtnFunction();" id="insertPageBtn">Insert Page</a>
             <div class="dropdown-content" id="insertPageDropdown">
               <a id="blankWhitePageBtn" onclick="insertTemplateAsPage('images/Blank_White_Page.png');">Blank White</a>
-              <a id="graphPaperPageBtn">Graph Paper</a>
-              <a id="coordinatePlaneBtn">Coordinate</a>
+              <a id="graphPaperPageBtn" onclick="insertTemplateAsPage('images/Blank_Graph_Paper_Page.png');">Graph Paper</a>
+              <a id="coordinatePlaneBtn" onclick="insertTemplateAsPage('images/Blank_X_Y_Graph_Paper_Page.png');">Coordinate</a>
               <a id="screenshotBtn">Screenshot</a>
-              <a id="otherPageBtn">Other</a>
+              <a href ="#otherPageDialog" onclick="OPDReadyOtherPageDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherPageBtn">Other</a>
             </div>
         </li>
         <li>
@@ -107,7 +107,7 @@
     <!--Below is the html code for all of the modal dialog boxes that pop up and allow access to functionality not avaliable
     in the main user interface. These follow a strict naming convention. All ids of all elements related to a particular 
     dialog must start with the innitials of the id of that dialog. Any classes must also start with the innitials of the id 
-    of the applicable dialog unless of course they are meant to be avaliable globaly to all dialogs. They are in order from
+    of the applicable dialog unless of course they are meant to be avaliable globaly to all dialogs. The dialogs are in order from
     the settings dialog down through to the other dialogs.-->
     
     <!--Here is the settings dialog-->
@@ -286,6 +286,26 @@
           <a class="modalBoxKeypadBtns" onclick="OSDClear();">Clear</a><br>
         </div>
         <a onclick="OSDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
+      </div>
+    </div>
+    
+    <!--Insert Screenshot dialog goes here-->
+    
+    <!--Here is the insertOtherPage dialog-->
+    
+    <div id="otherPageDialog" class="modalDialogs">
+      <div>
+        <a id="OPDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <h2>Choose a Template:</h2>
+        <div class="modalBoxContent">
+          
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" id="OPDBlankGraphPaperPageSmallerSquares" src="images/other_templates/Blank_Graph_Paper_Page_Smaller_Squares.png"></a>
+          <p>↑ Graph Paper Smaller Squares</p>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" id="OPDBlankGraphPaperPageLargerSquares" src="images/other_templates/Blank_Graph_Paper_Page_Larger_Squares.png"></a>
+          <p>↑ Graph Paper Larger Squares</p>
+          
+        </div>
+        
       </div>
     </div>
     
