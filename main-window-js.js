@@ -1919,6 +1919,10 @@ function OPDInsertPage(e){
   document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }
 
+function OPDInsertColoredPage(){
+  //TODO: Make this insert colored page...
+}
+
 
 
 
