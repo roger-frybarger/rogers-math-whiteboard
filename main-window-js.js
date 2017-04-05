@@ -2,6 +2,8 @@
 const {ipcRenderer} = require('electron');
 const {dialog} = require('electron').remote;
 
+var fs = require('fs');
+
 
 const remote = require('electron').remote;
 const Menu = remote.Menu;
@@ -1909,10 +1911,6 @@ function OSDCheckForEnter(e){
 
 // Here is the code for the otherPageDialog:
 
-function OPDReadyOtherPageDialog(){
-  
-}
-
 function OPDInsertPage(e){
   var locOfTem = e.target.src;
   insertTemplateAsPage(locOfTem);
@@ -1920,7 +1918,37 @@ function OPDInsertPage(e){
 }
 
 function OPDInsertColoredPage(){
-  //TODO: Make this insert colored page...
+  var whiteImage = new Image();
+  whiteImage.addEventListener('load', function() {
+    var orgWidth = context.canvas.width;
+    var orgHeight = context.canvas.height;
+    var originalImageOnCanvas = new Image();
+    originalImageOnCanvas.src = context.canvas.toDataURL('image/png');
+    context.canvas.width = 2200;
+    context.canvas.height = 1700;
+    context.drawImage(whiteImage, 0, 0);
+    context.fillStyle = instrumentColor;
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    var imageToInsert = new Image();
+    imageToInsert.src = context.canvas.toDataURL('image/png');
+    context.canvas.width = orgWidth;
+    context.canvas.height = orgHeight;
+    context.drawImage(originalImageOnCanvas, 0, 0);
+    insertPageUsingImage(imageToInsert);
+  }, false);
+  whiteImage.src = 'images/Blank_White_Page.png';
+  document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
+function OPDInsertPageFromImage(){
+  dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
+   { name: 'Image', extensions: ['png', 'jpeg', 'jpg'] }
+    ]}, function (fileNames) {
+    if (fileNames === undefined) return;
+    var fileName = fileNames[0];
+    insertTemplateAsPage(fileName);
+    document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+ });
 }
 
 

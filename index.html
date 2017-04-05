@@ -77,7 +77,7 @@
               <a id="graphPaperPageBtn" onclick="insertTemplateAsPage('images/Blank_Graph_Paper_Page.png');">Graph Paper</a>
               <a id="coordinatePlaneBtn" onclick="insertTemplateAsPage('images/Blank_X_Y_Graph_Paper_Page.png');">Coordinate</a>
               <a id="screenshotBtn">Screenshot</a>
-              <a href ="#otherPageDialog" onclick="OPDReadyOtherPageDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherPageBtn">Other</a>
+              <a href ="#otherPageDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="otherPageBtn">Other</a>
             </div>
         </li>
         <li>
@@ -381,6 +381,8 @@
           <p>↑ Lined Page</p>
           <a onclick="OPDInsertColoredPage();"><img class="OPDImages" src="images/other_templates/Colored_Page.png"></a>
           <p>↑ Colored Page</p>
+          <a onclick="OPDInsertPageFromImage();"><img class="OPDImages" src="images/other_templates/From_Image.png"></a>
+          <p>↑ Insert Page Using Image</p>
           
           
         </div>
