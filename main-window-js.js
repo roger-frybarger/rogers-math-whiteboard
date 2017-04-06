@@ -1350,7 +1350,7 @@ function saveCurrentImageToArrayBeforeMoving(){
 
 function tellUserTheyHaveExcededMaxPages(){
   // Here we explain why they can't insert another page:
-  alert('Max Pages Exceededddddd please change this message!!!!!');
+  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' + maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
 }
 
 function updatePageNumsOnGui(){
