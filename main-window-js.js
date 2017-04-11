@@ -1423,7 +1423,7 @@ function deletePageBtnFunction(){
   }
   else{
     // Here we tell them that the document must have at least one page:
-    alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.');
+    alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.', '');
   }
 }
 
