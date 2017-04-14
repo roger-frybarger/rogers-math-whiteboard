@@ -293,11 +293,11 @@
     
     <div id="insertScreenshotDialog" class="modalDialogs">
       <div>
-        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanImagesFromModal();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>Insert Screenshot</h2>
         <div class="modalBoxContent">
           <!--Here is where the content of the modal box will go:-->
-          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
+          <p>Select the screen or window that you would like to capture:</p>
           
         </div>
         <a onclick="ISDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>

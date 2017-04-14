@@ -1917,7 +1917,12 @@ function ISDReadyInsertScreenshotDialog(){
 
 function ISDOkBtnFunction(){
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
+  ISDCleanImagesFromModal();
   document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
+function ISDCleanImagesFromModal(){
+  // Eventually, we will clean out all of the images in the modal here.
 }
 
 // Here is the code for the otherPageDialog:
