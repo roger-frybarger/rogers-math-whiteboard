@@ -1909,6 +1909,17 @@ function OSDCheckForEnter(e){
     }
 }
 
+// Here is the code for the insertScreenshotDialog:
+
+function ISDReadyInsertScreenshotDialog(){
+  // get thumnails of each screen/window & insert into the dialog.
+}
+
+function ISDOkBtnFunction(){
+  // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
+  document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
 // Here is the code for the otherPageDialog:
 
 function OPDInsertPage(e){

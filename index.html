@@ -76,7 +76,7 @@
               <a id="blankWhitePageBtn" onclick="insertTemplateAsPage('images/Blank_White_Page.png');">Blank White</a>
               <a id="graphPaperPageBtn" onclick="insertTemplateAsPage('images/Blank_Graph_Paper_Page.png');">Graph Paper</a>
               <a id="coordinatePlaneBtn" onclick="insertTemplateAsPage('images/Blank_X_Y_Graph_Paper_Page.png');">Coordinate</a>
-              <a id="screenshotBtn">Screenshot</a>
+              <a id="screenshotBtn" href ="#insertScreenshotDialog" onclick="ISDReadyInsertScreenshotDialog(); unregisterShortcutsOnModalDialogOpen();">Screenshot</a>
               <a href ="#otherPageDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="otherPageBtn">Other</a>
             </div>
         </li>
@@ -289,7 +289,20 @@
       </div>
     </div>
     
-    <!--Insert Screenshot dialog goes here-->
+    <!--Here is the insertScreenshot dialog-->
+    
+    <div id="insertScreenshotDialog" class="modalDialogs">
+      <div>
+        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <h2>Insert Screenshot</h2>
+        <div class="modalBoxContent">
+          <!--Here is where the content of the modal box will go:-->
+          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
+          
+        </div>
+        <a onclick="ISDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
+      </div>
+    </div>
     
     <!--Here is the insertOtherPage dialog-->
     
