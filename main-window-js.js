@@ -2,6 +2,8 @@
 const {ipcRenderer} = require('electron');
 const {dialog} = require('electron').remote;
 
+const {desktopCapturer} = require('electron');
+
 var fs = require('fs');
 
 
@@ -52,7 +54,11 @@ var userWantsErrorMessages = true
 
 process.on('uncaughtException', function (err) {
   if(userWantsErrorMessages){
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings screen. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + err.stack);
+    var stk = "Empty :(";
+    if(err != null){
+      stk = err.stack;
+    }
+    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings screen. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk);
   }
   else{
     throw err;
@@ -1913,6 +1919,29 @@ function OSDCheckForEnter(e){
 
 function ISDReadyInsertScreenshotDialog(){
   // get thumnails of each screen/window & insert into the dialog.
+  desktopCapturer.getSources({types: ['window', 'screen']}, (error, sources) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    for (let i = 0; i < sources.length; ++i) {
+      //console.log(sources[i]);
+      //console.log(sources[i].thumbnail);
+      
+      var elem = document.createElement('img');
+      elem.setAttribute('src', sources[i].thumbnail.toDataURL());
+      var str = 'ISDThumbnailClicked("' + sources[i].id + '");';
+      console.log(str);
+      elem.setAttribute('onclick', str);
+      document.getElementById("ISDContentDiv").appendChild(elem);
+      
+    }
+  });
+  
+}
+
+function ISDThumbnailClicked(id){
+  console.log(id);
 }
 
 function ISDOkBtnFunction(){
