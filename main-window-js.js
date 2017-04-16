@@ -1917,23 +1917,46 @@ function OSDCheckForEnter(e){
 
 // Here is the code for the insertScreenshotDialog:
 
+var ISDCanInsert = false;
+var ISDAreaSelected = false;
+
 function ISDReadyInsertScreenshotDialog(){
+  ISDCanInsert = false;
+  ISDAreaSelected = false;
   // get thumnails of each screen/window & insert into the dialog.
-  desktopCapturer.getSources({types: ['window', 'screen']}, (error, sources) => {
+  desktopCapturer.getSources({types: ['window', 'screen'], thumbnailSize: {width: 400, height: 400}}, (error, sources) => {
     if (error) {
-      console.log(error);
+      alert('Unable to obtain screenshot sources.', 'Error:');
       return;
     }
-    for (let i = 0; i < sources.length; ++i) {
-      //console.log(sources[i]);
-      //console.log(sources[i].thumbnail);
-      
+    // clear out the dialog:
+    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:';
+    document.getElementById("ISDContentDiv").innerHTML = '';
+    // Prepare the dialog with some spaces:
+    var br = document.createElement('br');
+    document.getElementById("ISDContentDiv").appendChild(br);
+    document.getElementById("ISDContentDiv").appendChild(br);
+    document.getElementById("ISDContentDiv").appendChild(br);
+    // Now loop through each source and put its thumbnail in the dialog:
+    for (let i = 0; i < sources.length; ++i) {  // For each one we will...
+      // Make the image element:
       var elem = document.createElement('img');
       elem.setAttribute('src', sources[i].thumbnail.toDataURL());
       var str = 'ISDThumbnailClicked("' + sources[i].id + '");';
-      console.log(str);
       elem.setAttribute('onclick', str);
+      // Make a name element:
+      var elem2 = document.createElement('p');
+      var str2 = sources[i].name;
+      if(str2.length > 40){
+        str2 = str2.substring(0, 40) + '...';
+      }
+      elem2.innerHTML = '↑ ' + str2;
+      // Make a line break element:
+      var elem3 = document.createElement('br');
+      // Add all 3 elements to the dialog:
       document.getElementById("ISDContentDiv").appendChild(elem);
+      document.getElementById("ISDContentDiv").appendChild(elem2);
+      document.getElementById("ISDContentDiv").appendChild(elem3);
       
     }
   });
@@ -1941,18 +1964,26 @@ function ISDReadyInsertScreenshotDialog(){
 }
 
 function ISDThumbnailClicked(id){
+  // 1. clear out the dialog
+  // 2. put up new message
+  // 3. use id to get screenshot of desired thing & put in canvas of right size.
+  // 4. re-focus main window
+  // 5. set ISDCanInsert to true & area selected to false.
+  // 6. allow croping.
+  // 7. If area gets selected, store area & set ISDAreaSelected to true.
+  // 8. make btn for de-select.
   console.log(id);
 }
 
 function ISDOkBtnFunction(){
+  // check ISDCanInsert before doing anything.
+  // then check if area selected
+  // if not, simply grab data & insert.
+  // Otherwise, grab data, paint white, paint data in upper corner, grab data & insert, all without degregating image quality.
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
-  ISDCleanImagesFromModal();
   document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }
 
-function ISDCleanImagesFromModal(){
-  // Eventually, we will clean out all of the images in the modal here.
-}
 
 // Here is the code for the otherPageDialog:
 
