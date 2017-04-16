@@ -1930,7 +1930,7 @@ function ISDReadyInsertScreenshotDialog(){
       return;
     }
     // clear out the dialog:
-    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:';
+    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update.';
     document.getElementById("ISDContentDiv").innerHTML = '';
     // Prepare the dialog with some spaces:
     var br = document.createElement('br');
@@ -1964,14 +1964,15 @@ function ISDReadyInsertScreenshotDialog(){
 }
 
 function ISDThumbnailClicked(id){
-  // 1. clear out the dialog
-  // 2. put up new message
-  // 3. use id to get screenshot of desired thing & put in canvas of right size.
-  // 4. re-focus main window
-  // 5. set ISDCanInsert to true & area selected to false.
-  // 6. allow croping.
-  // 7. If area gets selected, store area & set ISDAreaSelected to true.
-  // 8. make btn for de-select.
+  // 1. clear out the dialog & put up new message
+  document.getElementById('ISDContentHeader').innerHTML = 'Capturing Screenshot...';
+  document.getElementById("ISDContentDiv").innerHTML = '';
+  // 2. use id to get screenshot of desired thing & put in canvas of right size.
+  // 3. re-focus main window
+  // 4. set ISDCanInsert to true & area selected to false.
+  // 5. allow croping.
+  // 6. If area gets selected, store area & set ISDAreaSelected to true.
+  // 7. make btn for de-select.
   console.log(id);
 }
 
