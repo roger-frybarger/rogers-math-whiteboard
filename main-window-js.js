@@ -1919,6 +1919,7 @@ function OSDCheckForEnter(e){
 
 var ISDCanInsert = false;
 var ISDAreaSelected = false;
+var ISDScreenShotORIGINAL;
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -1968,12 +1969,70 @@ function ISDThumbnailClicked(id){
   document.getElementById('ISDContentHeader').innerHTML = 'Capturing Screenshot...';
   document.getElementById("ISDContentDiv").innerHTML = '';
   // 2. use id to get screenshot of desired thing & put in canvas of right size.
-  // 3. re-focus main window
+  navigator.webkitGetUserMedia({
+    audio: false,
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: id,
+        minWidth: 1280,
+        maxWidth: 1280,
+        minHeight: 720,
+        maxHeight: 720
+      }
+    }
+  }, ISDHandleStream, ISDHandleError);
+
+  //console.log(id);
+}
+
+function ISDHandleError(e){
+  alert('An error occured while obtaining the screenshot. Here is the error:\n\n' + e.name, 'Error:');
+}
+
+function ISDHandleStream(stream){
+  console.log('got stream');
+  
+  // Create hidden video tag
+  var video = document.createElement('video');
+  video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
+  // Event connected to stream
+  video.onloadedmetadata = function () {
+    // Set video ORIGINAL height (screenshot)
+    video.style.height = this.videoHeight + 'px'; // videoHeight
+    video.style.width = this.videoWidth + 'px'; // videoWidth
+
+    // Create canvas
+    var canvas = document.createElement('canvas');
+    canvas.width = this.videoWidth;
+    canvas.height = this.videoHeight;
+    var ctx = canvas.getContext('2d');
+    // Draw video on canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Save screenshot to base64
+    ISDScreenShotORIGINAL = canvas.toDataURL('image/png');
+    
+    ISDReadyForCroping();
+
+    // Remove hidden video tag
+    video.remove();
+    try {
+        // Destroy connect to stream
+        stream.getTracks()[0].stop();
+    } catch (e) {}
+  }
+  video.src = URL.createObjectURL(stream);
+  document.body.appendChild(video);
+  
+}
+
+function ISDReadyForCroping(){
+    // 3. re-focus main window
   // 4. set ISDCanInsert to true & area selected to false.
   // 5. allow croping.
   // 6. If area gets selected, store area & set ISDAreaSelected to true.
   // 7. make btn for de-select.
-  console.log(id);
 }
 
 function ISDOkBtnFunction(){
