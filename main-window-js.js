@@ -2032,11 +2032,19 @@ function ISDReadyForCroping(){
   // 3. re-focus main window
   ipcRenderer.send('focus-main-win');
   // 4. Put screenshot in canvas of right size
-  
+  console.log(ISDGetAvaliableDialogSpace());
   // 5. set ISDCanInsert to true & area selected to false.
   // 6. allow croping.
   // 7. If area gets selected, store area & set ISDAreaSelected to true.
   // 8. make btn for de-select.
+}
+
+function ISDGetAvaliableDialogSpace(){
+  var x = (0.88 * window.innerWidth) - 145; // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future.
+  var y = (0.68 * window.innerHeight) - 21; // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future.
+  x = Math.round(x);
+  y = Math.round(y);
+  return {avaliableWidth: x, avaliableHeight: y };
 }
 
 function ISDOkBtnFunction(){
