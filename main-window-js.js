@@ -1920,6 +1920,9 @@ function OSDCheckForEnter(e){
 var ISDCanInsert = false;
 var ISDAreaSelected = false;
 var ISDScreenShotORIGINAL;
+var ISDXScale;
+var ISDYScale;
+var ISDImageToReturn;
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -2032,7 +2035,14 @@ function ISDReadyForCroping(){
   // 3. re-focus main window
   ipcRenderer.send('focus-main-win');
   // 4. Put screenshot in canvas of right size
-  console.log(ISDGetAvaliableDialogSpace());
+  //console.log(ISDGetAvaliableDialogSpace());
+  var canvasForScreenshot = document.createElement('canvas');
+  var img = new Image();
+  img.src = ISDScreenShotORIGINAL;
+  console.log(img.naturalWidth);
+  console.log(img.naturalHeight);
+  //document.getElementById("ISDContentDiv").appendChild(img);
+  
   // 5. set ISDCanInsert to true & area selected to false.
   // 6. allow croping.
   // 7. If area gets selected, store area & set ISDAreaSelected to true.
