@@ -564,6 +564,23 @@ input[type='checkbox']:checked {
 }
 
 /*
+ * Below is the css that is speciffic to the insertScreenshotDialog:
+*/
+
+#ISDMainDiv {
+  max-width: 100vw;
+  margin-top: 5vh;
+  margin-right: 6vw;
+  margin-left: 6vw;
+  height: 85vh;
+}
+
+#ISDMainContentDiv {
+  height: 68vh;
+  max-height: 100vh;
+}
+
+/*
  * Below is the css that is speciffic to the otherSizeDialog:
 */
 

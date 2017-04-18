@@ -1968,7 +1968,7 @@ function ISDThumbnailClicked(id){
   // 1. clear out the dialog & put up new message
   document.getElementById('ISDContentHeader').innerHTML = 'Capturing Screenshot...';
   document.getElementById("ISDContentDiv").innerHTML = '';
-  // 2. use id to get screenshot of desired thing & put in canvas of right size.
+  // 2. use id to get screenshot of desired thing
   navigator.webkitGetUserMedia({
     audio: false,
     video: {
@@ -2013,7 +2013,8 @@ function ISDHandleStream(stream){
     // Save screenshot to base64
     ISDScreenShotORIGINAL = canvas.toDataURL('image/png');
     
-    ISDReadyForCroping();
+    setTimeout(ISDReadyForCroping, 1000);
+    //ISDReadyForCroping();
 
     // Remove hidden video tag
     video.remove();
@@ -2028,11 +2029,14 @@ function ISDHandleStream(stream){
 }
 
 function ISDReadyForCroping(){
-    // 3. re-focus main window
-  // 4. set ISDCanInsert to true & area selected to false.
-  // 5. allow croping.
-  // 6. If area gets selected, store area & set ISDAreaSelected to true.
-  // 7. make btn for de-select.
+  // 3. re-focus main window
+  ipcRenderer.send('focus-main-win');
+  // 4. Put screenshot in canvas of right size
+  
+  // 5. set ISDCanInsert to true & area selected to false.
+  // 6. allow croping.
+  // 7. If area gets selected, store area & set ISDAreaSelected to true.
+  // 8. make btn for de-select.
 }
 
 function ISDOkBtnFunction(){
