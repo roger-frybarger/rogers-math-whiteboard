@@ -1923,6 +1923,8 @@ var ISDScreenShotORIGINAL;
 var ISDXScale;
 var ISDYScale;
 var ISDImageToReturn;
+var ISDCanvas = 'NA';
+var ISDContext = 'NA';
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -2016,7 +2018,7 @@ function ISDHandleStream(stream){
     // Save screenshot to base64
     ISDScreenShotORIGINAL = canvas.toDataURL('image/png');
     
-    setTimeout(ISDReadyForCroping, 1000);
+    setTimeout(ISDReadyForCroping, 500);
     //ISDReadyForCroping();
 
     // Remove hidden video tag
@@ -2036,12 +2038,17 @@ function ISDReadyForCroping(){
   ipcRenderer.send('focus-main-win');
   // 4. Put screenshot in canvas of right size
   //console.log(ISDGetAvaliableDialogSpace());
-  var canvasForScreenshot = document.createElement('canvas');
   var img = new Image();
   img.src = ISDScreenShotORIGINAL;
-  console.log(img.naturalWidth);
-  console.log(img.naturalHeight);
-  //document.getElementById("ISDContentDiv").appendChild(img);
+  ISDCanvas = 'NA';
+  ISDCanvas = document.createElement('canvas');
+  ISDCanvas.width = img.naturalWidth;
+  ISDCanvas.height = img.naturalHeight;
+  document.getElementById("ISDContentDiv").appendChild(ISDCanvas);
+  ISDContext = ISDCanvas.getContext('2d');
+  ISDContext.drawImage(img, 0, 0, ISDCanvas.width, ISDCanvas.height);
+  
+  ISDFixCanvas();
   
   // 5. set ISDCanInsert to true & area selected to false.
   // 6. allow croping.
@@ -2049,12 +2056,94 @@ function ISDReadyForCroping(){
   // 8. make btn for de-select.
 }
 
+function ISDFixCanvas(){
+  var horizontalPixels = ISDContext.getImageData(0, 360, 640, 1);
+  var verticalPixels = ISDContext.getImageData(640, 0, 1, 360);
+  var xPixelsToCrop = 0;
+  var yPixelsToCrop = 0;
+  var pixelCounter = 0;
+  
+  console.log(horizontalPixels.data);
+  
+  for (var i=0; i < horizontalPixels.data.length; i+=4){
+    if(horizontalPixels.data[i] != 0 || horizontalPixels.data[i+1] != 0 || horizontalPixels.data[i+2] != 0){
+      xPixelsToCrop = pixelCounter;
+      i = horizontalPixels.data.length;
+    }
+    else{
+      pixelCounter+=1;
+    }
+  }
+  
+  pixelCounter = 0;
+  
+  for (var i=0; i < verticalPixels.data.length; i+=4){
+    if(verticalPixels.data[i] != 0 || verticalPixels.data[i+1] != 0 || verticalPixels.data[i+2] != 0){
+      yPixelsToCrop = pixelCounter;
+      i = verticalPixels.data.length;
+    }
+    else{
+      pixelCounter+=1;
+    }
+  }
+  
+  var picture = ISDContext.getImageData(0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+  ISDCanvas.width = ISDCanvas.width - (2 * xPixelsToCrop);
+  ISDCanvas.height = ISDCanvas.height - (2 * yPixelsToCrop);
+  ISDContext.putImageData(picture, (0 - xPixelsToCrop), (0 - yPixelsToCrop));
+  // 1. capture image from canvas & save for inserting, 2. draw preview to fit into window size.
+  
+  ISDImageToReturn = null;
+  ISDImageToReturn = new Image();
+  ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
+  
+  //console.log('jtyfuytfuytf');
+  
+  ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
+  
+}
+
+function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
+  
+  if(incommingWidth == 0 || incommingHeight == 0){
+    console.log('ERROR: You have called ISDDisplayImageOnCanvas before the image has loaded!');
+  }
+  var dlg = ISDGetAvaliableDialogSpace();
+  
+  var proportionalHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
+  if(proportionalHeight > dlg.availableHeight)
+    {  //this means height is limiting dimension.
+      var canvasHeight = dlg.availableHeight;
+      var canvasWidth = (incommingWidth * dlg.availableHeight) / incommingHeight;
+      canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
+      ISDCanvas.width = canvasWidth;
+      ISDCanvas.height = canvasHeight;
+      ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+    }
+  else
+    {  //this means width is limiting dimension.
+      var canvasWidth = dlg.availableWidth;
+      var canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
+      canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
+      ISDCanvas.width = canvasWidth;
+      ISDCanvas.height = canvasHeight;
+      ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+    }
+    
+    // Calculate & save scale factor in relation to actual image.
+    ISDXScale = ISDImageToReturn.naturalWidth / ISDCanvas.width;
+    ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
+    //tool = 'select';
+    //messageDisplayed = false;
+    //chrome.app.window.current().focus();
+}
+
 function ISDGetAvaliableDialogSpace(){
   var x = (0.88 * window.innerWidth) - 145; // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future.
   var y = (0.68 * window.innerHeight) - 21; // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future.
   x = Math.round(x);
   y = Math.round(y);
-  return {avaliableWidth: x, avaliableHeight: y };
+  return {availableWidth: x, availableHeight: y };
 }
 
 function ISDOkBtnFunction(){
