@@ -2095,11 +2095,16 @@ function ISDFixCanvas(){
   
   ISDImageToReturn = null;
   ISDImageToReturn = new Image();
+  ISDImageToReturn.onload = function(){
+    ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
+    // Here seems to be the right place to add the event listeners to the canvas.
+    // We just have to remember to remove them when the window closes.
+  };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
   
   //console.log('jtyfuytfuytf');
   
-  ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
+  //ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
   
 }
 
