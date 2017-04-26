@@ -1925,6 +1925,10 @@ var ISDYScale;
 var ISDImageToReturn;
 var ISDCanvas = null;
 var ISDContext = 'NA';
+var ISDTempX = 'NA';
+var ISDTempY = 'NA';
+var ISDPrevX = 'NA';
+var ISDPrevY = 'NA';
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -2098,7 +2102,29 @@ function ISDFixCanvas(){
   ISDImageToReturn.onload = function(){
     ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
     // Here seems to be the right place to add the event listeners to the canvas.
-    ISDCanvas.addEventListener('mousedown', ISDMouseDownFunction);
+    ISDCanvas.addEventListener('mousedown', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
+    });
+    ISDCanvas.addEventListener('touchstart', function(e){
+      var offset = getCoords(ISDCanvas);
+      if(e.touches.length == 1)
+      {
+        ISDInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+        e.preventDefault();
+      }
+      else
+      {
+        ISDInstrumentUp(ISDPrevX, ISDPrevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+      }
+    });
+    //ISDCanvas.addEventListener('mousemove', ISDMousemoveFunction);
+    //ISDCanvas.addEventListener('touchmove', ISDTouchmoveFunction);
+    //ISDCanvas.addEventListener('mouseup', ISDMouseupFunction);
+    //ISDCanvas.addEventListener('mouseleave', ISDMouseleaveFunction);
+    //ISDCanvas.addEventListener('touchend', ISDMouseleaveFunction);
+    //ISDCanvas.addEventListener('touchleave', ISDTouchleaveFunction);
+    //ISDCanvas.addEventListener('touchcancel', ISDTouchcancelFunction);
     // ........
     // We just have to remember to remove them when the window closes.
     document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click OK to insert the entire screenshot.';
@@ -2155,9 +2181,25 @@ function ISDGetAvaliableDialogSpace(){
   return {availableWidth: x, availableHeight: y };
 }
 
-function ISDMouseDownFunction(e){
-  console.log(e);
-  // .......
+//function ISDMousedownFunction(e){
+  //console.log(e);
+  //console.log(e.clientX + ', ' + e.clientY);
+  //var offset = getCoords(ISDCanvas);
+  //console.log(offset.left + ', ' + offset.top);
+  //var x = e.clientX - offset.left;
+  //var y = e.clientY - offset.top;
+  //console.log(x + ', ' + y);
+
+  //console.log(' ' + (e.clientX - offset.left) + ', ' + (e.clientY - offset.top));
+  //// .......
+//}
+
+function ISDInstrumentDown(x, y){
+  console.log(x + ', ' + y);
+}
+
+function ISDInstrumentUp(x, y){
+  console.log(x + ', ' + y);
 }
 
 function ISDOkBtnFunction(){
