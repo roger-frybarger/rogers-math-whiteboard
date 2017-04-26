@@ -455,7 +455,7 @@ function initializeCanvas(){
     arrayOfOriginalImagesY[0] = image.naturalHeight;
     clearUndoHistory();
     continueAfterAppFinishedLoading1();
-  }, false);
+  });
   image.src = 'images/Blank_White_Page.png';
 }
 
@@ -1318,7 +1318,7 @@ function insertTemplateAsPage(locationOfTemplate){
   tempImageForInserting.src = locationOfTemplate;
   tempImageForInserting.addEventListener('load', function() {
     insertPageUsingImage(tempImageForInserting);
-  }, false);
+  });
 }
 
 function insertPageUsingImage(img){
@@ -1923,7 +1923,7 @@ var ISDScreenShotORIGINAL;
 var ISDXScale;
 var ISDYScale;
 var ISDImageToReturn;
-var ISDCanvas = 'NA';
+var ISDCanvas = null;
 var ISDContext = 'NA';
 
 function ISDReadyInsertScreenshotDialog(){
@@ -1996,7 +1996,7 @@ function ISDHandleError(e){
 }
 
 function ISDHandleStream(stream){
-  console.log('got stream');
+  //console.log('got stream');
   
   // Create hidden video tag
   var video = document.createElement('video');
@@ -2040,7 +2040,7 @@ function ISDReadyForCroping(){
   //console.log(ISDGetAvaliableDialogSpace());
   var img = new Image();
   img.src = ISDScreenShotORIGINAL;
-  ISDCanvas = 'NA';
+  ISDCanvas = null;
   ISDCanvas = document.createElement('canvas');
   ISDCanvas.width = img.naturalWidth;
   ISDCanvas.height = img.naturalHeight;
@@ -2063,7 +2063,7 @@ function ISDFixCanvas(){
   var yPixelsToCrop = 0;
   var pixelCounter = 0;
   
-  console.log(horizontalPixels.data);
+  //console.log(horizontalPixels.data);
   
   for (var i=0; i < horizontalPixels.data.length; i+=4){
     if(horizontalPixels.data[i] != 0 || horizontalPixels.data[i+1] != 0 || horizontalPixels.data[i+2] != 0){
@@ -2098,7 +2098,11 @@ function ISDFixCanvas(){
   ISDImageToReturn.onload = function(){
     ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
     // Here seems to be the right place to add the event listeners to the canvas.
+    ISDCanvas.addEventListener('mousedown', ISDMouseDownFunction);
+    // ........
     // We just have to remember to remove them when the window closes.
+    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click OK to insert the entire screenshot.';
+    // Also here is where to make the ok btn work.
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
   
@@ -2151,6 +2155,11 @@ function ISDGetAvaliableDialogSpace(){
   return {availableWidth: x, availableHeight: y };
 }
 
+function ISDMouseDownFunction(e){
+  console.log(e);
+  // .......
+}
+
 function ISDOkBtnFunction(){
   // check ISDCanInsert before doing anything.
   // then check if area selected
@@ -2158,6 +2167,12 @@ function ISDOkBtnFunction(){
   // Otherwise, grab data, paint white, paint data in upper corner, grab data & insert, all without degregating image quality.
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
   document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+}
+
+function ISDCleanupFunction(){
+  // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
+  document.getElementById("ISDContentDiv").removeChild(ISDCanvas);
+  ISDCanvas = null;
 }
 
 
@@ -2187,7 +2202,7 @@ function OPDInsertColoredPage(){
     context.canvas.height = orgHeight;
     context.drawImage(originalImageOnCanvas, 0, 0);
     insertPageUsingImage(imageToInsert);
-  }, false);
+  });
   whiteImage.src = 'images/Blank_White_Page.png';
   document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }

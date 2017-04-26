@@ -293,7 +293,7 @@
     
     <div id="insertScreenshotDialog" class="modalDialogs">
       <div id="ISDMainDiv">
-        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
         <h2>Insert Screenshot</h2>
         <div id="ISDMainContentDiv" class="modalBoxContent">
           <!--Here is where the content of the modal box will go:-->
