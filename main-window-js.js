@@ -1918,12 +1918,14 @@ function OSDCheckForEnter(e){
 // Here is the code for the insertScreenshotDialog:
 
 var ISDCanInsert = false;
+var ISDCanUseTool = false;
 var ISDAreaSelected = false;
 var ISDScreenShotORIGINAL;
 var ISDXScale;
 var ISDYScale;
 var ISDImageToReturn;
 var ISDCanvas = null;
+var ISDTempCanvasForInterval = 'NA';
 var ISDContext = 'NA';
 var ISDTempX = 'NA';
 var ISDTempY = 'NA';
@@ -2101,11 +2103,14 @@ function ISDFixCanvas(){
   ISDImageToReturn = new Image();
   ISDImageToReturn.onload = function(){
     ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
+    
     // Here seems to be the right place to add the event listeners to the canvas.
+    // We just have to remember to remove them when the window closes.
     ISDCanvas.addEventListener('mousedown', function(e){
       var offset = getCoords(ISDCanvas);
       ISDInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
     });
+    
     ISDCanvas.addEventListener('touchstart', function(e){
       var offset = getCoords(ISDCanvas);
       if(e.touches.length == 1)
@@ -2118,15 +2123,46 @@ function ISDFixCanvas(){
         ISDInstrumentUp(ISDPrevX, ISDPrevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
       }
     });
-    //ISDCanvas.addEventListener('mousemove', ISDMousemoveFunction);
-    //ISDCanvas.addEventListener('touchmove', ISDTouchmoveFunction);
-    //ISDCanvas.addEventListener('mouseup', ISDMouseupFunction);
-    //ISDCanvas.addEventListener('mouseleave', ISDMouseleaveFunction);
-    //ISDCanvas.addEventListener('touchend', ISDMouseleaveFunction);
-    //ISDCanvas.addEventListener('touchleave', ISDTouchleaveFunction);
-    //ISDCanvas.addEventListener('touchcancel', ISDTouchcancelFunction);
-    // ........
-    // We just have to remember to remove them when the window closes.
+    
+    ISDCanvas.addEventListener('mousemove', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentMoved(e.pageX - offset.left, e.pageY - offset.top);
+    });
+    
+    ISDCanvas.addEventListener('touchmove', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentMoved(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      e.preventDefault();
+    });
+    
+    ISDCanvas.addEventListener('mouseup', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
+    });
+    
+    ISDCanvas.addEventListener('mouseleave', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
+    });
+    
+    ISDCanvas.addEventListener('touchend', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      e.preventDefault();
+    });
+    
+    ISDCanvas.addEventListener('touchleave', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      e.preventDefault();
+    });
+    
+    ISDCanvas.addEventListener('touchcancel', function(e){
+      var offset = getCoords(ISDCanvas);
+      ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      e.preventDefault();
+    });
+    
     document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click OK to insert the entire screenshot.';
     // Also here is where to make the ok btn work.
   };
@@ -2195,11 +2231,94 @@ function ISDGetAvaliableDialogSpace(){
 //}
 
 function ISDInstrumentDown(x, y){
-  console.log(x + ', ' + y);
+  //console.log('down ' + x + ', ' + y);
+  ISDCanUseTool = true;
+  ISDSelectMethod(x, y, 'down');
+}
+
+function ISDInstrumentMoved(x, y){
+  //console.log('move ' + x + ', ' + y);
+  if(ISDCanUseTool){
+    ISDSelectMethod(x, y, 'move');
+  }
 }
 
 function ISDInstrumentUp(x, y){
-  console.log(x + ', ' + y);
+  //console.log('up ' + x + ', ' + y);
+  if(ISDCanUseTool){
+    ISDSelectMethod(x, y, 'up');
+  }
+  ISDCanUseTool = false;
+}
+
+function ISDSelectMethod(x, y, phase){
+  switch(phase){
+    case 'down':
+      
+      ISDCancelSelect();
+      ISDPrevX = x;
+      ISDPrevY = y;
+      ISDTempX = x;
+      ISDTempY = y;
+      ISDTempCanvasForInterval = 'NA';
+      ISDTempCanvasForInterval = new Image();
+      ISDTempCanvasForInterval.src = ISDContext.canvas.toDataURL('image/png');
+      
+    break;
+    case 'move':
+      
+      ISDPrevX = x;
+      ISDPrevY = y;
+      ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+      ISDContext.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+      ISDContext.lineJoin = 'round';
+      ISDContext.lineWidth = 1;
+      ISDContext.beginPath();
+      ISDContext.moveTo(ISDTempX, ISDTempY);
+      ISDContext.lineTo(ISDPrevX, ISDTempY);
+      ISDContext.lineTo(ISDPrevX, ISDPrevY);
+      ISDContext.lineTo(ISDTempX, ISDPrevY);
+      ISDContext.closePath();
+      ISDContext.stroke();
+      
+    break;
+    case 'up':
+      
+      ISDAreaSelected = true;
+      ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+      ISDContext.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+      ISDContext.lineJoin = 'round';
+      ISDContext.lineWidth = 1;
+      ISDContext.beginPath();
+      ISDContext.moveTo(ISDTempX, ISDTempY);
+      ISDContext.lineTo(ISDPrevX, ISDTempY);
+      ISDContext.lineTo(ISDPrevX, ISDPrevY);
+      ISDContext.lineTo(ISDTempX, ISDPrevY);
+      ISDContext.closePath();
+      ISDContext.stroke();
+      
+      var tempWidth = Math.abs(ISDTempX - ISDPrevX);
+      var tempHeight = Math.abs(ISDTempY - ISDPrevY);
+      if(tempWidth == 0 || tempHeight == 0){
+        cancelSelect();
+      }
+      
+    break;
+    default:
+      console.log('ERROR: Invalid phase in ISDSelectMethod: ' + phase);
+    break;
+  }
+}
+
+function ISDCancelSelect(){
+  if(ISDAreaSelected){
+    ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+    ISDPrevX = 'NA';
+    ISDPrevY = 'NA';
+    ISDTempX = 'NA';
+    ISDTempY = 'NA';
+    ISDAreaSelected = false;
+  }
 }
 
 function ISDOkBtnFunction(){
