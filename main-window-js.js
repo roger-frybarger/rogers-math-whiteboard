@@ -2163,8 +2163,9 @@ function ISDFixCanvas(){
       e.preventDefault();
     });
     
-    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click OK to insert the entire screenshot.';
+    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
     // Also here is where to make the ok btn work.
+    ISDCanInsert = true;
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
   
@@ -2327,13 +2328,30 @@ function ISDOkBtnFunction(){
   // if not, simply grab data & insert.
   // Otherwise, grab data, paint white, paint data in upper corner, grab data & insert, all without degregating image quality.
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
-  document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  if(ISDCanInsert){
+    document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  }
 }
 
 function ISDCleanupFunction(){
   // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
-  document.getElementById("ISDContentDiv").removeChild(ISDCanvas);
-  ISDCanvas = null;
+  if(ISDCanvas != null){
+    document.getElementById("ISDContentDiv").removeChild(ISDCanvas);
+    ISDCanvas = null;
+  }
+  ISDPrevX = 'NA';
+  ISDPrevY = 'NA';
+  ISDTempX = 'NA';
+  ISDTempY = 'NA';
+  ISDAreaSelected = false;
+  ISDCanInsert = false;
+  ISDCanUseTool = false;
+  ISDScreenShotORIGINAL = null;
+  ISDXScale = null;
+  ISDYScale = null;
+  ISDImageToReturn = null;
+  ISDTempCanvasForInterval = 'NA';
+  ISDContext = 'NA';
 }
 
 
