@@ -1933,6 +1933,8 @@ var ISDPrevX = 'NA';
 var ISDPrevY = 'NA';
 var ISDClearSelectionBtn = null;
 var ISDLocationDropdown = null;
+var ISDExtraTextLabel = null;
+var ISDExtraBreak = null;
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -2170,6 +2172,9 @@ function ISDFixCanvas(){
     ISDCanInsert = true;
     // And add the clear selection button & insertion location dropdown:
     
+    ISDExtraBreak = document.createElement('br');
+    document.getElementById("ISDContentDiv").appendChild(ISDExtraBreak);
+    
     ISDClearSelectionBtn = document.createElement('a');
     ISDClearSelectionBtn.setAttribute('class', 'modalBoxKeypadBtns');
     ISDClearSelectionBtn.setAttribute('onclick', 'ISDCancelSelect();');
@@ -2177,22 +2182,39 @@ function ISDFixCanvas(){
     
     document.getElementById("ISDContentDiv").appendChild(ISDClearSelectionBtn);
     
+    ISDExtraTextLabel = document.createElement('p');
+    ISDExtraTextLabel.innerHTML = 'Place selected region in:'
+    document.getElementById("ISDContentDiv").appendChild(ISDExtraTextLabel);
+    
     ISDLocationDropdown = document.createElement('select');
+    ISDLocationDropdown.style.fontSize = '30px';
+    ISDLocationDropdown.style.margin = '0px 0px 25px 0px';
     
     var op1 = document.createElement('option');
-    op1.setAttribute('value', 'top left');
-    op1.innerHTML = 'top left';
+    op1.setAttribute('value', 'topleft');
+    op1.innerHTML = 'top left corner';
+    //op1.style.height = '40px';
     ISDLocationDropdown.appendChild(op1);
     
     var op2 = document.createElement('option');
-    op2.setAttribute('value', 'top right');
-    op2.innerHTML = 'top right';
+    op2.setAttribute('value', 'topright');
+    op2.innerHTML = 'top right corner';
     ISDLocationDropdown.appendChild(op2);
     
     var op3 = document.createElement('option');
-    op3.setAttribute('value', 'botom left');
-    op3.innerHTML = 'botom left';
+    op3.setAttribute('value', 'botomleft');
+    op3.innerHTML = 'botom left corner';
     ISDLocationDropdown.appendChild(op3);
+    
+    var op4 = document.createElement('option');
+    op4.setAttribute('value', 'botomright');
+    op4.innerHTML = 'botom right corner';
+    ISDLocationDropdown.appendChild(op4);
+    
+    var op5 = document.createElement('option');
+    op5.setAttribute('value', 'center');
+    op5.innerHTML = 'center';
+    ISDLocationDropdown.appendChild(op5);
     
     //...
     // Need some text & break as global var, style dropdown bigger, don't forget cleanup.
@@ -2388,6 +2410,8 @@ function ISDCleanupFunction(){
   // Remove these then null them out
   //ISDClearSelectionBtn = null;
   //ISDLocationDropdown = null;
+  //ISDExtraTextLabel = null;
+  //ISDExtraBreak = null;
 }
 
 
