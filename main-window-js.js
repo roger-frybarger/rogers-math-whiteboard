@@ -1931,6 +1931,8 @@ var ISDTempX = 'NA';
 var ISDTempY = 'NA';
 var ISDPrevX = 'NA';
 var ISDPrevY = 'NA';
+var ISDClearSelectionBtn = null;
+var ISDLocationDropdown = null;
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -2166,6 +2168,37 @@ function ISDFixCanvas(){
     document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
     // Also here is where to make the ok btn work.
     ISDCanInsert = true;
+    // And add the clear selection button & insertion location dropdown:
+    
+    ISDClearSelectionBtn = document.createElement('a');
+    ISDClearSelectionBtn.setAttribute('class', 'modalBoxKeypadBtns');
+    ISDClearSelectionBtn.setAttribute('onclick', 'ISDCancelSelect();');
+    ISDClearSelectionBtn.innerHTML = 'Clear Selection';
+    
+    document.getElementById("ISDContentDiv").appendChild(ISDClearSelectionBtn);
+    
+    ISDLocationDropdown = document.createElement('select');
+    
+    var op1 = document.createElement('option');
+    op1.setAttribute('value', 'top left');
+    op1.innerHTML = 'top left';
+    ISDLocationDropdown.appendChild(op1);
+    
+    var op2 = document.createElement('option');
+    op2.setAttribute('value', 'top right');
+    op2.innerHTML = 'top right';
+    ISDLocationDropdown.appendChild(op2);
+    
+    var op3 = document.createElement('option');
+    op3.setAttribute('value', 'botom left');
+    op3.innerHTML = 'botom left';
+    ISDLocationDropdown.appendChild(op3);
+    
+    //...
+    // Need some text & break as global var, style dropdown bigger, don't forget cleanup.
+    
+    document.getElementById("ISDContentDiv").appendChild(ISDLocationDropdown);
+    
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
   
@@ -2352,6 +2385,9 @@ function ISDCleanupFunction(){
   ISDImageToReturn = null;
   ISDTempCanvasForInterval = 'NA';
   ISDContext = 'NA';
+  // Remove these then null them out
+  //ISDClearSelectionBtn = null;
+  //ISDLocationDropdown = null;
 }
 
 
