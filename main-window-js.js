@@ -1935,6 +1935,9 @@ var ISDClearSelectionBtn = null;
 var ISDLocationDropdown = null;
 var ISDExtraTextLabel = null;
 var ISDExtraBreak = null;
+var ISDExtraBreak2 = null;
+var ISDExtraTextLabel2 = null;
+var ISDBackgroundColorDropdown = null;
 
 function ISDReadyInsertScreenshotDialog(){
   ISDCanInsert = false;
@@ -2168,8 +2171,6 @@ function ISDFixCanvas(){
     });
     
     document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
-    // Also here is where to make the ok btn work.
-    ISDCanInsert = true;
     // And add the clear selection button & insertion location dropdown:
     
     ISDExtraBreak = document.createElement('br');
@@ -2188,12 +2189,11 @@ function ISDFixCanvas(){
     
     ISDLocationDropdown = document.createElement('select');
     ISDLocationDropdown.style.fontSize = '30px';
-    ISDLocationDropdown.style.margin = '0px 0px 25px 0px';
+    //ISDLocationDropdown.style.margin = '0px 0px 25px 0px';
     
     var op1 = document.createElement('option');
     op1.setAttribute('value', 'topleft');
     op1.innerHTML = 'top left corner';
-    //op1.style.height = '40px';
     ISDLocationDropdown.appendChild(op1);
     
     var op2 = document.createElement('option');
@@ -2216,10 +2216,35 @@ function ISDFixCanvas(){
     op5.innerHTML = 'center';
     ISDLocationDropdown.appendChild(op5);
     
-    //...
-    // Need some text & break as global var, style dropdown bigger, don't forget cleanup.
-    
     document.getElementById("ISDContentDiv").appendChild(ISDLocationDropdown);
+    
+    ISDExtraBreak2 = document.createElement('br');
+    document.getElementById("ISDContentDiv").appendChild(ISDExtraBreak2);
+    
+    ISDExtraTextLabel2 = document.createElement('p');
+    ISDExtraTextLabel2.innerHTML = 'Background Color:'
+    document.getElementById("ISDContentDiv").appendChild(ISDExtraTextLabel2);
+    
+    ISDBackgroundColorDropdown = document.createElement('select');
+    ISDBackgroundColorDropdown.style.fontSize = '30px';
+    ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
+    
+    op1 = null;
+    op1 = document.createElement('option');
+    op1.setAttribute('value', 'white');
+    op1.innerHTML = 'white';
+    ISDBackgroundColorDropdown.appendChild(op1);
+    
+    op2 = null;
+    op2 = document.createElement('option');
+    op2.setAttribute('value', 'globalcolor');
+    op2.innerHTML = 'color chosen';
+    ISDBackgroundColorDropdown.appendChild(op2);
+    
+    document.getElementById("ISDContentDiv").appendChild(ISDBackgroundColorDropdown);
+    
+    // Also here is where to make the ok btn work.
+    ISDCanInsert = true;
     
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
@@ -2378,12 +2403,23 @@ function ISDCancelSelect(){
 }
 
 function ISDOkBtnFunction(){
+  //console.log(ISDLocationDropdown.value + ' ' + ISDBackgroundColorDropdown.value);
   // check ISDCanInsert before doing anything.
   // then check if area selected
   // if not, simply grab data & insert.
-  // Otherwise, grab data, paint white, paint data in upper corner, grab data & insert, all without degregating image quality.
+  // Otherwise, grab data, paint white, paint data in correct spot, grab data & insert, all without degregating image quality.
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
   if(ISDCanInsert){
+    if(ISDAreaSelected){
+      // Now we have to determine where the user wants the selected region, what background color they want,
+      // scale the coordinates to original size, re-size canvas to size of ISDImageToReturn, pant ISDImageToReturn onto it,
+      // grab selected region from canvas, paint canvas with applicable color, paint selected region in correct spot,
+      // grab data from canvas, make image from data, call insertPageUsingImage() when the image loads.
+    }
+    else{
+      // Here we need to call insertPageUsingImage(). At this point the image will already exist and be loaded.
+      insertPageUsingImage(ISDImageToReturn);
+    }
     document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
 }
@@ -2425,6 +2461,21 @@ function ISDCleanupFunction(){
     }
     document.getElementById("ISDContentDiv").removeChild(ISDLocationDropdown);
     ISDLocationDropdown = null;
+  }
+  if(ISDExtraBreak2 != null){
+    document.getElementById("ISDContentDiv").removeChild(ISDExtraBreak2);
+    ISDExtraBreak2 = null;
+  }
+  if(ISDExtraTextLabel2 != null){
+    document.getElementById("ISDContentDiv").removeChild(ISDExtraTextLabel2);
+    ISDExtraTextLabel2 = null;
+  }
+  if(ISDBackgroundColorDropdown != null){
+    while (ISDBackgroundColorDropdown.firstChild) {
+      ISDBackgroundColorDropdown.removeChild(ISDBackgroundColorDropdown.firstChild);
+    }
+    document.getElementById("ISDContentDiv").removeChild(ISDBackgroundColorDropdown);
+    ISDBackgroundColorDropdown = null;
   }
 }
 
