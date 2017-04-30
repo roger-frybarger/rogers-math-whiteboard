@@ -2411,12 +2411,31 @@ function ISDOkBtnFunction(){
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
   if(ISDCanInsert){
     if(ISDAreaSelected){
-      var blah = ISDCalculateInsertionPoint('topleft', 0,0,0,0);
-      console.log(blah);
+      
       // Now we have to determine where the user wants the selected region, what background color they want,
       // scale the coordinates to original size, re-size canvas to size of ISDImageToReturn, pant ISDImageToReturn onto it,
       // grab selected region from canvas, paint canvas with applicable color, paint selected region in correct spot,
       // grab data from canvas, make image from data, call insertPageUsingImage() when the image loads.
+      
+      var selectionWidth = Math.abs(ISDTempX - ISDPrevX);
+      var selectionHeight = Math.abs(ISDTempY - ISDPrevY);
+      selectionWidth = Math.round(selectionWidth * ISDXScale);
+      selectionHeight = Math.round(selectionHeight * ISDYScale);
+      
+      var selectionLocationX = Math.min(ISDTempX, ISDPrevX);
+      var selectionLocationY = Math.min(ISDTempY, ISDPrevY);
+      selectionLocationX = Math.round(selectionLocationX * ISDXScale);
+      selectionLocationY = Math.round(selectionLocationY * ISDYScale);
+      
+      var insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height, selectionWidth, selectionHeight);
+      
+      var bgColor = 'white';
+      if(ISDBackgroundColorDropdown.value != 'white'){
+        bgColor = instrumentColor;
+      }
+      
+      // At this point, we have all the information we need to start working with the canvas...
+      
     }
     else{
       // Here we need to call insertPageUsingImage(). At this point the image will already exist and be loaded.
@@ -2426,36 +2445,39 @@ function ISDOkBtnFunction(){
   }
 }
 
-function ISDCalculateInsertionPoint(insertionLocationStr, orgImageY, orgImageY, selSizeX, selSizeY){
+function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, selSizeX, selSizeY){
   var toRet = { x: 0, y: 0 };
   switch(insertionLocationStr){
-    case 'topleft':
-      
-      
-      
-    break;
     case 'topright':
       
-      
+      toRet.x = orgImageX - selSizeX;
       
     break;
     case 'botomleft':
       
-      
+      toRet.y = orgImageY - selSizeY;
       
     break;
     case 'botomright':
       
-      
+      toRet.x = orgImageX - selSizeX;
+      toRet.y = orgImageY - selSizeY;
       
     break;
     case 'center':
       
+      var halfOrgImageX = Math.round(orgImageX / 2);
+      var halfOrgImageY = Math.round(orgImageY / 2);
+      var halfSelSizeX = Math.round(selSizeX / 2);
+      var halfSelSizeY = Math.round(selSizeY / 2);
       
+      toRet.x = halfOrgImageX - halfSelSizeX;
+      toRet.y = halfOrgImageY - halfSelSizeY;
       
     break;
     default:
-      console.log('ERROR: Invalid insertionLocationStr in ISDCalculateInsertionPoint: ' + insertionLocationStr);
+      // Here we do nothing since for the top left, the coordinates are already correct. 
+      // Also, if something wierd happens, we want to put it in the top left corner anyhow, so doing nothing works.
     break;
   }
   return toRet;
