@@ -2411,6 +2411,8 @@ function ISDOkBtnFunction(){
   // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
   if(ISDCanInsert){
     if(ISDAreaSelected){
+      var blah = ISDCalculateInsertionPoint('topleft', 0,0,0,0);
+      console.log(blah);
       // Now we have to determine where the user wants the selected region, what background color they want,
       // scale the coordinates to original size, re-size canvas to size of ISDImageToReturn, pant ISDImageToReturn onto it,
       // grab selected region from canvas, paint canvas with applicable color, paint selected region in correct spot,
@@ -2422,6 +2424,41 @@ function ISDOkBtnFunction(){
     }
     document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
+}
+
+function ISDCalculateInsertionPoint(insertionLocationStr, orgImageY, orgImageY, selSizeX, selSizeY){
+  var toRet = { x: 0, y: 0 };
+  switch(insertionLocationStr){
+    case 'topleft':
+      
+      
+      
+    break;
+    case 'topright':
+      
+      
+      
+    break;
+    case 'botomleft':
+      
+      
+      
+    break;
+    case 'botomright':
+      
+      
+      
+    break;
+    case 'center':
+      
+      
+      
+    break;
+    default:
+      console.log('ERROR: Invalid insertionLocationStr in ISDCalculateInsertionPoint: ' + insertionLocationStr);
+    break;
+  }
+  return toRet;
 }
 
 function ISDCleanupFunction(){
