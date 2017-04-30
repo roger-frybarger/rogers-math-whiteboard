@@ -2407,11 +2407,25 @@ function ISDCleanupFunction(){
   ISDImageToReturn = null;
   ISDTempCanvasForInterval = 'NA';
   ISDContext = 'NA';
-  // Remove these then null them out
-  //ISDClearSelectionBtn = null;
-  //ISDLocationDropdown = null;
-  //ISDExtraTextLabel = null;
-  //ISDExtraBreak = null;
+  if(ISDExtraBreak != null){
+    document.getElementById("ISDContentDiv").removeChild(ISDExtraBreak);
+    ISDExtraBreak = null;
+  }
+  if(ISDClearSelectionBtn != null){
+    document.getElementById("ISDContentDiv").removeChild(ISDClearSelectionBtn);
+    ISDClearSelectionBtn = null;
+  }
+  if(ISDExtraTextLabel != null){
+    document.getElementById("ISDContentDiv").removeChild(ISDExtraTextLabel);
+    ISDExtraTextLabel = null;
+  }
+  if(ISDLocationDropdown != null){
+    while (ISDLocationDropdown.firstChild) {
+      ISDLocationDropdown.removeChild(ISDLocationDropdown.firstChild);
+    }
+    document.getElementById("ISDContentDiv").removeChild(ISDLocationDropdown);
+    ISDLocationDropdown = null;
+  }
 }
 
 
