@@ -2436,6 +2436,26 @@ function ISDOkBtnFunction(){
       
       // At this point, we have all the information we need to start working with the canvas...
       
+      ISDCanvas.width = ISDImageToReturn.width;
+      ISDCanvas.height = ISDImageToReturn.height;
+      ISDContext.drawImage(ISDImageToReturn, 0, 0, ISDImageToReturn.width, ISDImageToReturn.height);
+      
+      var selectionData = ISDContext.getImageData(selectionLocationX, selectionLocationY, selectionWidth, selectionHeight);
+      
+      ISDContext.beginPath();
+      ISDContext.fillStyle = bgColor;
+      ISDContext.rect(0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+      ISDContext.fill();
+      
+      ISDContext.putImageData(selectionData, insertionPoint.x, insertionPoint.y);
+      
+      ISDImageToReturn = null;
+      ISDImageToReturn = new Image();
+      ISDImageToReturn.onload = function () {
+        insertPageUsingImage(this);
+      };
+      ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
+      
     }
     else{
       // Here we need to call insertPageUsingImage(). At this point the image will already exist and be loaded.
