@@ -2171,7 +2171,7 @@ function ISDFixCanvas(){
     });
     
     document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
-    // And add the clear selection button & insertion location dropdown:
+    // And add the clear selection button, insertion location dropdown, * background color dropdown:
     
     ISDExtraBreak = document.createElement('br');
     document.getElementById("ISDContentDiv").appendChild(ISDExtraBreak);
@@ -2298,19 +2298,6 @@ function ISDGetAvaliableDialogSpace(){
   return {availableWidth: x, availableHeight: y };
 }
 
-//function ISDMousedownFunction(e){
-  //console.log(e);
-  //console.log(e.clientX + ', ' + e.clientY);
-  //var offset = getCoords(ISDCanvas);
-  //console.log(offset.left + ', ' + offset.top);
-  //var x = e.clientX - offset.left;
-  //var y = e.clientY - offset.top;
-  //console.log(x + ', ' + y);
-
-  //console.log(' ' + (e.clientX - offset.left) + ', ' + (e.clientY - offset.top));
-  //// .......
-//}
-
 function ISDInstrumentDown(x, y){
   //console.log('down ' + x + ', ' + y);
   ISDCanUseTool = true;
@@ -2403,12 +2390,6 @@ function ISDCancelSelect(){
 }
 
 function ISDOkBtnFunction(){
-  //console.log(ISDLocationDropdown.value + ' ' + ISDBackgroundColorDropdown.value);
-  // check ISDCanInsert before doing anything.
-  // then check if area selected
-  // if not, simply grab data & insert.
-  // Otherwise, grab data, paint white, paint data in correct spot, grab data & insert, all without degregating image quality.
-  // Eventually, after we get the trimmed screenshot & insert it in the appropriate place, we will close:
   if(ISDCanInsert){
     if(ISDAreaSelected){
       
@@ -2592,11 +2573,27 @@ function OPDInsertColoredPage(){
 
 function OPDInsertPageFromImage(){
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
-   { name: 'Image', extensions: ['png', 'jpeg', 'jpg'] }
+   { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] }
     ]}, function (fileNames) {
     if (fileNames === undefined) return;
     var fileName = fileNames[0];
-    insertTemplateAsPage(fileName);
+    // Now we check to see if the file exists before loading it in.
+    
+    fs.stat(fileName, function(err, stat) {
+      if(err == null) {
+          //console.log('File exists');
+          insertTemplateAsPage(fileName);
+      } else if(err.code == 'ENOENT') {
+          // file does not exist
+          //fs.writeFile('log.txt', 'Some log\n');
+          alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
+      } else {
+          //console.log('Some other error: ', err.code);
+          throw err;
+      }
+    });
+    
+    //insertTemplateAsPage(fileName);
     document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
  });
 }
