@@ -18,35 +18,21 @@ const osModule = require('os');
 // This enables the right-click menu over the text boxes. I found it at:
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
-        label: 'Undo',
-        role: 'undo',
-    }, {
-        label: 'Redo',
-        role: 'redo',
-    }, {
-        type: 'separator',
-    }, {
-        label: 'Cut',
-        role: 'cut',
-    }, {
-        label: 'Copy',
-        role: 'copy',
-    }, {
-        label: 'Paste',
-        role: 'paste',
-    }, {
-        type: 'separator',
-    }, {
-        label: 'Select all',
-        role: 'selectall',
-    },
+  label: 'Undo', role: 'undo',},
+  {label: 'Redo', role: 'redo',},
+  {type: 'separator',},
+  {label: 'Cut', role: 'cut',},
+  {label: 'Copy', role: 'copy',},
+  {label: 'Paste', role: 'paste',},
+  {type: 'separator',},
+  {label: 'Select all', role: 'selectall',},
 ]);
 
 
 
 window.addEventListener('resize', onWindowResize);
 
-var userWantsErrorMessages = true
+var userWantsErrorMessages = true;
 
 
 
@@ -54,11 +40,11 @@ var userWantsErrorMessages = true
 
 process.on('uncaughtException', function (err) {
   if(userWantsErrorMessages){
-    var stk = "Empty :(";
+    var stk = 'Empty :(';
     if(err != null){
       stk = err.stack;
     }
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings screen. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk);
+    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
   }
   else{
     throw err;
@@ -89,29 +75,19 @@ var instrumentWidth = 5;
 var instrumentColor = 'rgba(78, 78, 255, 1.0)';
 
 var maxNumberOfPages = 250;
-var globalIntervalVarForFunction = null;
 var tempCanvasForInterval = 'NA';
-var tempCanvasForPasting = 'NA';
-var tempCanvasForCopyPasteStorage = 'NA';
 var copiedSectionOfCanvas = 'NA';
 var tempX = 'NA';
 var tempY = 'NA';
 var areaSelected = false;
-var tempTool = 'NOT APPLICABLE';
 
 var textToInsert = '';
-
-var imagesChangedSinceOpen = false;
 
 var tempImageForWindowResize;
 
 //var locationToCheckWhenPushingDataIntoLocalStorage;
 var weGotKeyboardShortcuts = false;
 var temporarilyDisabledKeyboardShortcuts = false;
-
-var counterForRestoringImages;
-
-var arrayOfDataURLsForRestoringDocument;
 
 // var testObjectForStoringGlobalFunctions = {};
 
@@ -376,61 +352,62 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   //var screenH = screen.height;
   var screenH = window.innerHeight + 30;  // I know this is confusing. Originally I had planned to use screen hight, but then desided to pass in the window height instead.
   //console.log(screenH);
+  var i = 0;
   switch (true){
-    case (screenH < 720):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '15px 0px 14px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '12px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
-      
-      break;
-    case (screenH >= 720 && screenH < 854):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '20px 0px 19px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '17px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
-      
-      break;
-    case (screenH >= 854 && screenH < 960):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '26px 0px 25px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '23px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
-      
-      break;
-    case (screenH >= 960):
-      
-      for(i = 0; i < vButtonBarButtons.length; ++i){
-        vButtonBarButtons[i].style.padding = '31px 0px 30px 16px';
-      }
-      
-      for(i = 0; i < dropdowns.length; ++i){
-        dropdowns[i].style.padding = '28px 16px';
-      }
-      
-      document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
-      
-      break;
-    default:
-      break;
+  case (screenH < 720):
+    
+    for(i = 0; i < vButtonBarButtons.length; ++i){
+      vButtonBarButtons[i].style.padding = '15px 0px 14px 16px';
+    }
+    
+    for(i = 0; i < dropdowns.length; ++i){
+      dropdowns[i].style.padding = '12px 16px';
+    }
+    
+    document.getElementById('goBtnDivID').style.padding = '8px 0px 8px 0px';
+    
+    break;
+  case (screenH >= 720 && screenH < 854):
+    
+    for(i = 0; i < vButtonBarButtons.length; ++i){
+      vButtonBarButtons[i].style.padding = '20px 0px 19px 16px';
+    }
+    
+    for(i = 0; i < dropdowns.length; ++i){
+      dropdowns[i].style.padding = '17px 16px';
+    }
+    
+    document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+    
+    break;
+  case (screenH >= 854 && screenH < 960):
+    
+    for(i = 0; i < vButtonBarButtons.length; ++i){
+      vButtonBarButtons[i].style.padding = '26px 0px 25px 16px';
+    }
+    
+    for(i = 0; i < dropdowns.length; ++i){
+      dropdowns[i].style.padding = '23px 16px';
+    }
+    
+    document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+    
+    break;
+  case (screenH >= 960):
+    
+    for(i = 0; i < vButtonBarButtons.length; ++i){
+      vButtonBarButtons[i].style.padding = '31px 0px 30px 16px';
+    }
+    
+    for(i = 0; i < dropdowns.length; ++i){
+      dropdowns[i].style.padding = '28px 16px';
+    }
+    
+    document.getElementById('goBtnDivID').style.padding = '30px 0px 8px 0px';
+    
+    break;
+  default:
+    break;
   }
 }
 
@@ -512,21 +489,19 @@ function initializeEventListenersForCanvas(){
   // https://github.com/electron/electron/issues/4068
   
   document.body.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 
-      let node = e.target;
-
-      while (node) {
-          if (node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
-              InputMenu.popup(remote.getCurrentWindow());
-              break;
-          }
-          node = node.parentNode;
-      }
-  });
+    let node = e.target;
     
-  
+    while(node){
+      if(node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
+        InputMenu.popup(remote.getCurrentWindow());
+        break;
+      }
+      node = node.parentNode;
+    }
+  });
 }
 
 /*
@@ -626,7 +601,7 @@ function instrumentDown(x, y)
   case 'NA':
     break;
   default:
-      console.log('ERROR: Invalid tool in instrumentDown method: ' + tool);
+    throw 'ERROR: Invalid tool in instrumentDown method: ' + tool;
   }
 }
 
@@ -667,7 +642,7 @@ function instrumentMoved(x, y)
     case 'NA':
       break;
     default:
-        console.log('ERROR: Invalid tool in instrumentMoved method: ' + tool);
+      throw 'ERROR: Invalid tool in instrumentMoved method: ' + tool;
     }
   }
 }
@@ -716,7 +691,7 @@ function instrumentUp(x, y)
     case 'NA':
       break;
     default:
-        console.log('ERROR: Invalid tool in instrumentUp method: ' + tool);
+      throw 'ERROR: Invalid tool in instrumentUp method: ' + tool;
     }
   }
   
@@ -797,23 +772,26 @@ function penToolMethod(x, y, phase){
     prevY = 'NA';
     
     break;
-    default:
-      console.log('ERROR: Invalid phase in penToolMethod: ' + phase);
-    break;
+  default:
+    throw 'ERROR: Invalid phase in penToolMethod: ' + phase;
   }
 }
 
 // Here is the eraserToolMethod. It handles erasing areas of the canvas:
 function eraserToolMethod(x, y, phase){
-  // 1. grab section of original image under mouse, 2. draw it over the canvas where it belongs.
-  var ofset = Math.pow(instrumentWidth, 2);
-  var halfSmallerDimention = parseInt(Math.min(context.canvas.width, context.canvas.height) / 2);
-  if(ofset > halfSmallerDimention){
-    ofset = halfSmallerDimention;
+  if(phase == 'down' || phase == 'move' || phase == 'up'){
+    // 1. grab section of original image under mouse, 2. draw it over the canvas where it belongs.
+    var ofset = Math.pow(instrumentWidth, 2);
+    var halfSmallerDimention = parseInt(Math.min(context.canvas.width, context.canvas.height) / 2);
+    if(ofset > halfSmallerDimention){
+      ofset = halfSmallerDimention;
+    }
+    var tempImageData = eraserContext.getImageData(x - ofset, y - ofset, 2 * ofset, 2 * ofset);
+    context.putImageData(tempImageData, x - ofset, y - ofset);
   }
-  var tempImageData = eraserContext.getImageData(x - ofset, y - ofset, 2 * ofset, 2 * ofset);
-  context.putImageData(tempImageData, x - ofset, y - ofset);
-  
+  else{
+    throw 'ERROR: Invalid phase in eraserToolMethod: ' + phase;
+  }
 }
 
 // Here is the lineToolMethod. It handles drawing straight lines on the canvas:
@@ -865,9 +843,8 @@ function lineToolMethod(x, y, phase){
     context.stroke();
     
     break;
-    default:
-      console.log('ERROR: Invalid phase in lineToolMethod: ' + phase);
-    break;
+  default:
+    throw 'ERROR: Invalid phase in lineToolMethod: ' + phase;
   }
 }
 
@@ -935,9 +912,8 @@ function selectToolMethod(x, y, phase){
     }
     
     break;
-    default:
-      console.log('ERROR: Invalid phase in selectToolMethod: ' + phase);
-    break;
+  default:
+    throw 'ERROR: Invalid phase in selectToolMethod: ' + phase;
   }
 }
 
@@ -983,8 +959,8 @@ function textToolMethod(x, y, phase){
     context.fillText(textToInsert, prevX, prevY);
     
     break;
-    default:
-      console.log('ERROR: Invalid phase in textToolMethod: ' + phase);
+  default:
+    throw 'ERROR: Invalid phase in textToolMethod: ' + phase;
   }
 }
 
@@ -1029,9 +1005,8 @@ function identifyToolMethod(x, y, phase){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
     break;
-    default:
-      console.log('ERROR: Invalid phase in identifierToolMethod: ' + phase);
-    break;
+  default:
+    throw 'ERROR: Invalid phase in identifierToolMethod: ' + phase;
   }
 }
 
@@ -1081,9 +1056,8 @@ function dotToolMethod(x, y, phase){
     context.fill();
     
     break;
-    default:
-      console.log('ERROR: Invalid phase in dotToolMethod: ' + phase);
-    break;
+  default:
+    throw 'ERROR: Invalid phase in dotToolMethod: ' + phase;
   }
 }
 
@@ -1126,9 +1100,8 @@ function pasteToolMethod(x, y, phase){
       context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
       
       break;
-      default:
-        console.log('ERROR: Invalid phase in pasteToolMethod: ' + phase);
-      break;
+    default:
+      throw 'ERROR: Invalid phase in pasteToolMethod: ' + phase;
     }
   }
 }
@@ -1193,7 +1166,7 @@ window.onclick = function(e) {
   if(id != 'pageTextBoxID' && id != 'goBtnID'){
     updatePageNumsOnGui();
   }
-}
+};
 
 //Closes all the other dropdowns except for the one with the name passed in.
 function closeDropdowns(buttonName){
@@ -1239,8 +1212,7 @@ function insertPageBtnFunction(){
 
 function getElementsByIDs(ids){
   if(ids == undefined || (typeof ids != 'object') || (ids.length == 0)){
-    console.log('Expecting an array based parameter or there are no ids, exiting');
-    return null;
+    throw 'Expecting an array based parameter or there are no ids, exiting';
   }
   var elems = [];
   for(var i = 0; i < ids.length; i++){
@@ -1257,7 +1229,7 @@ function getElementsByIDs(ids){
 // size of the window.
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
   if(incommingWidth == 0 || incommingHeight == 0){
-    console.log('ERROR: You have called resizeAndLoadImagesOntoCanvases before the image has loaded!');
+    throw 'ERROR: You have called resizeAndLoadImagesOntoCanvases before the image has loaded!';
   }
   
   eraserContext.canvas.style.position = 'absolute';
