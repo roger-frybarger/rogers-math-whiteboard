@@ -41,7 +41,7 @@ var userWantsErrorMessages = true;
 process.on('uncaughtException', function (err) {
   if(userWantsErrorMessages){
     var stk = 'Empty :(';
-    if(err != null){
+    if(err !== null && typeof err !== 'undefined'){
       stk = err.stack;
     }
     dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
@@ -576,7 +576,6 @@ function instrumentDown(x, y)
   
   //And obviously, we can do things with our tool now:
   canUseTool = true;
-  
   // Now let's pass the event off to the applicable method:
   switch(tool) {
   case 'pen':
@@ -606,7 +605,7 @@ function instrumentDown(x, y)
   case 'NA':
     break;
   default:
-    throw 'ERROR: Invalid tool in instrumentDown method: ' + tool;
+    throw new Error('Invalid tool in instrumentDown method: ' + tool);
   }
 }
 
@@ -647,7 +646,7 @@ function instrumentMoved(x, y)
     case 'NA':
       break;
     default:
-      throw 'ERROR: Invalid tool in instrumentMoved method: ' + tool;
+      throw new Error('Invalid tool in instrumentMoved method: ' + tool);
     }
   }
 }
@@ -696,7 +695,7 @@ function instrumentUp(x, y)
     case 'NA':
       break;
     default:
-      throw 'ERROR: Invalid tool in instrumentUp method: ' + tool;
+      throw new Error('Invalid tool in instrumentUp method: ' + tool);
     }
   }
   
@@ -778,7 +777,7 @@ function penToolMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in penToolMethod: ' + phase;
+    throw new Error('Invalid phase in penToolMethod: ' + phase);
   }
 }
 
@@ -795,7 +794,7 @@ function eraserToolMethod(x, y, phase){
     context.putImageData(tempImageData, x - ofset, y - ofset);
   }
   else{
-    throw 'ERROR: Invalid phase in eraserToolMethod: ' + phase;
+    throw new Error('Invalid phase in eraserToolMethod: ' + phase);
   }
 }
 
@@ -849,7 +848,7 @@ function lineToolMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in lineToolMethod: ' + phase;
+    throw new Error('Invalid phase in lineToolMethod: ' + phase);
   }
 }
 
@@ -918,7 +917,7 @@ function selectToolMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in selectToolMethod: ' + phase;
+    throw new Error('Invalid phase in selectToolMethod: ' + phase);
   }
 }
 
@@ -965,7 +964,7 @@ function textToolMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in textToolMethod: ' + phase;
+    throw new Error('Invalid phase in textToolMethod: ' + phase);
   }
 }
 
@@ -1011,7 +1010,7 @@ function identifyToolMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in identifierToolMethod: ' + phase;
+    throw new Error('Invalid phase in identifierToolMethod: ' + phase);
   }
 }
 
@@ -1062,7 +1061,7 @@ function dotToolMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in dotToolMethod: ' + phase;
+    throw new Error('Invalid phase in dotToolMethod: ' + phase);
   }
 }
 
@@ -1106,7 +1105,7 @@ function pasteToolMethod(x, y, phase){
       
       break;
     default:
-      throw 'ERROR: Invalid phase in pasteToolMethod: ' + phase;
+      throw new Error('Invalid phase in pasteToolMethod: ' + phase);
     }
   }
 }
@@ -1145,7 +1144,7 @@ function fixThingsAfterRezizeIsDone(){
   cancelSelect();
   //adjustSizeOfMenuButtonsToScreenSize();
   if(allLoaded){
-    if(tempImageForWindowResize === null || tempImageForWindowResize === undefined){
+    if(tempImageForWindowResize === null || typeof tempImageForWindowResize === 'undefined'){
       tempImageForWindowResize = new Image();
       tempImageForWindowResize.src = context.canvas.toDataURL('image/png');
       resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1], tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
@@ -1233,8 +1232,8 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 // Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
 // size of the window.
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
-  if(incommingWidth === 0 || incommingHeight === 0 || incommingWidth === undefined || incommingHeight === undefined || incommingWidth === null || incommingHeight === null){
-    throw 'ERROR: resizeAndLoadImagesOntoCanvases has been called before the image has loaded!';
+  if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' || typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
+    throw new Error('resizeAndLoadImagesOntoCanvases has been called before the image has loaded!');
   }
   
   eraserContext.canvas.style.position = 'absolute';
@@ -2218,8 +2217,8 @@ function ISDFixCanvas(){
 
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
-  if(incommingWidth === 0 || incommingHeight === 0 || incommingWidth === undefined || incommingHeight === undefined || incommingWidth === null || incommingHeight === null){
-    throw 'ERROR: You have called ISDDisplayImageOnCanvas before the image has loaded!';
+  if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' || typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
+    throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!');
   }
   var dlg = ISDGetAvaliableDialogSpace();
   var canvasHeight;
@@ -2336,7 +2335,7 @@ function ISDSelectMethod(x, y, phase){
     
     break;
   default:
-    throw 'ERROR: Invalid phase in ISDSelectMethod: ' + phase;
+    throw new Error('Invalid phase in ISDSelectMethod: ' + phase);
   }
 }
 
@@ -2469,30 +2468,30 @@ function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
     document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak);
     ISDExtraBreak = null;
   }
-  if(ISDClearSelectionBtn != null){
+  if(ISDClearSelectionBtn !== null && ISDClearSelectionBtn !== undefined){
     document.getElementById('ISDContentDiv').removeChild(ISDClearSelectionBtn);
     ISDClearSelectionBtn = null;
   }
-  if(ISDExtraTextLabel != null){
+  if(ISDExtraTextLabel !== null && ISDExtraTextLabel !== undefined){
     document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel);
     ISDExtraTextLabel = null;
   }
-  if(ISDLocationDropdown != null){
+  if(ISDLocationDropdown !== null && ISDLocationDropdown !== undefined){
     while (ISDLocationDropdown.firstChild) {
       ISDLocationDropdown.removeChild(ISDLocationDropdown.firstChild);
     }
     document.getElementById('ISDContentDiv').removeChild(ISDLocationDropdown);
     ISDLocationDropdown = null;
   }
-  if(ISDExtraBreak2 != null){
+  if(ISDExtraBreak2 !== null && ISDExtraBreak2 !== undefined){
     document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak2);
     ISDExtraBreak2 = null;
   }
-  if(ISDExtraTextLabel2 != null){
+  if(ISDExtraTextLabel2 !== null && ISDExtraTextLabel2 !== undefined){
     document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel2);
     ISDExtraTextLabel2 = null;
   }
-  if(ISDBackgroundColorDropdown != null){
+  if(ISDBackgroundColorDropdown !== null && ISDBackgroundColorDropdown !== undefined){
     while(ISDBackgroundColorDropdown.firstChild){
       ISDBackgroundColorDropdown.removeChild(ISDBackgroundColorDropdown.firstChild);
     }
@@ -2537,15 +2536,25 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
     { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] }
   ]}, function (fileNames) {
-    if (fileNames === undefined) return;
+    if (typeof fileNames === 'undefined' || fileNames === null){
+      return;
+    }
     var fileName = fileNames[0];
     // Now we check to see if the file exists before loading it in.
     
-    fs.stat(fileName, function(err, stat) {
-      if(err == null){
-        //console.log('File exists');
-        insertTemplateAsPage(fileName);
-      } else if(err.code == 'ENOENT') {
+    fs.stat(fileName, function(err, stats) {
+      if(err === null){
+        
+        if(stats.size < 1){
+          alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
+        }
+        else if(stats.size > 25000000){
+          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
+        }
+        else{
+          insertTemplateAsPage(fileName);
+        }
+      } else if(err.code === 'ENOENT') {
         // file does not exist
         //fs.writeFile('log.txt', 'Some log\n');
         alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
@@ -2569,7 +2578,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
 
 
 function cancelSelect(){
-  if(areaSelected == true){
+  if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     prevX = 'NA';
     prevY = 'NA';
@@ -2635,7 +2644,7 @@ function updateTextOfToolBtn(){
     document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
     break;
   default:
-    throw 'ERROR: Invalid tool. Cant update tool btn text: ' + tool;
+    throw new Error('Invalid tool. Cant update tool btn text: ' + tool);
   }
 }
 
@@ -2650,7 +2659,7 @@ function updateTextOfToolBtn(){
 
 function undoBtnFunction(){
   if(currentPlaceInUndoArray > 0){
-    if(imageArrayForUndo[currentPlaceInUndoArray - 1] != null){
+    if(imageArrayForUndo[currentPlaceInUndoArray - 1] !== null){
       --currentPlaceInUndoArray;
       resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
     }
@@ -2659,7 +2668,7 @@ function undoBtnFunction(){
 
 function redoBtnFunction(){
   if(currentPlaceInUndoArray < imageArrayForUndo.length - 1){
-    if(imageArrayForUndo[currentPlaceInUndoArray + 1] != null){
+    if(imageArrayForUndo[currentPlaceInUndoArray + 1] !== null){
       ++currentPlaceInUndoArray;
       resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
     }
@@ -2667,7 +2676,7 @@ function redoBtnFunction(){
 }
 
 function copyBtnFunction(){
-  if(areaSelected == true){
+  if(areaSelected === true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     var drawingX = Math.min(tempX, prevX);
@@ -2690,14 +2699,14 @@ function copyBtnFunction(){
 }
 
 function pasteBtnFunction(){
-  if(copiedSectionOfCanvas != 'NA'){
+  if(copiedSectionOfCanvas !== 'NA'){
     tool = 'PASTE';
     updateTextOfToolBtn();
   }
 }
 
 function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
-  if(areaSelected == true){
+  if(areaSelected === true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
@@ -2725,7 +2734,7 @@ function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
 }
 
 function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
-  if(areaSelected == true){
+  if(areaSelected === true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     var drawingX = Math.min(tempX, prevX);
@@ -2748,7 +2757,7 @@ function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
 }
 
 function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
-  if(areaSelected == true){
+  if(areaSelected === true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
@@ -2798,7 +2807,7 @@ function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
 }
 
 function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
-  if(areaSelected == true){
+  if(areaSelected === true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     var drawingX = Math.min(tempX, prevX);
@@ -2830,7 +2839,7 @@ function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
 
 function pushStateIntoUndoArray(){
   //console.log(currentPlaceInUndoArray + ' ' + imageArrayForUndo.length);
-  if(currentPlaceInUndoArray != imageArrayForUndo.length - 1){
+  if(currentPlaceInUndoArray !== imageArrayForUndo.length - 1){
     //console.log('just undone and moved on');
     // This means they have just undone something, and are going on from there, so we have to get the remainder
     // of the undo array, (if applicable), and make the undo array just contain that. Then re-set the 
