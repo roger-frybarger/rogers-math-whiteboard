@@ -63,7 +63,7 @@ var context;
 var eraserContext;
 
 
-var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
+// var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
 
 
 // Some variables used in drawing:
@@ -128,13 +128,13 @@ ipcRenderer.on('keyboard-shortcuts-not-registered', () => {
 });
 
 ipcRenderer.on('ctrl-z-pressed', () => {
-  if(canUseTool == false){
+  if(canUseTool === false){
     undoBtnFunction();
   }
 });
 
 ipcRenderer.on('ctrl-y-pressed', () => {
-  if(canUseTool == false){
+  if(canUseTool === false){
     redoBtnFunction();
   }
 });
@@ -143,7 +143,7 @@ ipcRenderer.on('esc-pressed', () => {
   //console.log('Esc Pressed');
   cancelSelect();
   if(canUseTool){
-    if(tool == 'line' || tool == 'select' || tool == 'text' || tool == 'identify' || tool == 'dot' || tool == 'PASTE'){
+    if(tool === 'line' || tool === 'select' || tool === 'text' || tool === 'identify' || tool === 'dot' || tool === 'PASTE'){
       // Paint the temporary canvas onto the the real canvas:
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       // Disable the tool:
@@ -160,7 +160,7 @@ ipcRenderer.on('esc-pressed', () => {
 
 ipcRenderer.on('alt-p-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'pen';
     updateTextOfToolBtn();
   }
@@ -168,7 +168,7 @@ ipcRenderer.on('alt-p-pressed', () => {
 
 ipcRenderer.on('alt-e-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'eraser';
     updateTextOfToolBtn();
   }
@@ -176,7 +176,7 @@ ipcRenderer.on('alt-e-pressed', () => {
 
 ipcRenderer.on('alt-l-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'line';
     updateTextOfToolBtn();
   }
@@ -184,7 +184,7 @@ ipcRenderer.on('alt-l-pressed', () => {
 
 ipcRenderer.on('alt-s-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'select';
     updateTextOfToolBtn();
   }
@@ -192,7 +192,7 @@ ipcRenderer.on('alt-s-pressed', () => {
 
 ipcRenderer.on('alt-i-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'identify';
     updateTextOfToolBtn();
   }
@@ -200,7 +200,7 @@ ipcRenderer.on('alt-i-pressed', () => {
 
 ipcRenderer.on('alt-d-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'dot';
     updateTextOfToolBtn();
   }
@@ -208,7 +208,7 @@ ipcRenderer.on('alt-d-pressed', () => {
 
 ipcRenderer.on('alt-b-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     instrumentColor = 'rgba(78, 78, 255, 1.0)';
     updateColorOfColorBtn();
   }
@@ -216,7 +216,7 @@ ipcRenderer.on('alt-b-pressed', () => {
 
 ipcRenderer.on('alt-k-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     instrumentColor = 'rgba(0, 0, 0, 1.0)';
     updateColorOfColorBtn();
   }
@@ -224,7 +224,7 @@ ipcRenderer.on('alt-k-pressed', () => {
 
 ipcRenderer.on('alt-r-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     instrumentColor = 'rgba(255, 0, 0, 1.0)';
     updateColorOfColorBtn();
   }
@@ -232,7 +232,7 @@ ipcRenderer.on('alt-r-pressed', () => {
 
 ipcRenderer.on('alt-g-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     instrumentColor = 'rgba(0, 109, 0, 1.0)';
     updateColorOfColorBtn();
   }
@@ -240,7 +240,7 @@ ipcRenderer.on('alt-g-pressed', () => {
 
 ipcRenderer.on('ctrl-a-pressed', () => {
   cancelSelect();
-  if(canUseTool == false){
+  if(canUseTool === false){
     tool = 'select';
     updateTextOfToolBtn();
     prevX = context.canvas.width;
@@ -266,7 +266,7 @@ ipcRenderer.on('ctrl-a-pressed', () => {
     
     var tempWidth = Math.abs(tempX - prevX);
     var tempHeight = Math.abs(tempY - prevY);
-    if(tempWidth == 0 || tempHeight == 0){
+    if(tempWidth === 0 || tempHeight === 0){
       cancelSelect();
     }
   }
@@ -277,21 +277,21 @@ ipcRenderer.on('ctrl-shift-a-pressed', () => {
 });
 
 ipcRenderer.on('ctrl-c-pressed', () => {
-  if(canUseTool == false){
+  if(canUseTool === false){
     copyBtnFunction();
   }
 });
 
 ipcRenderer.on('ctrl-v-pressed', () => {
-  if(canUseTool == false){
+  if(canUseTool === false){
     cancelSelect();
     pasteBtnFunction();
   }
 });
 
 ipcRenderer.on('delete-pressed', () => {
-  if(canUseTool == false){
-    if(areaSelected == true){
+  if(canUseTool === false){
+    if(areaSelected === true){
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       var sx = Math.min(tempX, prevX);
       var sy = Math.min(tempY, prevY);
@@ -330,9 +330,14 @@ function continueAfterAppFinishedLoading1(){
 }
 
 function adjustSizeOfMenuButtonsToScreenSize(){
-  //var vButtonBar = document.getElementById('verticalButtonBar');
-  //var vButtonBarButtons = vButtonBar.getElementsByTagName('a');
-  var vButtonBarButtons = getElementsByIDs(verticalBtnBarBtnIDs);
+  //var vButtonBarButtons = getElementsByIDs(verticalBtnBarBtnIDs);
+  
+  // I know it is not good practice to hard-code this here, but I do not expect these to change
+  // in any signifficant way, so for now, I am ok with hard-coding it. Furthermore, adding more
+  // buttons to the GUI would take up valuable space. I feel that all the buttons that are necessary
+  // are already here, and expandibility can come within the dropdown menus. In sum, I can't think
+  // of a good reason to expand this in the future, so I don't see a problem with hard-coding it:
+  var vButtonBarButtons = document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
   
   var dropdowns = [];
   var el = document.getElementById('fileDropdown');
@@ -445,7 +450,7 @@ function initializeEventListenersForCanvas(){
   });
 
   document.getElementById('canvas1').addEventListener('touchstart', function(e){
-    if(e.touches.length == 1)
+    if(e.touches.length === 1)
     {
       instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
       e.preventDefault();
@@ -521,7 +526,7 @@ function initializeEventListenersForExternalDialogs(){
   });
 
   document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function(e){
-    if(e.touches.length == 1)
+    if(e.touches.length === 1)
     {
       var offset = getCoords(document.getElementById('OCDPickerCanvas'));
       //console.log(e.pageX - offset.left);
@@ -711,7 +716,7 @@ function penToolMethod(x, y, phase){
   var temp1 = instrumentColor.split(',');
   var temp2 = temp1[3].substring(1, (temp1[3].length - 1));
   var colorNotTransparent;
-  if(temp2 == '1.0' || temp2 == '1'){
+  if(temp2 === '1.0' || temp2 === '1'){
     colorNotTransparent = true;
   }
   else{
@@ -779,10 +784,10 @@ function penToolMethod(x, y, phase){
 
 // Here is the eraserToolMethod. It handles erasing areas of the canvas:
 function eraserToolMethod(x, y, phase){
-  if(phase == 'down' || phase == 'move' || phase == 'up'){
+  if(phase === 'down' || phase === 'move' || phase === 'up'){
     // 1. grab section of original image under mouse, 2. draw it over the canvas where it belongs.
     var ofset = Math.pow(instrumentWidth, 2);
-    var halfSmallerDimention = parseInt(Math.min(context.canvas.width, context.canvas.height) / 2);
+    var halfSmallerDimention = parseInt(Math.min(context.canvas.width, context.canvas.height) / 2, 10);
     if(ofset > halfSmallerDimention){
       ofset = halfSmallerDimention;
     }
@@ -907,7 +912,7 @@ function selectToolMethod(x, y, phase){
     
     var tempWidth = Math.abs(tempX - prevX);
     var tempHeight = Math.abs(tempY - prevY);
-    if(tempWidth == 0 || tempHeight == 0){
+    if(tempWidth === 0 || tempHeight === 0){
       cancelSelect();
     }
     
@@ -1063,7 +1068,7 @@ function dotToolMethod(x, y, phase){
 
 // Here is the pasteToolMethod. It handles pasting onto the canvas:
 function pasteToolMethod(x, y, phase){
-  if(copiedSectionOfCanvas != 'NA'){
+  if(copiedSectionOfCanvas !== 'NA'){
     switch(phase){
     case 'down':
       
@@ -1113,7 +1118,7 @@ function userWantsToClose(){
     ipcRenderer.send('focus-main-win');
     var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
-    if(ret == 0){
+    if(ret === 0){
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
       weGotKeyboardShortcuts = false;
       ipcRenderer.send('terminate-this-app');
@@ -1140,7 +1145,7 @@ function fixThingsAfterRezizeIsDone(){
   cancelSelect();
   //adjustSizeOfMenuButtonsToScreenSize();
   if(allLoaded){
-    if(tempImageForWindowResize == null){
+    if(tempImageForWindowResize === null || tempImageForWindowResize === undefined){
       tempImageForWindowResize = new Image();
       tempImageForWindowResize.src = context.canvas.toDataURL('image/png');
       resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1], tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
@@ -1160,10 +1165,10 @@ window.onclick = function(e) {
   }
   
   var id = e.target.id;
-  if(id != 'canvas1' && id != 'copyBtn' && id != 'drawRectangleBtn' && id != 'fillRectangleBtn' && id != 'drawEllipseBtn' && id != 'fillEllipseBtn' && id != 'topRightMinimizeBtn'){
+  if(id !== 'canvas1' && id !== 'copyBtn' && id !== 'drawRectangleBtn' && id !== 'fillRectangleBtn' && id !== 'drawEllipseBtn' && id !== 'fillEllipseBtn' && id !== 'topRightMinimizeBtn'){
     cancelSelect();
   }
-  if(id != 'pageTextBoxID' && id != 'goBtnID'){
+  if(id !== 'pageTextBoxID' && id !== 'goBtnID'){
     updatePageNumsOnGui();
   }
 };
@@ -1174,7 +1179,7 @@ function closeDropdowns(buttonName){
   for (var d = 0; d < dropdowns.length; d++) {
     var openDropdown = dropdowns[d];
     if (openDropdown.classList.contains('show')) {
-      if(openDropdown.id.toString() != buttonName){
+      if(openDropdown.id.toString() !== buttonName){
         openDropdown.classList.remove('show');
       }
     }
@@ -1210,17 +1215,17 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 
 
 
-function getElementsByIDs(ids){
-  if(ids == undefined || (typeof ids != 'object') || (ids.length == 0)){
-    throw 'Expecting an array based parameter or there are no ids, exiting';
-  }
-  var elems = [];
-  for(var i = 0; i < ids.length; i++){
-    elems[i] = document.getElementById(ids[i]);
-  }
+//function getElementsByIDs(ids){
+  //if(ids == undefined || (typeof ids != 'object') || (ids.length == 0)){
+    //throw 'Expecting an array based parameter or there are no ids, exiting';
+  //}
+  //var elems = [];
+  //for(var i = 0; i < ids.length; i++){
+    //elems[i] = document.getElementById(ids[i]);
+  //}
   
-  return elems; 
-}
+  //return elems; 
+//}
 
 
 
@@ -1228,8 +1233,8 @@ function getElementsByIDs(ids){
 // Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
 // size of the window.
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
-  if(incommingWidth == 0 || incommingHeight == 0){
-    throw 'ERROR: You have called resizeAndLoadImagesOntoCanvases before the image has loaded!';
+  if(incommingWidth === 0 || incommingHeight === 0 || incommingWidth === undefined || incommingHeight === undefined || incommingWidth === null || incommingHeight === null){
+    throw 'ERROR: resizeAndLoadImagesOntoCanvases has been called before the image has loaded!';
   }
   
   eraserContext.canvas.style.position = 'absolute';
@@ -1342,12 +1347,12 @@ function updatePageNumsOnGui(){
 
 function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
   var input = document.getElementById('pageTextBoxID').value;
-  var tempNum = parseInt(input);
+  var tempNum = parseInt(input, 10);
   if(isNaN(tempNum) || tempNum > arrayOfCurrentImages.length || tempNum < 1){
     document.getElementById('pageTextBoxID').style.backgroundColor = 'red';
   }
   else{
-    if(tempNum != currentPg){
+    if(tempNum !== currentPg){
       document.getElementById('pageTextBoxID').style.backgroundColor = 'yellow';
     }
     else{
@@ -1377,7 +1382,7 @@ function nextPageBtnFunction(){ // eslint-disable-line no-unused-vars
 
 function goBtnFunction(){
   var input = document.getElementById('pageTextBoxID').value;
-  var tempNum = parseInt(input);
+  var tempNum = parseInt(input, 10);
   if(isNaN(tempNum) || tempNum > arrayOfCurrentImages.length || tempNum < 1){
     document.getElementById('pageTextBoxID').style.backgroundColor = 'red';
   }
@@ -1394,7 +1399,7 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
     
     var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
       
-    if(ret == 1){
+    if(ret === 1){
       //Delete page...
       deleteCurrentPage();
     }
@@ -1429,7 +1434,7 @@ function unregisterShortcutsOnModalDialogOpen(){ // eslint-disable-line no-unuse
 }
 
 function registerShortcutsOnModalDialogClose(){ // eslint-disable-line no-unused-vars
-  if(temporarilyDisabledKeyboardShortcuts == true && weGotKeyboardShortcuts == true){
+  if(temporarilyDisabledKeyboardShortcuts === true && weGotKeyboardShortcuts === true){
     ipcRenderer.send('user-wants-keyboard-shortcuts');
     temporarilyDisabledKeyboardShortcuts = false;
   }
@@ -1447,7 +1452,7 @@ var SDValid = true;
 
 function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   
-  if(document.getElementById('canvas1').style.cursor == 'none'){
+  if(document.getElementById('canvas1').style.cursor === 'none'){
     document.getElementById('SDRemoveMousePointerOnCanvas').checked = true;
   }
   else{
@@ -1474,8 +1479,8 @@ function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
 }
 
 function SDInputValidation(){
-  var rawUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value);
-  var rawMaxPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
+  var rawUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value, 10);
+  var rawMaxPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value, 10);
   var undoHistoryGood = false;
   var maxPagesGood = false;
   
@@ -1518,8 +1523,8 @@ function SDOkBtnFunction(){
       document.getElementById('canvas1').style.cursor = 'default';
     }
     
-    maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value) + 1;
-    maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value);
+    maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value, 10) + 1;
+    maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value, 10);
     
     if(document.getElementById('SDEnableKeyboardShortcuts').checked){
       ipcRenderer.send('user-wants-keyboard-shortcuts');
@@ -1581,7 +1586,7 @@ function ITDBackspace(){ // eslint-disable-line no-unused-vars
   var sEnd = textBox.selectionEnd;
   var beforeSelection;
   var afterSelection;
-  if(sStart == sEnd){
+  if(sStart === sEnd){
     beforeSelection = alreadyThere.substring(0, sStart - 1);
     afterSelection = alreadyThere.substring(sEnd);
     textBox.value = beforeSelection + afterSelection;
@@ -1669,9 +1674,9 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   }
   
   var value = instrumentColor.split(',');
-  OCDRed = parseInt(value[0].substring(5));
-  OCDGreen = parseInt(value[1].substring(1));
-  OCDBlue = parseInt(value[2].substring(1));
+  OCDRed = parseInt(value[0].substring(5), 10);
+  OCDGreen = parseInt(value[1].substring(1), 10);
+  OCDBlue = parseInt(value[2].substring(1), 10);
   var temp = value[3].substring(1);
   OCDAlpha = parseFloat(temp.substring(0, temp.length - 1));
   
@@ -1681,7 +1686,7 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDBlueTextBox').value = OCDBlue;
   document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
-  temp = 100 - (parseInt(OCDAlpha * 100));
+  temp = 100 - (parseInt(OCDAlpha * 100), 10);
   document.getElementById('OCDTransparencyTextBox').value = temp;
   document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDRedTextBox').select();
@@ -1710,7 +1715,7 @@ function OCDOnInstrumentDown(x, y){
   document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDBlueTextBox').value = OCDBlue;
   document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
-  temp = 100 - (parseInt(OCDAlpha * 100));
+  temp = 100 - (parseInt(OCDAlpha * 100), 10);
   document.getElementById('OCDTransparencyTextBox').value = temp;
   document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDRedTextBox').select();
@@ -1720,10 +1725,10 @@ function OCDOnInstrumentDown(x, y){
 }
 
 function OCDValidateInputAndUpdateIfApplicable(){
-  var tempRed = parseInt(document.getElementById('OCDRedTextBox').value);
-  var tempGreen = parseInt(document.getElementById('OCDGreenTextBox').value);
-  var tempBlue = parseInt(document.getElementById('OCDBlueTextBox').value);
-  var tempAlpha = parseInt(document.getElementById('OCDTransparencyTextBox').value);
+  var tempRed = parseInt(document.getElementById('OCDRedTextBox').value, 10);
+  var tempGreen = parseInt(document.getElementById('OCDGreenTextBox').value, 10);
+  var tempBlue = parseInt(document.getElementById('OCDBlueTextBox').value, 10);
+  var tempAlpha = parseInt(document.getElementById('OCDTransparencyTextBox').value, 10);
   
   var redIsGood = false;
   var greenIsGood = false;
@@ -1842,7 +1847,7 @@ function OSDClear(){ // eslint-disable-line no-unused-vars
 }
 
 function OSDValidateInput(){
-  var rawInput = parseInt(document.getElementById('OSDSizeTextBox').value);
+  var rawInput = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
   if(isNaN(rawInput) || rawInput < 2 || rawInput > 2000){
     OSDValid = false;
     document.getElementById('OSDSizeTextBox').style.backgroundColor = 'red';
@@ -1856,7 +1861,7 @@ function OSDValidateInput(){
 function OSDOkBtnFunction(){
   
   if (OSDValid){
-    instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value);
+    instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
     updateTextOfSizeBtn();
     document.getElementById('OSDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
   }
@@ -2035,7 +2040,7 @@ function ISDFixCanvas(){
   //console.log(horizontalPixels.data);
   
   for (i=0; i < horizontalPixels.data.length; i+=4){
-    if(horizontalPixels.data[i] != 0 || horizontalPixels.data[i+1] != 0 || horizontalPixels.data[i+2] != 0){
+    if(horizontalPixels.data[i] !== 0 || horizontalPixels.data[i+1] !== 0 || horizontalPixels.data[i+2] !== 0){
       xPixelsToCrop = pixelCounter;
       i = horizontalPixels.data.length;
     }
@@ -2047,7 +2052,7 @@ function ISDFixCanvas(){
   pixelCounter = 0;
   
   for (i=0; i < verticalPixels.data.length; i+=4){
-    if(verticalPixels.data[i] != 0 || verticalPixels.data[i+1] != 0 || verticalPixels.data[i+2] != 0){
+    if(verticalPixels.data[i] !== 0 || verticalPixels.data[i+1] !== 0 || verticalPixels.data[i+2] !== 0){
       yPixelsToCrop = pixelCounter;
       i = verticalPixels.data.length;
     }
@@ -2076,7 +2081,7 @@ function ISDFixCanvas(){
     
     ISDCanvas.addEventListener('touchstart', function(e){
       var offset = getCoords(ISDCanvas);
-      if(e.touches.length == 1)
+      if(e.touches.length === 1)
       {
         ISDInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
         e.preventDefault();
@@ -2213,7 +2218,7 @@ function ISDFixCanvas(){
 
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
-  if(incommingWidth == 0 || incommingHeight == 0){
+  if(incommingWidth === 0 || incommingHeight === 0 || incommingWidth === undefined || incommingHeight === undefined || incommingWidth === null || incommingHeight === null){
     throw 'ERROR: You have called ISDDisplayImageOnCanvas before the image has loaded!';
   }
   var dlg = ISDGetAvaliableDialogSpace();
@@ -2325,7 +2330,7 @@ function ISDSelectMethod(x, y, phase){
     
     var tempWidth = Math.abs(ISDTempX - ISDPrevX);
     var tempHeight = Math.abs(ISDTempY - ISDPrevY);
-    if(tempWidth == 0 || tempHeight == 0){
+    if(tempWidth === 0 || tempHeight === 0){
       cancelSelect();
     }
     
@@ -2368,7 +2373,7 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       var insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height, selectionWidth, selectionHeight);
       
       var bgColor = 'white';
-      if(ISDBackgroundColorDropdown.value != 'white'){
+      if(ISDBackgroundColorDropdown.value !== 'white'){
         bgColor = instrumentColor;
       }
       
@@ -2443,7 +2448,7 @@ function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, 
 
 function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
   // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
-  if(ISDCanvas != null){
+  if(ISDCanvas !== null && ISDCanvas !== undefined){
     document.getElementById('ISDContentDiv').removeChild(ISDCanvas);
     ISDCanvas = null;
   }
@@ -2460,7 +2465,7 @@ function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
   ISDImageToReturn = null;
   ISDTempCanvasForInterval = 'NA';
   ISDContext = 'NA';
-  if(ISDExtraBreak != null){
+  if(ISDExtraBreak !== null && ISDExtraBreak !== undefined){
     document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak);
     ISDExtraBreak = null;
   }
@@ -2749,11 +2754,11 @@ function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
     
     var widthOfSelection = Math.abs(tempX - prevX);
     var heightOfSelection = Math.abs(tempY - prevY);
-    var minRadius = parseInt(Math.min(widthOfSelection, heightOfSelection) / 2);
+    var minRadius = parseInt(Math.min(widthOfSelection, heightOfSelection) / 2, 10);
     var minX = Math.min(tempX, prevX);
     var minY = Math.min(tempY, prevY);
-    var centerOfSelectionX = minX + (parseInt(widthOfSelection / 2));
-    var centerOfSelectionY = minY + (parseInt(heightOfSelection / 2));
+    var centerOfSelectionX = minX + (parseInt(widthOfSelection / 2, 10));
+    var centerOfSelectionY = minY + (parseInt(heightOfSelection / 2, 10));
     var xScaleFactor;
     var yScaleFactor;
     var longerDimention;
