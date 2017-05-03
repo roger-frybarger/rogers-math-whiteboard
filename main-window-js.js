@@ -1183,27 +1183,27 @@ function closeDropdowns(buttonName){
 
 
 
-function fileBtnFunction(){
+function fileBtnFunction(){ // eslint-disable-line no-unused-vars
   closeDropdowns('fileDropdown');
   document.getElementById('fileDropdown').classList.toggle('show');
 }
 
-function toolBtnFunction(){
+function toolBtnFunction(){ // eslint-disable-line no-unused-vars
   closeDropdowns('toolDropdown');
   document.getElementById('toolDropdown').classList.toggle('show');
 }
 
-function colorBtnFunction(){
+function colorBtnFunction(){ // eslint-disable-line no-unused-vars
   closeDropdowns('colorDropdown');
   document.getElementById('colorDropdown').classList.toggle('show');
 }
 
-function sizeBtnFunction(){
+function sizeBtnFunction(){ // eslint-disable-line no-unused-vars
   closeDropdowns('sizeDropdown');
   document.getElementById('sizeDropdown').classList.toggle('show');
 }
 
-function insertPageBtnFunction(){
+function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
   closeDropdowns('insertPageDropdown');
   document.getElementById('insertPageDropdown').classList.toggle('show');
 }
@@ -1239,33 +1239,34 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
   
   var avalibleWidth = window.innerWidth - SideToolbarWidth;   // Maybe there is a better way to do this than fixed positioning in the CSS?
   var avalibleHeight = window.innerHeight - topToolbarWidth;   // Maybe there is a better way to do this than fixed positioning in the CSS?
-  
+  var canvasHeight;
+  var canvasWidth;
   
   var proportionalHeight = (incommingHeight * avalibleWidth) / incommingWidth;
-  if(proportionalHeight > window.innerHeight - topToolbarWidth)
-    {  //this means height is limiting dimension.
-      var canvasHeight = avalibleHeight;
-      var canvasWidth = (incommingWidth * avalibleHeight) / incommingHeight;
-      canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
-      context.canvas.width = canvasWidth;
-      context.canvas.height = canvasHeight;
-      context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-      eraserContext.canvas.width = canvasWidth;
-      eraserContext.canvas.height = canvasHeight;
-      eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
-    }
+  if(proportionalHeight > window.innerHeight - topToolbarWidth){
+    //this means height is limiting dimension.
+    canvasHeight = avalibleHeight;
+    canvasWidth = (incommingWidth * avalibleHeight) / incommingHeight;
+    canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
+    context.canvas.width = canvasWidth;
+    context.canvas.height = canvasHeight;
+    context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+    eraserContext.canvas.width = canvasWidth;
+    eraserContext.canvas.height = canvasHeight;
+    eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
+  }
   else
-    {  //this means width is limiting dimension.
-      var canvasWidth = avalibleWidth;
-      var canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
-      canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
-      context.canvas.width = canvasWidth;
-      context.canvas.height = canvasHeight;
-      context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-      eraserContext.canvas.width = canvasWidth;
-      eraserContext.canvas.height = canvasHeight;
-      eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
-    }
+  { //this means width is limiting dimension.
+    canvasWidth = avalibleWidth;
+    canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
+    canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
+    context.canvas.width = canvasWidth;
+    context.canvas.height = canvasHeight;
+    context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+    eraserContext.canvas.width = canvasWidth;
+    eraserContext.canvas.height = canvasHeight;
+    eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
+  }
 }
 
 
@@ -1339,7 +1340,7 @@ function updatePageNumsOnGui(){
   document.getElementById('totalPagesDivID').innerHTML = 'Total Pages: ' + arrayOfCurrentImages.length;
 }
 
-function pageInputBoxValidator(){
+function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
   var input = document.getElementById('pageTextBoxID').value;
   var tempNum = parseInt(input);
   if(isNaN(tempNum) || tempNum > arrayOfCurrentImages.length || tempNum < 1){
@@ -1355,20 +1356,20 @@ function pageInputBoxValidator(){
   }
 }
 
-function pageInputBoxCheckForEnter(e){
+function pageInputBoxCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13) { // 13 is enter
     goBtnFunction();
   }
 }
 
-function previousPageBtnFunction(){
+function previousPageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(currentPg > 1){
     loadPage(currentPg - 1);
   }
 }
 
-function nextPageBtnFunction(){
+function nextPageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(currentPg < arrayOfCurrentImages.length){
     loadPage(currentPg + 1);
   }
@@ -1387,7 +1388,7 @@ function goBtnFunction(){
 }
 
 
-function deletePageBtnFunction(){
+function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
     //Here we question them if they want to delete the page, and delete it if they say yes.
     
@@ -1422,33 +1423,12 @@ function deleteCurrentPage(){
 
 
 
-
-
-
-
-
-
-function test(){
-  
-  console.log('rtdytrdytrdytrd');
-}
-
-function test2(v){
-  
-  console.log('test2 happening ' + v);
-  
-  //console.log(context);
-
-  //document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
-}
-
-
-function unregisterShortcutsOnModalDialogOpen(){
+function unregisterShortcutsOnModalDialogOpen(){ // eslint-disable-line no-unused-vars
   ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
   temporarilyDisabledKeyboardShortcuts = true;
 }
 
-function registerShortcutsOnModalDialogClose(){
+function registerShortcutsOnModalDialogClose(){ // eslint-disable-line no-unused-vars
   if(temporarilyDisabledKeyboardShortcuts == true && weGotKeyboardShortcuts == true){
     ipcRenderer.send('user-wants-keyboard-shortcuts');
     temporarilyDisabledKeyboardShortcuts = false;
@@ -1465,7 +1445,7 @@ var SDValid = true;
 
 // Here is the code for the settingsDialog:
 
-function SDReadySettingsDialog(){
+function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   
   if(document.getElementById('canvas1').style.cursor == 'none'){
     document.getElementById('SDRemoveMousePointerOnCanvas').checked = true;
@@ -1563,7 +1543,7 @@ function SDOkBtnFunction(){
   }
 }
 
-function SDCheckForEnter(e){
+function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13) { // 13 is enter
     SDOkBtnFunction();
@@ -1574,14 +1554,14 @@ function SDCheckForEnter(e){
 
 var ITDValid = true;
 
-function ITDReadyInsertTextDialog(){
+function ITDReadyInsertTextDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('ITDTextBox').value = textToInsert;
   ITDValidationFunction();
   document.getElementById('ITDTextBox').focus();
   document.getElementById('ITDTextBox').select();
 }
 
-function ITDAddCharacter(chr){
+function ITDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('ITDTextBox');
   var alreadyThere = textBox.value;
   var sStart = textBox.selectionStart;
@@ -1594,22 +1574,24 @@ function ITDAddCharacter(chr){
   ITDValidationFunction();
 }
 
-function ITDBackspace(){
+function ITDBackspace(){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('ITDTextBox');
   var alreadyThere = textBox.value;
   var sStart = textBox.selectionStart;
   var sEnd = textBox.selectionEnd;
+  var beforeSelection;
+  var afterSelection;
   if(sStart == sEnd){
-    var beforeSelection = alreadyThere.substring(0, sStart - 1);
-    var afterSelection = alreadyThere.substring(sEnd);
+    beforeSelection = alreadyThere.substring(0, sStart - 1);
+    afterSelection = alreadyThere.substring(sEnd);
     textBox.value = beforeSelection + afterSelection;
     textBox.focus();
     textBox.setSelectionRange(sStart - 1, sStart - 1);
     ITDValidationFunction();
   }
   else{
-    var beforeSelection = alreadyThere.substring(0, sStart);
-    var afterSelection = alreadyThere.substring(sEnd);
+    beforeSelection = alreadyThere.substring(0, sStart);
+    afterSelection = alreadyThere.substring(sEnd);
     textBox.value = beforeSelection + afterSelection;
     textBox.focus();
     textBox.setSelectionRange(sStart, sStart);
@@ -1617,14 +1599,14 @@ function ITDBackspace(){
   }
 }
 
-function ITDClear(){
+function ITDClear(){ // eslint-disable-line no-unused-vars
   document.getElementById('ITDTextBox').value = '';
   document.getElementById('ITDTextBox').focus();
   ITDValidationFunction();
 }
 
 function ITDValidationFunction(){
-  var input = document.getElementById('ITDTextBox').value
+  var input = document.getElementById('ITDTextBox').value;
   if(input.length < 1){
     ITDValid = false;
     document.getElementById('ITDTextBox').style.backgroundColor = 'red';
@@ -1644,7 +1626,7 @@ function ITDOkBtnFunction(){
   }
 }
 
-function ITDCheckForEnter(e){
+function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13) { // 13 is enter
     ITDOkBtnFunction();
@@ -1661,7 +1643,7 @@ var OCDBlue = 78;
 var OCDAlpha = 1.0;
 var OCDValid = true;
 
-function OCDReadyOtherColorDialog(){
+function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
 
   // Create the color wheel for them to choose from:
   var canvas = document.getElementById('OCDPickerCanvas');
@@ -1673,17 +1655,17 @@ function OCDReadyOtherColorDialog(){
   context.fillStyle = 'white';
   context.fill();
   for(var angle = 0; angle <= 360; angle += 1){
-      var startAngle = (angle - 1) * Math.PI / 180;
-      var endAngle = (angle + 1) * Math.PI / 180;
-      context.beginPath();
-      context.moveTo(x, y);
-      context.arc(x, y, radius, startAngle, endAngle);
-      context.closePath();
-      var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-      gradient.addColorStop(0,'hsl('+angle+', 10%, 100%)');
-      gradient.addColorStop(1,'hsl('+angle+', 100%, 50%)');
-      context.fillStyle = gradient;
-      context.fill();
+    var startAngle = (angle - 1) * Math.PI / 180;
+    var endAngle = (angle + 1) * Math.PI / 180;
+    context.beginPath();
+    context.moveTo(x, y);
+    context.arc(x, y, radius, startAngle, endAngle);
+    context.closePath();
+    var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
+    gradient.addColorStop(0,'hsl('+angle+', 10%, 100%)');
+    gradient.addColorStop(1,'hsl('+angle+', 100%, 50%)');
+    context.fillStyle = gradient;
+    context.fill();
   }
   
   var value = instrumentColor.split(',');
@@ -1823,7 +1805,7 @@ function OCDOkBtnFunction(){
   }
 }
 
-function OCDCheckForEnter(e){
+function OCDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13) { // 13 is enter
     OCDOkBtnFunction();
@@ -1834,26 +1816,26 @@ function OCDCheckForEnter(e){
 
 var OSDValid = true;
 
-function OSDReadyOtherSizeDialog(){
+function OSDReadyOtherSizeDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OSDSizeTextBox').value = instrumentWidth;
   document.getElementById('OSDSizeTextBox').select();
 }
 
-function OSDAddCharacter(chr){
+function OSDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('OSDSizeTextBox');
   var alreadyThere = textBox.value;
   textBox.value = alreadyThere + chr;
   OSDValidateInput();
 }
 
-function OSDBackspace(){
+function OSDBackspace(){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('OSDSizeTextBox');
   var alreadyThere = textBox.value;
   textBox.value = alreadyThere.substring(0, alreadyThere.length-1);
   OSDValidateInput();
 }
 
-function OSDClear(){
+function OSDClear(){ // eslint-disable-line no-unused-vars
   document.getElementById('OSDSizeTextBox').value = '';
   document.getElementById('OSDSizeTextBox').focus();
   OSDValidateInput();
@@ -1880,11 +1862,11 @@ function OSDOkBtnFunction(){
   }
 }
 
-function OSDCheckForEnter(e){
+function OSDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
-    if (key === 13) { // 13 is enter
-      OSDOkBtnFunction();
-    }
+  if (key === 13) { // 13 is enter
+    OSDOkBtnFunction();
+  }
 }
 
 // Here is the code for the insertScreenshotDialog:
@@ -1911,7 +1893,7 @@ var ISDExtraBreak2 = null;
 var ISDExtraTextLabel2 = null;
 var ISDBackgroundColorDropdown = null;
 
-function ISDReadyInsertScreenshotDialog(){
+function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDCanInsert = false;
   ISDAreaSelected = false;
   // get thumnails of each screen/window & insert into the dialog.
@@ -1922,12 +1904,12 @@ function ISDReadyInsertScreenshotDialog(){
     }
     // clear out the dialog:
     document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update.';
-    document.getElementById("ISDContentDiv").innerHTML = '';
+    document.getElementById('ISDContentDiv').innerHTML = '';
     // Prepare the dialog with some spaces:
     var br = document.createElement('br');
-    document.getElementById("ISDContentDiv").appendChild(br);
-    document.getElementById("ISDContentDiv").appendChild(br);
-    document.getElementById("ISDContentDiv").appendChild(br);
+    document.getElementById('ISDContentDiv').appendChild(br);
+    document.getElementById('ISDContentDiv').appendChild(br);
+    document.getElementById('ISDContentDiv').appendChild(br);
     // Now loop through each source and put its thumbnail in the dialog:
     for (let i = 0; i < sources.length; ++i) {  // For each one we will...
       // Make the image element:
@@ -1945,19 +1927,19 @@ function ISDReadyInsertScreenshotDialog(){
       // Make a line break element:
       var elem3 = document.createElement('br');
       // Add all 3 elements to the dialog:
-      document.getElementById("ISDContentDiv").appendChild(elem);
-      document.getElementById("ISDContentDiv").appendChild(elem2);
-      document.getElementById("ISDContentDiv").appendChild(elem3);
+      document.getElementById('ISDContentDiv').appendChild(elem);
+      document.getElementById('ISDContentDiv').appendChild(elem2);
+      document.getElementById('ISDContentDiv').appendChild(elem3);
       
     }
   });
   
 }
 
-function ISDThumbnailClicked(id){
+function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
   // 1. clear out the dialog & put up new message
   document.getElementById('ISDContentHeader').innerHTML = 'Capturing Screenshot...';
-  document.getElementById("ISDContentDiv").innerHTML = '';
+  document.getElementById('ISDContentDiv').innerHTML = '';
   // 2. use id to get screenshot of desired thing
   navigator.webkitGetUserMedia({
     audio: false,
@@ -2009,10 +1991,11 @@ function ISDHandleStream(stream){
     // Remove hidden video tag
     video.remove();
     try {
-        // Destroy connect to stream
-        stream.getTracks()[0].stop();
-    } catch (e) {}
-  }
+      // Destroy connect to stream
+      stream.getTracks()[0].stop();
+    } catch (e) {//Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
+    }
+  };
   video.src = URL.createObjectURL(stream);
   document.body.appendChild(video);
   
@@ -2029,7 +2012,7 @@ function ISDReadyForCroping(){
   ISDCanvas = document.createElement('canvas');
   ISDCanvas.width = img.naturalWidth;
   ISDCanvas.height = img.naturalHeight;
-  document.getElementById("ISDContentDiv").appendChild(ISDCanvas);
+  document.getElementById('ISDContentDiv').appendChild(ISDCanvas);
   ISDContext = ISDCanvas.getContext('2d');
   ISDContext.drawImage(img, 0, 0, ISDCanvas.width, ISDCanvas.height);
   
@@ -2047,10 +2030,11 @@ function ISDFixCanvas(){
   var xPixelsToCrop = 0;
   var yPixelsToCrop = 0;
   var pixelCounter = 0;
+  var i = 0;
   
   //console.log(horizontalPixels.data);
   
-  for (var i=0; i < horizontalPixels.data.length; i+=4){
+  for (i=0; i < horizontalPixels.data.length; i+=4){
     if(horizontalPixels.data[i] != 0 || horizontalPixels.data[i+1] != 0 || horizontalPixels.data[i+2] != 0){
       xPixelsToCrop = pixelCounter;
       i = horizontalPixels.data.length;
@@ -2062,7 +2046,7 @@ function ISDFixCanvas(){
   
   pixelCounter = 0;
   
-  for (var i=0; i < verticalPixels.data.length; i+=4){
+  for (i=0; i < verticalPixels.data.length; i+=4){
     if(verticalPixels.data[i] != 0 || verticalPixels.data[i+1] != 0 || verticalPixels.data[i+2] != 0){
       yPixelsToCrop = pixelCounter;
       i = verticalPixels.data.length;
@@ -2146,18 +2130,18 @@ function ISDFixCanvas(){
     // And add the clear selection button, insertion location dropdown, * background color dropdown:
     
     ISDExtraBreak = document.createElement('br');
-    document.getElementById("ISDContentDiv").appendChild(ISDExtraBreak);
+    document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak);
     
     ISDClearSelectionBtn = document.createElement('a');
     ISDClearSelectionBtn.setAttribute('class', 'modalBoxKeypadBtns');
     ISDClearSelectionBtn.setAttribute('onclick', 'ISDCancelSelect();');
     ISDClearSelectionBtn.innerHTML = 'Clear Selection';
     
-    document.getElementById("ISDContentDiv").appendChild(ISDClearSelectionBtn);
+    document.getElementById('ISDContentDiv').appendChild(ISDClearSelectionBtn);
     
     ISDExtraTextLabel = document.createElement('p');
-    ISDExtraTextLabel.innerHTML = 'Place selected region in:'
-    document.getElementById("ISDContentDiv").appendChild(ISDExtraTextLabel);
+    ISDExtraTextLabel.innerHTML = 'Place selected region in:';
+    document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel);
     
     ISDLocationDropdown = document.createElement('select');
     ISDLocationDropdown.style.fontSize = '30px';
@@ -2188,14 +2172,14 @@ function ISDFixCanvas(){
     op5.innerHTML = 'center';
     ISDLocationDropdown.appendChild(op5);
     
-    document.getElementById("ISDContentDiv").appendChild(ISDLocationDropdown);
+    document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
     
     ISDExtraBreak2 = document.createElement('br');
-    document.getElementById("ISDContentDiv").appendChild(ISDExtraBreak2);
+    document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak2);
     
     ISDExtraTextLabel2 = document.createElement('p');
-    ISDExtraTextLabel2.innerHTML = 'Background Color:'
-    document.getElementById("ISDContentDiv").appendChild(ISDExtraTextLabel2);
+    ISDExtraTextLabel2.innerHTML = 'Background Color:';
+    document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel2);
     
     ISDBackgroundColorDropdown = document.createElement('select');
     ISDBackgroundColorDropdown.style.fontSize = '30px';
@@ -2213,7 +2197,7 @@ function ISDFixCanvas(){
     op2.innerHTML = 'color chosen';
     ISDBackgroundColorDropdown.appendChild(op2);
     
-    document.getElementById("ISDContentDiv").appendChild(ISDBackgroundColorDropdown);
+    document.getElementById('ISDContentDiv').appendChild(ISDBackgroundColorDropdown);
     
     // Also here is where to make the ok btn work.
     ISDCanInsert = true;
@@ -2230,36 +2214,38 @@ function ISDFixCanvas(){
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
   if(incommingWidth == 0 || incommingHeight == 0){
-    console.log('ERROR: You have called ISDDisplayImageOnCanvas before the image has loaded!');
+    throw 'ERROR: You have called ISDDisplayImageOnCanvas before the image has loaded!';
   }
   var dlg = ISDGetAvaliableDialogSpace();
+  var canvasHeight;
+  var canvasWidth;
   
   var proportionalHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
-  if(proportionalHeight > dlg.availableHeight)
-    {  //this means height is limiting dimension.
-      var canvasHeight = dlg.availableHeight;
-      var canvasWidth = (incommingWidth * dlg.availableHeight) / incommingHeight;
-      canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
-      ISDCanvas.width = canvasWidth;
-      ISDCanvas.height = canvasHeight;
-      ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-    }
+  if(proportionalHeight > dlg.availableHeight){
+    //this means height is limiting dimension.
+    canvasHeight = dlg.availableHeight;
+    canvasWidth = (incommingWidth * dlg.availableHeight) / incommingHeight;
+    canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
+    ISDCanvas.width = canvasWidth;
+    ISDCanvas.height = canvasHeight;
+    ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+  }
   else
-    {  //this means width is limiting dimension.
-      var canvasWidth = dlg.availableWidth;
-      var canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
-      canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
-      ISDCanvas.width = canvasWidth;
-      ISDCanvas.height = canvasHeight;
-      ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-    }
-    
-    // Calculate & save scale factor in relation to actual image.
-    ISDXScale = ISDImageToReturn.naturalWidth / ISDCanvas.width;
-    ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
-    //tool = 'select';
-    //messageDisplayed = false;
-    //chrome.app.window.current().focus();
+  {  //this means width is limiting dimension.
+    canvasWidth = dlg.availableWidth;
+    canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
+    canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
+    ISDCanvas.width = canvasWidth;
+    ISDCanvas.height = canvasHeight;
+    ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+  }
+  
+  // Calculate & save scale factor in relation to actual image.
+  ISDXScale = ISDImageToReturn.naturalWidth / ISDCanvas.width;
+  ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
+  //tool = 'select';
+  //messageDisplayed = false;
+  //chrome.app.window.current().focus();
 }
 
 function ISDGetAvaliableDialogSpace(){
@@ -2293,60 +2279,59 @@ function ISDInstrumentUp(x, y){
 
 function ISDSelectMethod(x, y, phase){
   switch(phase){
-    case 'down':
-      
-      ISDCancelSelect();
-      ISDPrevX = x;
-      ISDPrevY = y;
-      ISDTempX = x;
-      ISDTempY = y;
-      ISDTempCanvasForInterval = 'NA';
-      ISDTempCanvasForInterval = new Image();
-      ISDTempCanvasForInterval.src = ISDContext.canvas.toDataURL('image/png');
-      
+  case 'down':
+    
+    ISDCancelSelect();
+    ISDPrevX = x;
+    ISDPrevY = y;
+    ISDTempX = x;
+    ISDTempY = y;
+    ISDTempCanvasForInterval = 'NA';
+    ISDTempCanvasForInterval = new Image();
+    ISDTempCanvasForInterval.src = ISDContext.canvas.toDataURL('image/png');
+    
     break;
-    case 'move':
-      
-      ISDPrevX = x;
-      ISDPrevY = y;
-      ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
-      ISDContext.strokeStyle = 'rgba(0, 0, 0, 1.0)';
-      ISDContext.lineJoin = 'round';
-      ISDContext.lineWidth = 1;
-      ISDContext.beginPath();
-      ISDContext.moveTo(ISDTempX, ISDTempY);
-      ISDContext.lineTo(ISDPrevX, ISDTempY);
-      ISDContext.lineTo(ISDPrevX, ISDPrevY);
-      ISDContext.lineTo(ISDTempX, ISDPrevY);
-      ISDContext.closePath();
-      ISDContext.stroke();
-      
+  case 'move':
+    
+    ISDPrevX = x;
+    ISDPrevY = y;
+    ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+    ISDContext.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    ISDContext.lineJoin = 'round';
+    ISDContext.lineWidth = 1;
+    ISDContext.beginPath();
+    ISDContext.moveTo(ISDTempX, ISDTempY);
+    ISDContext.lineTo(ISDPrevX, ISDTempY);
+    ISDContext.lineTo(ISDPrevX, ISDPrevY);
+    ISDContext.lineTo(ISDTempX, ISDPrevY);
+    ISDContext.closePath();
+    ISDContext.stroke();
+    
     break;
-    case 'up':
-      
-      ISDAreaSelected = true;
-      ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
-      ISDContext.strokeStyle = 'rgba(0, 0, 0, 1.0)';
-      ISDContext.lineJoin = 'round';
-      ISDContext.lineWidth = 1;
-      ISDContext.beginPath();
-      ISDContext.moveTo(ISDTempX, ISDTempY);
-      ISDContext.lineTo(ISDPrevX, ISDTempY);
-      ISDContext.lineTo(ISDPrevX, ISDPrevY);
-      ISDContext.lineTo(ISDTempX, ISDPrevY);
-      ISDContext.closePath();
-      ISDContext.stroke();
-      
-      var tempWidth = Math.abs(ISDTempX - ISDPrevX);
-      var tempHeight = Math.abs(ISDTempY - ISDPrevY);
-      if(tempWidth == 0 || tempHeight == 0){
-        cancelSelect();
-      }
-      
+  case 'up':
+    
+    ISDAreaSelected = true;
+    ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
+    ISDContext.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    ISDContext.lineJoin = 'round';
+    ISDContext.lineWidth = 1;
+    ISDContext.beginPath();
+    ISDContext.moveTo(ISDTempX, ISDTempY);
+    ISDContext.lineTo(ISDPrevX, ISDTempY);
+    ISDContext.lineTo(ISDPrevX, ISDPrevY);
+    ISDContext.lineTo(ISDTempX, ISDPrevY);
+    ISDContext.closePath();
+    ISDContext.stroke();
+    
+    var tempWidth = Math.abs(ISDTempX - ISDPrevX);
+    var tempHeight = Math.abs(ISDTempY - ISDPrevY);
+    if(tempWidth == 0 || tempHeight == 0){
+      cancelSelect();
+    }
+    
     break;
-    default:
-      console.log('ERROR: Invalid phase in ISDSelectMethod: ' + phase);
-    break;
+  default:
+    throw 'ERROR: Invalid phase in ISDSelectMethod: ' + phase;
   }
 }
 
@@ -2361,7 +2346,7 @@ function ISDCancelSelect(){
   }
 }
 
-function ISDOkBtnFunction(){
+function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
   if(ISDCanInsert){
     if(ISDAreaSelected){
       
@@ -2421,45 +2406,45 @@ function ISDOkBtnFunction(){
 function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, selSizeX, selSizeY){
   var toRet = { x: 0, y: 0 };
   switch(insertionLocationStr){
-    case 'topright':
-      
-      toRet.x = orgImageX - selSizeX;
-      
+  case 'topright':
+    
+    toRet.x = orgImageX - selSizeX;
+    
     break;
-    case 'botomleft':
-      
-      toRet.y = orgImageY - selSizeY;
-      
+  case 'botomleft':
+    
+    toRet.y = orgImageY - selSizeY;
+    
     break;
-    case 'botomright':
-      
-      toRet.x = orgImageX - selSizeX;
-      toRet.y = orgImageY - selSizeY;
-      
+  case 'botomright':
+    
+    toRet.x = orgImageX - selSizeX;
+    toRet.y = orgImageY - selSizeY;
+    
     break;
-    case 'center':
-      
-      var halfOrgImageX = Math.round(orgImageX / 2);
-      var halfOrgImageY = Math.round(orgImageY / 2);
-      var halfSelSizeX = Math.round(selSizeX / 2);
-      var halfSelSizeY = Math.round(selSizeY / 2);
-      
-      toRet.x = halfOrgImageX - halfSelSizeX;
-      toRet.y = halfOrgImageY - halfSelSizeY;
-      
+  case 'center':
+    
+    var halfOrgImageX = Math.round(orgImageX / 2);
+    var halfOrgImageY = Math.round(orgImageY / 2);
+    var halfSelSizeX = Math.round(selSizeX / 2);
+    var halfSelSizeY = Math.round(selSizeY / 2);
+    
+    toRet.x = halfOrgImageX - halfSelSizeX;
+    toRet.y = halfOrgImageY - halfSelSizeY;
+    
     break;
-    default:
-      // Here we do nothing since for the top left, the coordinates are already correct. 
-      // Also, if something wierd happens, we want to put it in the top left corner anyhow, so doing nothing works.
+  default:
+    // Here we do nothing since for the top left, the coordinates are already correct. 
+    // Also, if something wierd happens, we want to put it in the top left corner anyhow, so doing nothing works.
     break;
   }
   return toRet;
 }
 
-function ISDCleanupFunction(){
+function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
   // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
   if(ISDCanvas != null){
-    document.getElementById("ISDContentDiv").removeChild(ISDCanvas);
+    document.getElementById('ISDContentDiv').removeChild(ISDCanvas);
     ISDCanvas = null;
   }
   ISDPrevX = 'NA';
@@ -2476,37 +2461,37 @@ function ISDCleanupFunction(){
   ISDTempCanvasForInterval = 'NA';
   ISDContext = 'NA';
   if(ISDExtraBreak != null){
-    document.getElementById("ISDContentDiv").removeChild(ISDExtraBreak);
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak);
     ISDExtraBreak = null;
   }
   if(ISDClearSelectionBtn != null){
-    document.getElementById("ISDContentDiv").removeChild(ISDClearSelectionBtn);
+    document.getElementById('ISDContentDiv').removeChild(ISDClearSelectionBtn);
     ISDClearSelectionBtn = null;
   }
   if(ISDExtraTextLabel != null){
-    document.getElementById("ISDContentDiv").removeChild(ISDExtraTextLabel);
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel);
     ISDExtraTextLabel = null;
   }
   if(ISDLocationDropdown != null){
     while (ISDLocationDropdown.firstChild) {
       ISDLocationDropdown.removeChild(ISDLocationDropdown.firstChild);
     }
-    document.getElementById("ISDContentDiv").removeChild(ISDLocationDropdown);
+    document.getElementById('ISDContentDiv').removeChild(ISDLocationDropdown);
     ISDLocationDropdown = null;
   }
   if(ISDExtraBreak2 != null){
-    document.getElementById("ISDContentDiv").removeChild(ISDExtraBreak2);
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak2);
     ISDExtraBreak2 = null;
   }
   if(ISDExtraTextLabel2 != null){
-    document.getElementById("ISDContentDiv").removeChild(ISDExtraTextLabel2);
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel2);
     ISDExtraTextLabel2 = null;
   }
   if(ISDBackgroundColorDropdown != null){
-    while (ISDBackgroundColorDropdown.firstChild) {
+    while(ISDBackgroundColorDropdown.firstChild){
       ISDBackgroundColorDropdown.removeChild(ISDBackgroundColorDropdown.firstChild);
     }
-    document.getElementById("ISDContentDiv").removeChild(ISDBackgroundColorDropdown);
+    document.getElementById('ISDContentDiv').removeChild(ISDBackgroundColorDropdown);
     ISDBackgroundColorDropdown = null;
   }
 }
@@ -2514,13 +2499,13 @@ function ISDCleanupFunction(){
 
 // Here is the code for the otherPageDialog:
 
-function OPDInsertPage(e){
+function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
   insertTemplateAsPage(locOfTem);
   document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }
 
-function OPDInsertColoredPage(){
+function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
   var whiteImage = new Image();
   whiteImage.addEventListener('load', function() {
     var orgWidth = context.canvas.width;
@@ -2543,31 +2528,31 @@ function OPDInsertColoredPage(){
   document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
 }
 
-function OPDInsertPageFromImage(){
+function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
-   { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] }
-    ]}, function (fileNames) {
+    { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] }
+  ]}, function (fileNames) {
     if (fileNames === undefined) return;
     var fileName = fileNames[0];
     // Now we check to see if the file exists before loading it in.
     
     fs.stat(fileName, function(err, stat) {
-      if(err == null) {
-          //console.log('File exists');
-          insertTemplateAsPage(fileName);
+      if(err == null){
+        //console.log('File exists');
+        insertTemplateAsPage(fileName);
       } else if(err.code == 'ENOENT') {
-          // file does not exist
-          //fs.writeFile('log.txt', 'Some log\n');
-          alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
+        // file does not exist
+        //fs.writeFile('log.txt', 'Some log\n');
+        alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
       } else {
-          //console.log('Some other error: ', err.code);
-          throw err;
+        //console.log('Some other error: ', err.code);
+        throw err;
       }
     });
-    
+  
     //insertTemplateAsPage(fileName);
     document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
- });
+  });
 }
 
 
@@ -2602,52 +2587,50 @@ function updateColorOfColorBtn(){
 
 function updateTextOfSizeBtn(){
   switch(instrumentWidth){
-    case 2:
-      document.getElementById('sizeBtn').innerHTML = 'Size: S';
+  case 2:
+    document.getElementById('sizeBtn').innerHTML = 'Size: S';
     break;
-    case 5:
-      document.getElementById('sizeBtn').innerHTML = 'Size: M';
+  case 5:
+    document.getElementById('sizeBtn').innerHTML = 'Size: M';
     break;
-    case 10:
-      document.getElementById('sizeBtn').innerHTML = 'Size: L';
+  case 10:
+    document.getElementById('sizeBtn').innerHTML = 'Size: L';
     break;
-    default:
-      document.getElementById('sizeBtn').innerHTML = 'Size: ' + instrumentWidth;
+  default:
+    document.getElementById('sizeBtn').innerHTML = 'Size: ' + instrumentWidth;
     break;
-    
+  
   }
 }
 
 function updateTextOfToolBtn(){
   switch(tool){
-    case 'pen':
-      document.getElementById('toolBtn').innerHTML = 'Tool: P';
+  case 'pen':
+    document.getElementById('toolBtn').innerHTML = 'Tool: P';
     break;
-    case 'eraser':
-      document.getElementById('toolBtn').innerHTML = 'Tool: E';
+  case 'eraser':
+    document.getElementById('toolBtn').innerHTML = 'Tool: E';
     break;
-    case 'line':
-      document.getElementById('toolBtn').innerHTML = 'Tool: L';
+  case 'line':
+    document.getElementById('toolBtn').innerHTML = 'Tool: L';
     break;
-    case 'select':
-      document.getElementById('toolBtn').innerHTML = 'Tool: S';
+  case 'select':
+    document.getElementById('toolBtn').innerHTML = 'Tool: S';
     break;
-    case 'text':
-      document.getElementById('toolBtn').innerHTML = 'Tool: T';
+  case 'text':
+    document.getElementById('toolBtn').innerHTML = 'Tool: T';
     break;
-    case 'identify':
-      document.getElementById('toolBtn').innerHTML = 'Tool: I';
+  case 'identify':
+    document.getElementById('toolBtn').innerHTML = 'Tool: I';
     break;
-    case 'dot':
-      document.getElementById('toolBtn').innerHTML = 'Tool: D';
+  case 'dot':
+    document.getElementById('toolBtn').innerHTML = 'Tool: D';
     break;
-    case 'PASTE':
-      document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
+  case 'PASTE':
+    document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
     break;
-    default:
-      console.log('ERROR: Invalid tool. Cant update tool btn text: ' + tool);
-    break;
-    
+  default:
+    throw 'ERROR: Invalid tool. Cant update tool btn text: ' + tool;
   }
 }
 
@@ -2708,7 +2691,7 @@ function pasteBtnFunction(){
   }
 }
 
-function drawRectangleBtnFunction(){
+function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected == true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -2736,7 +2719,7 @@ function drawRectangleBtnFunction(){
   }
 }
 
-function fillRectangleBtnFunction(){
+function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected == true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -2759,7 +2742,7 @@ function fillRectangleBtnFunction(){
   }
 }
 
-function drawEllipseBtnFunction(){
+function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected == true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -2809,7 +2792,7 @@ function drawEllipseBtnFunction(){
   }
 }
 
-function fillEllipseBtnFunction(){
+function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected == true){
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -2910,19 +2893,19 @@ function tellUserToSelectAnAreaFirst(){
 // this location is known, the combination of it and the location of the
 // click can be used to calculate the location of the click on the element.
 function getCoords(elem) { // crossbrowser version
-    var box = elem.getBoundingClientRect();
+  var box = elem.getBoundingClientRect();
 
-    var body = document.body;
-    var docEl = document.documentElement;
+  var body = document.body;
+  var docEl = document.documentElement;
 
-    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+  var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+  var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
-    var clientTop = docEl.clientTop || body.clientTop || 0;
-    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+  var clientTop = docEl.clientTop || body.clientTop || 0;
+  var clientLeft = docEl.clientLeft || body.clientLeft || 0;
 
-    var top  = box.top +  scrollTop - clientTop;
-    var left = box.left + scrollLeft - clientLeft;
+  var top  = box.top +  scrollTop - clientTop;
+  var left = box.left + scrollLeft - clientLeft;
 
-    return { top: Math.round(top), left: Math.round(left) };
+  return { top: Math.round(top), left: Math.round(left) };
 }
