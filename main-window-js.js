@@ -1679,19 +1679,24 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   var temp = value[3].substring(1);
   OCDAlpha = parseFloat(temp.substring(0, temp.length - 1));
   
+  OCDUpdateTextBoxes();
+  OCDValidateInputAndUpdateIfApplicable();
+  OCDUpdateExample();
+  
+}
+
+function OCDUpdateTextBoxes(){
+  
   document.getElementById('OCDRedTextBox').value = OCDRed;
   document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDGreenTextBox').value = OCDGreen;
   document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDBlueTextBox').value = OCDBlue;
   document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
-  temp = 100 - (parseInt(OCDAlpha * 100), 10);
+  var temp = 100 - (parseInt(OCDAlpha * 100, 10));
   document.getElementById('OCDTransparencyTextBox').value = temp;
   document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDRedTextBox').select();
-  
-  OCDValidateInputAndUpdateIfApplicable();
-  OCDUpdateExample();
   
 }
 
@@ -1708,17 +1713,7 @@ function OCDOnInstrumentDown(x, y){
   OCDAlpha = 1.0;
   OCDColor = 'rgba(' + OCDRed + ', ' + OCDGreen + ', ' + OCDBlue + ', ' + OCDAlpha + ')';
   
-  document.getElementById('OCDRedTextBox').value = OCDRed;
-  document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
-  document.getElementById('OCDGreenTextBox').value = OCDGreen;
-  document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
-  document.getElementById('OCDBlueTextBox').value = OCDBlue;
-  document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
-  temp = 100 - (parseInt(OCDAlpha * 100), 10);
-  document.getElementById('OCDTransparencyTextBox').value = temp;
-  document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
-  document.getElementById('OCDRedTextBox').select();
-  
+  OCDUpdateTextBoxes();
   OCDValidateInputAndUpdateIfApplicable();
   OCDUpdateExample();
 }
@@ -1729,10 +1724,7 @@ function OCDValidateInputAndUpdateIfApplicable(){
   var tempBlue = parseInt(document.getElementById('OCDBlueTextBox').value, 10);
   var tempAlpha = parseInt(document.getElementById('OCDTransparencyTextBox').value, 10);
   
-  var redIsGood = false;
-  var greenIsGood = false;
-  var blueIsGood = false;
-  var alphaIsGood = false;
+  var redIsGood = false, greenIsGood = false, blueIsGood = false, alphaIsGood = false;
 
   if(isNaN(tempRed) || tempRed < 0 || tempRed > 255){
     redIsGood = false;
@@ -1742,7 +1734,6 @@ function OCDValidateInputAndUpdateIfApplicable(){
     redIsGood = true;
     document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
   }
-  
   if(isNaN(tempGreen) || tempGreen < 0 || tempGreen > 255){
     greenIsGood = false;
     document.getElementById('OCDGreenTextBox').style.backgroundColor = 'red';
@@ -1751,7 +1742,6 @@ function OCDValidateInputAndUpdateIfApplicable(){
     greenIsGood = true;
     document.getElementById('OCDGreenTextBox').style.backgroundColor = 'white';
   }
-  
   if(isNaN(tempBlue) || tempBlue < 0 || tempBlue > 255){
     blueIsGood = false;
     document.getElementById('OCDBlueTextBox').style.backgroundColor = 'red';
@@ -1760,7 +1750,6 @@ function OCDValidateInputAndUpdateIfApplicable(){
     blueIsGood = true;
     document.getElementById('OCDBlueTextBox').style.backgroundColor = 'white';
   }
-  
   if(isNaN(tempAlpha) || tempAlpha < 0 || tempAlpha > 100){
     alphaIsGood = false;
     document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'red';
@@ -1769,7 +1758,6 @@ function OCDValidateInputAndUpdateIfApplicable(){
     alphaIsGood = true;
     document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
   }
-  
   if(redIsGood && greenIsGood && blueIsGood && alphaIsGood){
     OCDValid = true;
     OCDRed = tempRed;
@@ -2073,135 +2061,12 @@ function ISDFixCanvas(){
     
     // Here seems to be the right place to add the event listeners to the canvas.
     // We just have to remember to remove them when the window closes.
-    ISDCanvas.addEventListener('mousedown', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
-    });
-    
-    ISDCanvas.addEventListener('touchstart', function(e){
-      var offset = getCoords(ISDCanvas);
-      if(e.touches.length === 1)
-      {
-        ISDInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-        e.preventDefault();
-      }
-      else
-      {
-        ISDInstrumentUp(ISDPrevX, ISDPrevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
-      }
-    });
-    
-    ISDCanvas.addEventListener('mousemove', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentMoved(e.pageX - offset.left, e.pageY - offset.top);
-    });
-    
-    ISDCanvas.addEventListener('touchmove', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentMoved(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      e.preventDefault();
-    });
-    
-    ISDCanvas.addEventListener('mouseup', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
-    });
-    
-    ISDCanvas.addEventListener('mouseleave', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
-    });
-    
-    ISDCanvas.addEventListener('touchend', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      e.preventDefault();
-    });
-    
-    ISDCanvas.addEventListener('touchleave', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      e.preventDefault();
-    });
-    
-    ISDCanvas.addEventListener('touchcancel', function(e){
-      var offset = getCoords(ISDCanvas);
-      ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      e.preventDefault();
-    });
+    ISDAddTouchAndClickEventHandelers();
     
     document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
     // And add the clear selection button, insertion location dropdown, * background color dropdown:
     
-    ISDExtraBreak = document.createElement('br');
-    document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak);
-    
-    ISDClearSelectionBtn = document.createElement('a');
-    ISDClearSelectionBtn.setAttribute('class', 'modalBoxKeypadBtns');
-    ISDClearSelectionBtn.setAttribute('onclick', 'ISDCancelSelect();');
-    ISDClearSelectionBtn.innerHTML = 'Clear Selection';
-    
-    document.getElementById('ISDContentDiv').appendChild(ISDClearSelectionBtn);
-    
-    ISDExtraTextLabel = document.createElement('p');
-    ISDExtraTextLabel.innerHTML = 'Place selected region in:';
-    document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel);
-    
-    ISDLocationDropdown = document.createElement('select');
-    ISDLocationDropdown.style.fontSize = '30px';
-    //ISDLocationDropdown.style.margin = '0px 0px 25px 0px';
-    
-    var op1 = document.createElement('option');
-    op1.setAttribute('value', 'topleft');
-    op1.innerHTML = 'top left corner';
-    ISDLocationDropdown.appendChild(op1);
-    
-    var op2 = document.createElement('option');
-    op2.setAttribute('value', 'topright');
-    op2.innerHTML = 'top right corner';
-    ISDLocationDropdown.appendChild(op2);
-    
-    var op3 = document.createElement('option');
-    op3.setAttribute('value', 'botomleft');
-    op3.innerHTML = 'botom left corner';
-    ISDLocationDropdown.appendChild(op3);
-    
-    var op4 = document.createElement('option');
-    op4.setAttribute('value', 'botomright');
-    op4.innerHTML = 'botom right corner';
-    ISDLocationDropdown.appendChild(op4);
-    
-    var op5 = document.createElement('option');
-    op5.setAttribute('value', 'center');
-    op5.innerHTML = 'center';
-    ISDLocationDropdown.appendChild(op5);
-    
-    document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
-    
-    ISDExtraBreak2 = document.createElement('br');
-    document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak2);
-    
-    ISDExtraTextLabel2 = document.createElement('p');
-    ISDExtraTextLabel2.innerHTML = 'Background Color:';
-    document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel2);
-    
-    ISDBackgroundColorDropdown = document.createElement('select');
-    ISDBackgroundColorDropdown.style.fontSize = '30px';
-    ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
-    
-    op1 = null;
-    op1 = document.createElement('option');
-    op1.setAttribute('value', 'white');
-    op1.innerHTML = 'white';
-    ISDBackgroundColorDropdown.appendChild(op1);
-    
-    op2 = null;
-    op2 = document.createElement('option');
-    op2.setAttribute('value', 'globalcolor');
-    op2.innerHTML = 'color chosen';
-    ISDBackgroundColorDropdown.appendChild(op2);
-    
-    document.getElementById('ISDContentDiv').appendChild(ISDBackgroundColorDropdown);
+    ISDAddElementsForSelectRegion();
     
     // Also here is where to make the ok btn work.
     ISDCanInsert = true;
@@ -2212,6 +2077,133 @@ function ISDFixCanvas(){
   //console.log('jtyfuytfuytf');
   
   //ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
+  
+}
+
+function ISDAddTouchAndClickEventHandelers(){
+  
+  ISDCanvas.addEventListener('mousedown', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
+  });
+  ISDCanvas.addEventListener('touchstart', function(e){
+    var offset = getCoords(ISDCanvas);
+    if(e.touches.length === 1)
+    {
+      ISDInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+      e.preventDefault();
+    }
+    else
+    {
+      ISDInstrumentUp(ISDPrevX, ISDPrevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+    }
+  });
+  ISDCanvas.addEventListener('mousemove', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentMoved(e.pageX - offset.left, e.pageY - offset.top);
+  });
+  ISDCanvas.addEventListener('touchmove', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentMoved(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+    e.preventDefault();
+  });
+  ISDCanvas.addEventListener('mouseup', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
+  });
+  ISDCanvas.addEventListener('mouseleave', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
+  });
+  ISDCanvas.addEventListener('touchend', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+    e.preventDefault();
+  });
+  ISDCanvas.addEventListener('touchleave', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+    e.preventDefault();
+  });
+  ISDCanvas.addEventListener('touchcancel', function(e){
+    var offset = getCoords(ISDCanvas);
+    ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+    e.preventDefault();
+  });
+  
+}
+
+function ISDAddElementsForSelectRegion(){
+  
+  ISDExtraBreak = document.createElement('br');
+  document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak);
+  
+  ISDClearSelectionBtn = document.createElement('a');
+  ISDClearSelectionBtn.setAttribute('class', 'modalBoxKeypadBtns');
+  ISDClearSelectionBtn.setAttribute('onclick', 'ISDCancelSelect();');
+  ISDClearSelectionBtn.innerHTML = 'Clear Selection';
+  
+  document.getElementById('ISDContentDiv').appendChild(ISDClearSelectionBtn);
+  
+  ISDExtraTextLabel = document.createElement('p');
+  ISDExtraTextLabel.innerHTML = 'Place selected region in:';
+  document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel);
+  
+  ISDLocationDropdown = document.createElement('select');
+  ISDLocationDropdown.style.fontSize = '30px';
+  //ISDLocationDropdown.style.margin = '0px 0px 25px 0px';
+  
+  var op1 = document.createElement('option');
+  op1.setAttribute('value', 'topleft');
+  op1.innerHTML = 'top left corner';
+  ISDLocationDropdown.appendChild(op1);
+  
+  var op2 = document.createElement('option');
+  op2.setAttribute('value', 'topright');
+  op2.innerHTML = 'top right corner';
+  ISDLocationDropdown.appendChild(op2);
+  
+  var op3 = document.createElement('option');
+  op3.setAttribute('value', 'botomleft');
+  op3.innerHTML = 'botom left corner';
+  ISDLocationDropdown.appendChild(op3);
+  
+  var op4 = document.createElement('option');
+  op4.setAttribute('value', 'botomright');
+  op4.innerHTML = 'botom right corner';
+  ISDLocationDropdown.appendChild(op4);
+  
+  var op5 = document.createElement('option');
+  op5.setAttribute('value', 'center');
+  op5.innerHTML = 'center';
+  ISDLocationDropdown.appendChild(op5);
+  
+  document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
+  
+  ISDExtraBreak2 = document.createElement('br');
+  document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak2);
+  
+  ISDExtraTextLabel2 = document.createElement('p');
+  ISDExtraTextLabel2.innerHTML = 'Background Color:';
+  document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel2);
+  
+  ISDBackgroundColorDropdown = document.createElement('select');
+  ISDBackgroundColorDropdown.style.fontSize = '30px';
+  ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
+  
+  op1 = null;
+  op1 = document.createElement('option');
+  op1.setAttribute('value', 'white');
+  op1.innerHTML = 'white';
+  ISDBackgroundColorDropdown.appendChild(op1);
+  
+  op2 = null;
+  op2 = document.createElement('option');
+  op2.setAttribute('value', 'globalcolor');
+  op2.innerHTML = 'color chosen';
+  ISDBackgroundColorDropdown.appendChild(op2);
+  
+  document.getElementById('ISDContentDiv').appendChild(ISDBackgroundColorDropdown);
   
 }
 
