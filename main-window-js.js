@@ -2149,36 +2149,7 @@ function ISDAddElementsForSelectRegion(){
   ISDExtraTextLabel.innerHTML = 'Place selected region in:';
   document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel);
   
-  ISDLocationDropdown = document.createElement('select');
-  ISDLocationDropdown.style.fontSize = '30px';
-  //ISDLocationDropdown.style.margin = '0px 0px 25px 0px';
-  
-  var op1 = document.createElement('option');
-  op1.setAttribute('value', 'topleft');
-  op1.innerHTML = 'top left corner';
-  ISDLocationDropdown.appendChild(op1);
-  
-  var op2 = document.createElement('option');
-  op2.setAttribute('value', 'topright');
-  op2.innerHTML = 'top right corner';
-  ISDLocationDropdown.appendChild(op2);
-  
-  var op3 = document.createElement('option');
-  op3.setAttribute('value', 'botomleft');
-  op3.innerHTML = 'botom left corner';
-  ISDLocationDropdown.appendChild(op3);
-  
-  var op4 = document.createElement('option');
-  op4.setAttribute('value', 'botomright');
-  op4.innerHTML = 'botom right corner';
-  ISDLocationDropdown.appendChild(op4);
-  
-  var op5 = document.createElement('option');
-  op5.setAttribute('value', 'center');
-  op5.innerHTML = 'center';
-  ISDLocationDropdown.appendChild(op5);
-  
-  document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
+  ISDAddLocationDropdown();
   
   ISDExtraBreak2 = document.createElement('br');
   document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak2);
@@ -2191,20 +2162,41 @@ function ISDAddElementsForSelectRegion(){
   ISDBackgroundColorDropdown.style.fontSize = '30px';
   ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
   
-  op1 = null;
-  op1 = document.createElement('option');
-  op1.setAttribute('value', 'white');
-  op1.innerHTML = 'white';
-  ISDBackgroundColorDropdown.appendChild(op1);
+  // Add the entries to the background color dropdown:
+  var options = ['white', 'color chosen'];
+  var optionValues = ['white', 'globalcolor'];
   
-  op2 = null;
-  op2 = document.createElement('option');
-  op2.setAttribute('value', 'globalcolor');
-  op2.innerHTML = 'color chosen';
-  ISDBackgroundColorDropdown.appendChild(op2);
+  var opt = null;
+  
+  for(var i = 0; i < options.length; i++){
+    opt = document.createElement('option');
+    opt.setAttribute('value', optionValues[i]);
+    opt.innerHTML = options[i];
+    ISDBackgroundColorDropdown.appendChild(opt);
+  }
   
   document.getElementById('ISDContentDiv').appendChild(ISDBackgroundColorDropdown);
   
+}
+
+function ISDAddLocationDropdown(){
+  ISDLocationDropdown = document.createElement('select');
+  ISDLocationDropdown.style.fontSize = '30px';
+  
+  // Add the entries to the location dropdown:
+  var options = ['top left corner', 'top right corner', 'botom left corner', 'botom right corner', 'center'];
+  var optionValues = ['topleft', 'topright', 'botomleft', 'botomright', 'center'];
+  
+  var opt = null;
+  
+  for(var i = 0; i < options.length; i++){
+    opt = document.createElement('option');
+    opt.setAttribute('value', optionValues[i]);
+    opt.innerHTML = options[i];
+    ISDLocationDropdown.appendChild(opt);
+  }
+  
+  document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
 }
 
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
@@ -2439,10 +2431,48 @@ function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, 
 
 function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
   // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
-  if(ISDCanvas !== null && ISDCanvas !== undefined){
+  ISDSimpleVariableCleanup();
+  if(ISDCanvas !== null && typeof ISDCanvas !== 'undefined'){
     document.getElementById('ISDContentDiv').removeChild(ISDCanvas);
     ISDCanvas = null;
   }
+  if(ISDExtraBreak !== null && typeof ISDExtraBreak !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak);
+    ISDExtraBreak = null;
+  }
+  if(ISDClearSelectionBtn !== null && typeof ISDClearSelectionBtn !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDClearSelectionBtn);
+    ISDClearSelectionBtn = null;
+  }
+  if(ISDExtraTextLabel !== null && typeof ISDExtraTextLabel !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel);
+    ISDExtraTextLabel = null;
+  }
+  if(ISDLocationDropdown !== null && typeof ISDLocationDropdown !== 'undefined'){
+    while (ISDLocationDropdown.firstChild) {
+      ISDLocationDropdown.removeChild(ISDLocationDropdown.firstChild);
+    }
+    document.getElementById('ISDContentDiv').removeChild(ISDLocationDropdown);
+    ISDLocationDropdown = null;
+  }
+  if(ISDExtraBreak2 !== null && typeof ISDExtraBreak2 !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak2);
+    ISDExtraBreak2 = null;
+  }
+  if(ISDExtraTextLabel2 !== null && typeof ISDExtraTextLabel2 !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel2);
+    ISDExtraTextLabel2 = null;
+  }
+  if(ISDBackgroundColorDropdown !== null && typeof ISDBackgroundColorDropdown !== 'undefined'){
+    while(ISDBackgroundColorDropdown.firstChild){
+      ISDBackgroundColorDropdown.removeChild(ISDBackgroundColorDropdown.firstChild);
+    }
+    document.getElementById('ISDContentDiv').removeChild(ISDBackgroundColorDropdown);
+    ISDBackgroundColorDropdown = null;
+  }
+}
+
+function ISDSimpleVariableCleanup(){
   ISDPrevX = 'NA';
   ISDPrevY = 'NA';
   ISDTempX = 'NA';
@@ -2456,40 +2486,6 @@ function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
   ISDImageToReturn = null;
   ISDTempCanvasForInterval = 'NA';
   ISDContext = 'NA';
-  if(ISDExtraBreak !== null && ISDExtraBreak !== undefined){
-    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak);
-    ISDExtraBreak = null;
-  }
-  if(ISDClearSelectionBtn !== null && ISDClearSelectionBtn !== undefined){
-    document.getElementById('ISDContentDiv').removeChild(ISDClearSelectionBtn);
-    ISDClearSelectionBtn = null;
-  }
-  if(ISDExtraTextLabel !== null && ISDExtraTextLabel !== undefined){
-    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel);
-    ISDExtraTextLabel = null;
-  }
-  if(ISDLocationDropdown !== null && ISDLocationDropdown !== undefined){
-    while (ISDLocationDropdown.firstChild) {
-      ISDLocationDropdown.removeChild(ISDLocationDropdown.firstChild);
-    }
-    document.getElementById('ISDContentDiv').removeChild(ISDLocationDropdown);
-    ISDLocationDropdown = null;
-  }
-  if(ISDExtraBreak2 !== null && ISDExtraBreak2 !== undefined){
-    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak2);
-    ISDExtraBreak2 = null;
-  }
-  if(ISDExtraTextLabel2 !== null && ISDExtraTextLabel2 !== undefined){
-    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel2);
-    ISDExtraTextLabel2 = null;
-  }
-  if(ISDBackgroundColorDropdown !== null && ISDBackgroundColorDropdown !== undefined){
-    while(ISDBackgroundColorDropdown.firstChild){
-      ISDBackgroundColorDropdown.removeChild(ISDBackgroundColorDropdown.firstChild);
-    }
-    document.getElementById('ISDContentDiv').removeChild(ISDBackgroundColorDropdown);
-    ISDBackgroundColorDropdown = null;
-  }
 }
 
 
