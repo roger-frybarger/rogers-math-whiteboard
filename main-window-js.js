@@ -44,7 +44,14 @@ process.on('uncaughtException', function (err) {
     if(err !== null && typeof err !== 'undefined'){
       stk = err.stack;
     }
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause the app to malfunction further, and potentially become unusable. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
+    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com' +
+    ' to see if you are using the latest version of this program. If not, please try out the latest version and see if that' +
+    ' resolves the issue. If that does not resolve the issue, please email the following message, along with a description of' +
+    ' the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems' +
+    ' to function normally despite this error, you can disable error messages in the settings for this program. However, be' +
+    ' aware that this may cause unpredictable behavior. Here is the error message to send:\n\n' +
+    'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() +
+    '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
   }
   else{
     throw err;
@@ -317,7 +324,8 @@ ipcRenderer.on('app-finished-loading', () => {
   adjustSizeOfMenuButtonsToScreenSize();
   initializeGlobalVariables();
   initializeCanvas();
-  // Since we have to wait for an image to load, the startup process continues on in the continueAfterAppFinishedLoading1 function.
+  // Since we have to wait for an image to load, the startup process continues on in the
+  // continueAfterAppFinishedLoading1 function.
 });
 
 // This function runs after the initializeCanvas() function finishes its job.
@@ -337,7 +345,8 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   // buttons to the GUI would take up valuable space. I feel that all the buttons that are necessary
   // are already here, and expandibility can come within the dropdown menus. In sum, I can't think
   // of a good reason to expand this in the future, so I don't see a problem with hard-coding it:
-  var vButtonBarButtons = document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
+  var vButtonBarButtons = 
+  document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
   
   var dropdowns = [];
   var el = document.getElementById('fileDropdown');
@@ -354,9 +363,10 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
   //console.log(dropdowns);
 
-  //var screenH = screen.height;
-  var screenH = window.innerHeight + 30;  // I know this is confusing. Originally I had planned to use screen hight, but then desided to pass in the window height instead.
-  //console.log(screenH);
+  // I know this is confusing. Originally I had planned to use screen hight,
+  // but then desided to pass in the window height instead.
+  var screenH = window.innerHeight + 30;
+  
   var i = 0;
   switch (true){
   case (screenH < 720):
@@ -452,12 +462,14 @@ function initializeEventListenersForCanvas(){
   document.getElementById('canvas1').addEventListener('touchstart', function(e){
     if(e.touches.length === 1)
     {
-      instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+      instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+      this.offsetTop - topToolbarWidth);
       e.preventDefault();
     }
     else
     {
-      instrumentUp(prevX, prevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+      // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+      instrumentUp(prevX, prevY);
     }
   });
 
@@ -466,7 +478,8 @@ function initializeEventListenersForCanvas(){
   });
 
   document.getElementById('canvas1').addEventListener('touchmove', function(e){
-    instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+    instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    this.offsetTop - topToolbarWidth);
     e.preventDefault();
   });
 
@@ -479,15 +492,18 @@ function initializeEventListenersForCanvas(){
   });
 
   document.getElementById('canvas1').addEventListener('touchend', function(e){
-    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    this.offsetTop - topToolbarWidth);
   });
 
   document.getElementById('canvas1').addEventListener('touchleave', function(e){
-    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    this.offsetTop - topToolbarWidth);
   });
 
   document.getElementById('canvas1').addEventListener('touchcancel', function(e){
-    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY - this.offsetTop - topToolbarWidth);
+    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    this.offsetTop - topToolbarWidth);
   });
   
   // This enables the right-click menu over the text boxes. I found it at:
@@ -551,13 +567,20 @@ function checkForScreenSizeIssues(){
   var screenY = screen.height;
   //if(true){
   if(screenX < 800 || screenY < 600){
-    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error');
+    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution' +
+    ' of 800 by 600 is required.', 'Error');
     ipcRenderer.send('terminate-this-app');
   }
   //if(true){
   if(screenX > 1920 || screenY > 1080){
   
-    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning');
+    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially' +
+    ' cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a' +
+    ' touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution' +
+    ' may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing,' +
+    ' a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload,' +
+    ' etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by' +
+    ' 1080.', 'Warning');
   }
 }
 
@@ -1115,7 +1138,8 @@ function pasteToolMethod(x, y, phase){
 function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('focus-main-win');
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' +
+      'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
     if(ret === 0){
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
@@ -1147,11 +1171,13 @@ function fixThingsAfterRezizeIsDone(){
     if(tempImageForWindowResize === null || typeof tempImageForWindowResize === 'undefined'){
       tempImageForWindowResize = new Image();
       tempImageForWindowResize.src = context.canvas.toDataURL('image/png');
-      resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1], tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
+      resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1],
+      tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
       adjustSizeOfMenuButtonsToScreenSize();
     }
     else{
-      resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1], tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
+      resizeAndLoadImagesOntoCanvases(tempImageForWindowResize, arrayOfOriginalImages[currentPg - 1],
+      tempImageForWindowResize.naturalWidth, tempImageForWindowResize.naturalHeight);
       adjustSizeOfMenuButtonsToScreenSize();
     }
   }
@@ -1164,7 +1190,9 @@ window.onclick = function(e) {
   }
   
   var id = e.target.id;
-  if(id !== 'canvas1' && id !== 'copyBtn' && id !== 'drawRectangleBtn' && id !== 'fillRectangleBtn' && id !== 'drawEllipseBtn' && id !== 'fillEllipseBtn' && id !== 'topRightMinimizeBtn'){
+  if(id !== 'canvas1' && id !== 'copyBtn' && id !== 'drawRectangleBtn' && id !== 'fillRectangleBtn' &&
+  id !== 'drawEllipseBtn' && id !== 'fillEllipseBtn' && id !== 'topRightMinimizeBtn')
+  {
     cancelSelect();
   }
   if(id !== 'pageTextBoxID' && id !== 'goBtnID'){
@@ -1232,7 +1260,8 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 // Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
 // size of the window.
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
-  if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' || typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
+  if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
+  typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
     throw new Error('resizeAndLoadImagesOntoCanvases has been called before the image has loaded!');
   }
   
@@ -1240,9 +1269,9 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
   eraserContext.canvas.style.left = SideToolbarWidth + 'px';
   eraserContext.canvas.style.top =  (screen.height + topToolbarWidth) + 'px';
 
-  
-  var avalibleWidth = window.innerWidth - SideToolbarWidth;   // Maybe there is a better way to do this than fixed positioning in the CSS?
-  var avalibleHeight = window.innerHeight - topToolbarWidth;   // Maybe there is a better way to do this than fixed positioning in the CSS?
+  // Maybe there is a better way to do this than fixed positioning in the CSS:
+  var avalibleWidth = window.innerWidth - SideToolbarWidth;
+  var avalibleHeight = window.innerHeight - topToolbarWidth;
   var canvasHeight;
   var canvasWidth;
   
@@ -1263,7 +1292,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
   { //this means width is limiting dimension.
     canvasWidth = avalibleWidth;
     canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
-    canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
+    canvasHeight = Math.round(canvasHeight); // Without this line the image height is potentially reduced by 1px on every repaint.
     context.canvas.width = canvasWidth;
     context.canvas.height = canvasHeight;
     context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
@@ -1284,7 +1313,8 @@ function loadPage(numberOfPageToLoad){
   // load the page that was passed in.
   saveCurrentImageToArrayBeforeMoving();
   currentPg = numberOfPageToLoad;
-  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1],
+  arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
   updatePageNumsOnGui();
   clearUndoHistory();
 }
@@ -1333,7 +1363,11 @@ function saveCurrentImageToArrayBeforeMoving(){
 
 function tellUserTheyHaveExcededMaxPages(){
   // Here we explain why they can't insert another page:
-  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' + maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
+  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +
+    maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open' +
+    ' another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless' +
+    ' of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single' +
+    ' sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
 }
 
 function updatePageNumsOnGui(){
@@ -1396,7 +1430,8 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
     //Here we question them if they want to delete the page, and delete it if they say yes.
     
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning',
+      message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
       
     if(ret === 1){
       //Delete page...
@@ -1406,7 +1441,8 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   }
   else{
     // Here we tell them that the document must have at least one page:
-    alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.', '');
+    alert('The document must have at least one page at all times.\nHowever, you can add another' +
+    ' page and then come back and delete this one.', '');
   }
 }
 
@@ -1418,7 +1454,8 @@ function deleteCurrentPage(){
   if(currentPg > 1){
     --currentPg;
   }
-  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1],
+  arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
   updatePageNumsOnGui();
   clearUndoHistory();
 }
@@ -1895,7 +1932,8 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
       return;
     }
     // clear out the dialog:
-    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update.';
+    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to' +
+    ' capture:<br>Note that this list does not automatically update.';
     document.getElementById('ISDContentDiv').innerHTML = '';
     // Prepare the dialog with some spaces:
     var br = document.createElement('br');
@@ -2063,7 +2101,9 @@ function ISDFixCanvas(){
     // We just have to remember to remove them when the window closes.
     ISDAddTouchAndClickEventHandelers();
     
-    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
+    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to' +
+    ' insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the' +
+    ' dropdown below the image.';
     // And add the clear selection button, insertion location dropdown, * background color dropdown:
     
     ISDAddElementsForSelectRegion();
@@ -2095,7 +2135,8 @@ function ISDAddTouchAndClickEventHandelers(){
     }
     else
     {
-      ISDInstrumentUp(ISDPrevX, ISDPrevY);  // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+      // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+      ISDInstrumentUp(ISDPrevX, ISDPrevY);
     }
   });
   ISDCanvas.addEventListener('mousemove', function(e){
@@ -2201,7 +2242,8 @@ function ISDAddLocationDropdown(){
 
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
-  if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' || typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
+  if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
+  typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
     throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!');
   }
   var dlg = ISDGetAvaliableDialogSpace();
@@ -2222,7 +2264,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   {  //this means width is limiting dimension.
     canvasWidth = dlg.availableWidth;
     canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
-    canvasHeight = Math.round(canvasHeight);   // Without this line the image height is potentially reduced by 1px on every repaint.
+    canvasHeight = Math.round(canvasHeight); // Without this line the image height is potentially reduced by 1px on every repaint.
     ISDCanvas.width = canvasWidth;
     ISDCanvas.height = canvasHeight;
     ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
@@ -2237,8 +2279,9 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
 }
 
 function ISDGetAvaliableDialogSpace(){
-  var x = (0.88 * window.innerWidth) - 145; // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future.
-  var y = (0.68 * window.innerHeight) - 21; // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future.
+  // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future:
+  var x = (0.88 * window.innerWidth) - 145;
+  var y = (0.68 * window.innerHeight) - 21;
   x = Math.round(x);
   y = Math.round(y);
   return {availableWidth: x, availableHeight: y };
@@ -2353,7 +2396,8 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       selectionLocationX = Math.round(selectionLocationX * ISDXScale);
       selectionLocationY = Math.round(selectionLocationY * ISDYScale);
       
-      var insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height, selectionWidth, selectionHeight);
+      var insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height,
+      selectionWidth, selectionHeight);
       
       var bgColor = 'white';
       if(ISDBackgroundColorDropdown.value !== 'white'){
@@ -2537,7 +2581,8 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
           alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
         }
         else if(stats.size > 25000000){
-          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
+          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it' +
+          ' down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
         }
         else{
           insertTemplateAsPage(fileName);
@@ -2649,7 +2694,8 @@ function undoBtnFunction(){
   if(currentPlaceInUndoArray > 0){
     if(imageArrayForUndo[currentPlaceInUndoArray - 1] !== null){
       --currentPlaceInUndoArray;
-      resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+      resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1],
+      arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
     }
   }
 }
@@ -2658,7 +2704,8 @@ function redoBtnFunction(){
   if(currentPlaceInUndoArray < imageArrayForUndo.length - 1){
     if(imageArrayForUndo[currentPlaceInUndoArray + 1] !== null){
       ++currentPlaceInUndoArray;
-      resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+      resizeAndLoadImagesOntoCanvases(imageArrayForUndo[currentPlaceInUndoArray], arrayOfOriginalImages[currentPg - 1],
+      arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
     }
   }
 }
