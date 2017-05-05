@@ -9,8 +9,8 @@ var fs = require('fs');
 
 const remote = require('electron').remote;
 const Menu = remote.Menu;
-var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a refference to the main window so we can use
-// it for dialoug boxes.
+var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a reference to the main window so we can use
+// it for dialog boxes.
 
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
@@ -25,12 +25,12 @@ const InputMenu = Menu.buildFromTemplate([{
   {label: 'Copy', role: 'copy',},
   {label: 'Paste', role: 'paste',},
   {type: 'separator',},
-  {label: 'Select all', role: 'selectall',},
+  {label: 'Select all', role: 'selectall',}, // eslint-disable-line spellcheck/spell-checker
 ]);
 
 
 
-window.addEventListener('resize', onWindowResize);
+window.addEventListener('resize', onWindowResize); // eslint-disable-line spellcheck/spell-checker
 
 var userWantsErrorMessages = true;
 
@@ -70,7 +70,7 @@ var context;
 var eraserContext;
 
 
-// var verticalBtnBarBtnIDs = ['fileBtn', 'colorBtn', 'sizeBtn', 'toolBtn', 'insertPageBtn', 'previousPageBtn', 'nextPageBtn'];
+
 
 
 // Some variables used in drawing:
@@ -338,21 +338,21 @@ function continueAfterAppFinishedLoading1(){
 }
 
 function adjustSizeOfMenuButtonsToScreenSize(){
-  //var vButtonBarButtons = getElementsByIDs(verticalBtnBarBtnIDs);
+  
   
   // I know it is not good practice to hard-code this here, but I do not expect these to change
-  // in any signifficant way, so for now, I am ok with hard-coding it. Furthermore, adding more
+  // in any significant way, so for now, I am cool with hard-coding it. Furthermore, adding more
   // buttons to the GUI would take up valuable space. I feel that all the buttons that are necessary
-  // are already here, and expandibility can come within the dropdown menus. In sum, I can't think
+  // are already here, and expandability can come within the drop down menus. In sum, I can't think
   // of a good reason to expand this in the future, so I don't see a problem with hard-coding it:
   var vButtonBarButtons = 
   document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
   
   var dropdowns = [];
-  var el = document.getElementById('fileDropdown');
-  //console.log(el);
+  var el = document.getElementById('fileDropdown'); // eslint-disable-line spellcheck/spell-checker
+  
   dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
-  //console.log(dropdowns);
+  
   el = document.getElementById('colorDropdown');
   dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
   el = document.getElementById('sizeDropdown');
@@ -361,10 +361,9 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
   el = document.getElementById('insertPageDropdown');
   dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
-  //console.log(dropdowns);
 
-  // I know this is confusing. Originally I had planned to use screen hight,
-  // but then desided to pass in the window height instead.
+  // I know this is confusing. Originally I had planned to use screen height,
+  // but then decided to pass in the window height instead.
   var screenH = window.innerHeight + 30;
   
   var i = 0;
@@ -509,7 +508,7 @@ function initializeEventListenersForCanvas(){
   // This enables the right-click menu over the text boxes. I found it at:
   // https://github.com/electron/electron/issues/4068
   
-  document.body.addEventListener('contextmenu', (e) => {
+  document.body.addEventListener('contextmenu', (e) => { // eslint-disable-line spellcheck/spell-checker
     e.preventDefault();
     e.stopPropagation();
 
@@ -526,10 +525,10 @@ function initializeEventListenersForCanvas(){
 }
 
 /*
- * Here is the function that innitializes the event listeners for all of the external dialogs.
- * It has to be run only once on startup since runnung it in the code for each window will result
+ * Here is the function that initializes the event listeners for all of the external dialogs.
+ * It has to be run only once on startup since running it in the code for each window will result
  * in the same functions being added to the events again each time the dialog is opened,
- * which results in noticable slowness.
+ * which results in noticeable slowness.
 */
 function initializeEventListenersForExternalDialogs(){
   
@@ -827,7 +826,7 @@ function lineToolMethod(x, y, phase){
   case 'down':
     
     //      1. save current canvas into tempCanvasForInterval.
-    //      2. save x & y into tempX, tempY, prevX & prevY.
+    //      2. save x & y into both the variables that store the start point & the ones that store the current position.
     tempCanvasForInterval = 'NA';
     tempCanvasForInterval = new Image();
     tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
@@ -839,9 +838,9 @@ function lineToolMethod(x, y, phase){
     break;
   case 'move':
     
-    // 1. Update prevX & prevY with the current values of x & y.
+    // 1. Update the current position variables with the current values of x & y.
     // 2. repaint the tempCanvasForInterval onto the real canvas.
-    // 3. paint an opaque gray line of set size onto the canvas between the tempX, tempY; and prevX, prevY.
+    // 3. paint an opaque gray line of set size onto the canvas between the starting point & current position.
     prevX = x;
     prevY = y;
     
