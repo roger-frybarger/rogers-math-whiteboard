@@ -2957,3 +2957,7 @@ function getCoords(elem) { // crossbrowser version
 
   return { top: Math.round(top), left: Math.round(left) };
 }
+
+function bs(){
+  alert('12345\b\b5678');
+}
