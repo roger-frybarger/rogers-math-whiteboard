@@ -18,19 +18,19 @@ const osModule = require('os');
 // This enables the right-click menu over the text boxes. I found it at:
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
-  label: 'Undo', role: 'undo',},
-  {label: 'Redo', role: 'redo',},
+  label: 'Undo', role: 'undo',}, //----Visible!
+  {label: 'Redo', role: 'redo',}, //----Visible!
   {type: 'separator',},
-  {label: 'Cut', role: 'cut',},
-  {label: 'Copy', role: 'copy',},
-  {label: 'Paste', role: 'paste',},
+  {label: 'Cut', role: 'cut',}, //----Visible!
+  {label: 'Copy', role: 'copy',}, //----Visible!
+  {label: 'Paste', role: 'paste',}, //----Visible!
   {type: 'separator',},
-  {label: 'Select all', role: 'selectall',}, // eslint-disable-line spellcheck/spell-checker
+  {label: 'Select all', role: 'selectall',}, //----Visible!
 ]);
 
 
 
-window.addEventListener('resize', onWindowResize); // eslint-disable-line spellcheck/spell-checker
+window.addEventListener('resize', onWindowResize);
 
 var userWantsErrorMessages = true;
 
@@ -44,14 +44,7 @@ process.on('uncaughtException', function (err) {
     if(err !== null && typeof err !== 'undefined'){
       stk = err.stack;
     }
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com' +
-    ' to see if you are using the latest version of this program. If not, please try out the latest version and see if that' +
-    ' resolves the issue. If that does not resolve the issue, please email the following message, along with a description of' +
-    ' the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems' +
-    ' to function normally despite this error, you can disable error messages in the settings for this program. However, be' +
-    ' aware that this may cause unpredictable behavior. Here is the error message to send:\n\n' +
-    'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() +
-    '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
+    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause unpredictable behavior. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err); // eslint-disable-line max-len
   }
   else{
     throw err;
@@ -349,7 +342,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
   
   var dropdowns = [];
-  var el = document.getElementById('fileDropdown'); // eslint-disable-line spellcheck/spell-checker
+  var el = document.getElementById('fileDropdown');
   
   dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
   
@@ -566,20 +559,13 @@ function checkForScreenSizeIssues(){
   var screenY = screen.height;
   //if(true){
   if(screenX < 800 || screenY < 600){
-    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution' +
-    ' of 800 by 600 is required.', 'Error');
+    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error'); // eslint-disable-line max-len
     ipcRenderer.send('terminate-this-app');
   }
   //if(true){
   if(screenX > 1920 || screenY > 1080){
   
-    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially' +
-    ' cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a' +
-    ' touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution' +
-    ' may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing,' +
-    ' a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload,' +
-    ' etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by' +
-    ' 1080.', 'Warning');
+    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
   }
 }
 
@@ -627,7 +613,7 @@ function instrumentDown(x, y)
   case 'NA':
     break;
   default:
-    throw new Error('Invalid tool in instrumentDown method: ' + tool);
+    throw new Error('Invalid tool in instrumentDown method: ' + tool); //----Visible!
   }
 }
 
@@ -668,7 +654,7 @@ function instrumentMoved(x, y)
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentMoved method: ' + tool);
+      throw new Error('Invalid tool in instrumentMoved method: ' + tool); //----Visible!
     }
   }
 }
@@ -717,7 +703,7 @@ function instrumentUp(x, y)
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentUp method: ' + tool);
+      throw new Error('Invalid tool in instrumentUp method: ' + tool); //----Visible!
     }
   }
   
@@ -799,7 +785,7 @@ function penToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in penToolMethod: ' + phase);
+    throw new Error('Invalid phase in penToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -816,7 +802,7 @@ function eraserToolMethod(x, y, phase){
     context.putImageData(tempImageData, x - ofset, y - ofset);
   }
   else{
-    throw new Error('Invalid phase in eraserToolMethod: ' + phase);
+    throw new Error('Invalid phase in eraserToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -870,7 +856,7 @@ function lineToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in lineToolMethod: ' + phase);
+    throw new Error('Invalid phase in lineToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -939,7 +925,7 @@ function selectToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in selectToolMethod: ' + phase);
+    throw new Error('Invalid phase in selectToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -986,7 +972,7 @@ function textToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in textToolMethod: ' + phase);
+    throw new Error('Invalid phase in textToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -1032,7 +1018,7 @@ function identifyToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in identifierToolMethod: ' + phase);
+    throw new Error('Invalid phase in identifierToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -1083,7 +1069,7 @@ function dotToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in dotToolMethod: ' + phase);
+    throw new Error('Invalid phase in dotToolMethod: ' + phase); //----Visible!
   }
 }
 
@@ -1127,7 +1113,7 @@ function pasteToolMethod(x, y, phase){
       
       break;
     default:
-      throw new Error('Invalid phase in pasteToolMethod: ' + phase);
+      throw new Error('Invalid phase in pasteToolMethod: ' + phase); //----Visible!
     }
   }
 }
@@ -1137,8 +1123,8 @@ function pasteToolMethod(x, y, phase){
 function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('focus-main-win');
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' +
-      'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
+    // eslint-disable-next-line max-len
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true}); //----Visible!
       
     if(ret === 0){
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
@@ -1261,7 +1247,7 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
   typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
-    throw new Error('resizeAndLoadImagesOntoCanvases has been called before the image has loaded!');
+    throw new Error('resizeAndLoadImagesOntoCanvases has been called before the image has loaded!'); //----Visible!
   }
   
   eraserContext.canvas.style.position = 'absolute';
@@ -1362,11 +1348,8 @@ function saveCurrentImageToArrayBeforeMoving(){
 
 function tellUserTheyHaveExcededMaxPages(){
   // Here we explain why they can't insert another page:
-  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +
-    maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open' +
-    ' another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless' +
-    ' of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single' +
-    ' sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
+  // eslint-disable-next-line max-len
+  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true}); //----Visible!
 }
 
 function updatePageNumsOnGui(){
@@ -1428,9 +1411,8 @@ function goBtnFunction(){
 function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
     //Here we question them if they want to delete the page, and delete it if they say yes.
-    
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning',
-      message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
+    // eslint-disable-next-line max-len
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true}); //----Visible!
       
     if(ret === 1){
       //Delete page...
@@ -1440,8 +1422,8 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   }
   else{
     // Here we tell them that the document must have at least one page:
-    alert('The document must have at least one page at all times.\nHowever, you can add another' +
-    ' page and then come back and delete this one.', '');
+    // eslint-disable-next-line max-len
+    alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.', '');
   }
 }
 
@@ -1931,8 +1913,8 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
       return;
     }
     // clear out the dialog:
-    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to' +
-    ' capture:<br>Note that this list does not automatically update.';
+    // eslint-disable-next-line max-len
+    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update.';
     document.getElementById('ISDContentDiv').innerHTML = '';
     // Prepare the dialog with some spaces:
     var br = document.createElement('br');
@@ -1950,7 +1932,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
       var elem2 = document.createElement('p');
       var str2 = sources[i].name;
       if(str2.length > 40){
-        str2 = str2.substring(0, 40) + '...';
+        str2 = str2.substring(0, 40) + '...'; //----Visible!
       }
       elem2.innerHTML = '↑ ' + str2;
       // Make a line break element:
@@ -2099,10 +2081,8 @@ function ISDFixCanvas(){
     // Here seems to be the right place to add the event listeners to the canvas.
     // We just have to remember to remove them when the window closes.
     ISDAddTouchAndClickEventHandelers();
-    
-    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to' +
-    ' insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the' +
-    ' dropdown below the image.';
+    // eslint-disable-next-line max-len
+    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
     // And add the clear selection button, insertion location dropdown, * background color dropdown:
     
     ISDAddElementsForSelectRegion();
@@ -2203,7 +2183,7 @@ function ISDAddElementsForSelectRegion(){
   ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
   
   // Add the entries to the background color dropdown:
-  var options = ['white', 'color chosen'];
+  var options = ['white', 'color chosen']; //----Visible!
   var optionValues = ['white', 'globalcolor'];
   
   var opt = null;
@@ -2224,7 +2204,7 @@ function ISDAddLocationDropdown(){
   ISDLocationDropdown.style.fontSize = '30px';
   
   // Add the entries to the location dropdown:
-  var options = ['top left corner', 'top right corner', 'botom left corner', 'botom right corner', 'center'];
+  var options = ['top left corner', 'top right corner', 'botom left corner', 'botom right corner', 'center']; //----Visible!
   var optionValues = ['topleft', 'topright', 'botomleft', 'botomright', 'center'];
   
   var opt = null;
@@ -2243,7 +2223,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
   typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
-    throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!');
+    throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!'); //----Visible!
   }
   var dlg = ISDGetAvaliableDialogSpace();
   var canvasHeight;
@@ -2361,7 +2341,7 @@ function ISDSelectMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in ISDSelectMethod: ' + phase);
+    throw new Error('Invalid phase in ISDSelectMethod: ' + phase); //----Visible!
   }
 }
 
@@ -2564,8 +2544,8 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
 }
 
 function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
-  dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
-    { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] }
+  dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [ //----Visible!
+    { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } //----Visible!
   ]}, function (fileNames) {
     if (typeof fileNames === 'undefined' || fileNames === null){
       return;
@@ -2580,8 +2560,8 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
           alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
         }
         else if(stats.size > 25000000){
-          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it' +
-          ' down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
+          // eslint-disable-next-line max-len
+          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
         }
         else{
           insertTemplateAsPage(fileName);
@@ -2958,6 +2938,3 @@ function getCoords(elem) { // crossbrowser version
   return { top: Math.round(top), left: Math.round(left) };
 }
 
-function bs(){
-  alert('12345\b\b5678');
-}
