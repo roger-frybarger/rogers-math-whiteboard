@@ -18,14 +18,14 @@ const osModule = require('os');
 // This enables the right-click menu over the text boxes. I found it at:
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
-  label: 'Undo', role: 'undo',}, //----Visible!
-  {label: 'Redo', role: 'redo',}, //----Visible!
+  label: 'Undo', role: 'undo',},
+  {label: 'Redo', role: 'redo',},
   {type: 'separator',},
-  {label: 'Cut', role: 'cut',}, //----Visible!
-  {label: 'Copy', role: 'copy',}, //----Visible!
-  {label: 'Paste', role: 'paste',}, //----Visible!
+  {label: 'Cut', role: 'cut',},
+  {label: 'Copy', role: 'copy',},
+  {label: 'Paste', role: 'paste',},
   {type: 'separator',},
-  {label: 'Select all', role: 'selectall',}, //----Visible!
+  {label: 'Select all', role: 'selectall',},
 ]);
 
 
@@ -140,7 +140,7 @@ ipcRenderer.on('ctrl-y-pressed', () => {
 });
 
 ipcRenderer.on('esc-pressed', () => {
-  //console.log('Esc Pressed');
+  
   cancelSelect();
   if(canUseTool){
     if(tool === 'line' || tool === 'select' || tool === 'text' || tool === 'identify' || tool === 'dot' || tool === 'PASTE'){
@@ -613,7 +613,7 @@ function instrumentDown(x, y)
   case 'NA':
     break;
   default:
-    throw new Error('Invalid tool in instrumentDown method: ' + tool); //----Visible!
+    throw new Error('Invalid tool in instrumentDown method: ' + tool);
   }
 }
 
@@ -654,7 +654,7 @@ function instrumentMoved(x, y)
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentMoved method: ' + tool); //----Visible!
+      throw new Error('Invalid tool in instrumentMoved method: ' + tool);
     }
   }
 }
@@ -703,7 +703,7 @@ function instrumentUp(x, y)
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentUp method: ' + tool); //----Visible!
+      throw new Error('Invalid tool in instrumentUp method: ' + tool);
     }
   }
   
@@ -785,7 +785,7 @@ function penToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in penToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in penToolMethod: ' + phase);
   }
 }
 
@@ -802,7 +802,7 @@ function eraserToolMethod(x, y, phase){
     context.putImageData(tempImageData, x - ofset, y - ofset);
   }
   else{
-    throw new Error('Invalid phase in eraserToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in eraserToolMethod: ' + phase);
   }
 }
 
@@ -856,7 +856,7 @@ function lineToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in lineToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in lineToolMethod: ' + phase);
   }
 }
 
@@ -925,7 +925,7 @@ function selectToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in selectToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in selectToolMethod: ' + phase);
   }
 }
 
@@ -972,7 +972,7 @@ function textToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in textToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in textToolMethod: ' + phase);
   }
 }
 
@@ -1018,7 +1018,7 @@ function identifyToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in identifierToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in identifierToolMethod: ' + phase);
   }
 }
 
@@ -1069,7 +1069,7 @@ function dotToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in dotToolMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in dotToolMethod: ' + phase);
   }
 }
 
@@ -1113,7 +1113,7 @@ function pasteToolMethod(x, y, phase){
       
       break;
     default:
-      throw new Error('Invalid phase in pasteToolMethod: ' + phase); //----Visible!
+      throw new Error('Invalid phase in pasteToolMethod: ' + phase);
     }
   }
 }
@@ -1124,7 +1124,7 @@ function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('focus-main-win');
     // eslint-disable-next-line max-len
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true}); //----Visible!
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
       
     if(ret === 0){
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
@@ -1226,28 +1226,12 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 }
 
 
-
-//function getElementsByIDs(ids){
-  //if(ids == undefined || (typeof ids != 'object') || (ids.length == 0)){
-    //throw 'Expecting an array based parameter or there are no ids, exiting';
-  //}
-  //var elems = [];
-  //for(var i = 0; i < ids.length; i++){
-    //elems[i] = document.getElementById(ids[i]);
-  //}
-  
-  //return elems; 
-//}
-
-
-
-
 // Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
 // size of the window.
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
   typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
-    throw new Error('resizeAndLoadImagesOntoCanvases has been called before the image has loaded!'); //----Visible!
+    throw new Error('resizeAndLoadImagesOntoCanvases has been called before the image has loaded!');
   }
   
   eraserContext.canvas.style.position = 'absolute';
@@ -1265,7 +1249,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
     //this means height is limiting dimension.
     canvasHeight = avalibleHeight;
     canvasWidth = (incommingWidth * avalibleHeight) / incommingHeight;
-    canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
+    canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1 pixel every repaint.
     context.canvas.width = canvasWidth;
     context.canvas.height = canvasHeight;
     context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
@@ -1277,7 +1261,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
   { //this means width is limiting dimension.
     canvasWidth = avalibleWidth;
     canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
-    canvasHeight = Math.round(canvasHeight); // Without this line the image height is potentially reduced by 1px on every repaint.
+    canvasHeight = Math.round(canvasHeight);// Without this line the image height is potentially reduced by 1 pixel every repaint.
     context.canvas.width = canvasWidth;
     context.canvas.height = canvasHeight;
     context.drawImage(img, 0, 0, canvasWidth, canvasHeight);
@@ -1349,7 +1333,7 @@ function saveCurrentImageToArrayBeforeMoving(){
 function tellUserTheyHaveExcededMaxPages(){
   // Here we explain why they can't insert another page:
   // eslint-disable-next-line max-len
-  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true}); //----Visible!
+  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
 }
 
 function updatePageNumsOnGui(){
@@ -1412,7 +1396,7 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
     //Here we question them if they want to delete the page, and delete it if they say yes.
     // eslint-disable-next-line max-len
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true}); //----Visible!
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
       
     if(ret === 1){
       //Delete page...
@@ -1459,9 +1443,9 @@ function registerShortcutsOnModalDialogClose(){ // eslint-disable-line no-unused
 
 
 // ********* Below is the javascript related to the modal dialogs: **********
-// Variables that need to be global but are still only realted to the applicable dialog
-// are named beginning with the innitials of the dialoug's id.
-// Functions are also named starting with the same innitials.
+// Variables that need to be global but are still only related to the applicable dialog
+// are named beginning with the initials of the dialog's id.
+// Functions are also named starting with the same initials.
 
 var SDValid = true;
 
@@ -1561,7 +1545,7 @@ function SDOkBtnFunction(){
       userWantsErrorMessages = true;
       ipcRenderer.send('user-wants-error-messages');
     }
-    document.getElementById('SDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+    document.getElementById('SDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1644,7 +1628,7 @@ function ITDOkBtnFunction(){
     textToInsert = document.getElementById('ITDTextBox').value;
     tool = 'text';
     updateTextOfToolBtn();
-    document.getElementById('ITDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+    document.getElementById('ITDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1811,7 +1795,7 @@ function OCDOkBtnFunction(){
   if (OCDValid){
     instrumentColor = OCDColor;
     updateColorOfColorBtn();
-    document.getElementById('OCDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+    document.getElementById('OCDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1868,7 +1852,7 @@ function OSDOkBtnFunction(){
   if (OSDValid){
     instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
     updateTextOfSizeBtn();
-    document.getElementById('OSDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+    document.getElementById('OSDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1906,7 +1890,7 @@ var ISDBackgroundColorDropdown = null;
 function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDCanInsert = false;
   ISDAreaSelected = false;
-  // get thumnails of each screen/window & insert into the dialog.
+  // get thumbnails of each screen/window & insert into the dialog.
   desktopCapturer.getSources({types: ['window', 'screen'], thumbnailSize: {width: 400, height: 400}}, (error, sources) => {
     if (error) {
       alert('Unable to obtain screenshot sources.', 'Error:');
@@ -1970,7 +1954,7 @@ function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
 }
 
 function ISDHandleError(e){
-  alert('An error occured while obtaining the screenshot. Here is the error:\n\n' + e.name, 'Error:');
+  alert('An error occurred while obtaining the screenshot. Here is the error:\n\n' + e.name, 'Error:');
 }
 
 function ISDHandleStream(stream){
@@ -1997,7 +1981,6 @@ function ISDHandleStream(stream){
     ISDScreenShotORIGINAL = canvas.toDataURL('image/png');
     
     setTimeout(ISDReadyForCroping, 500);
-    //ISDReadyForCroping();
 
     // Remove hidden video tag
     video.remove();
@@ -2016,7 +1999,6 @@ function ISDReadyForCroping(){
   // 3. re-focus main window
   ipcRenderer.send('focus-main-win');
   // 4. Put screenshot in canvas of right size
-  //console.log(ISDGetAvaliableDialogSpace());
   var img = new Image();
   img.src = ISDScreenShotORIGINAL;
   ISDCanvas = null;
@@ -2030,9 +2012,9 @@ function ISDReadyForCroping(){
   ISDFixCanvas();
   
   // 5. set ISDCanInsert to true & area selected to false.
-  // 6. allow croping.
+  // 6. allow cropping.
   // 7. If area gets selected, store area & set ISDAreaSelected to true.
-  // 8. make btn for de-select.
+  // 8. make button for canceling select.
 }
 
 function ISDFixCanvas(){
@@ -2087,13 +2069,11 @@ function ISDFixCanvas(){
     
     ISDAddElementsForSelectRegion();
     
-    // Also here is where to make the ok btn work.
+    // Also here is where to make the ok button work.
     ISDCanInsert = true;
     
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
-  
-  //console.log('jtyfuytfuytf');
   
   //ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
   
@@ -2204,8 +2184,8 @@ function ISDAddLocationDropdown(){
   ISDLocationDropdown.style.fontSize = '30px';
   
   // Add the entries to the location dropdown:
-  var options = ['top left corner', 'top right corner', 'botom left corner', 'botom right corner', 'center']; //----Visible!
-  var optionValues = ['topleft', 'topright', 'botomleft', 'botomright', 'center'];
+  var options = ['top left corner', 'top right corner', 'bottom left corner', 'bottom right corner', 'center']; //----Visible!
+  var optionValues = ['topleft', 'topright', 'bottomleft', 'bottomright', 'center'];
   
   var opt = null;
   
@@ -2223,7 +2203,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
   typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
-    throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!'); //----Visible!
+    throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!');
   }
   var dlg = ISDGetAvaliableDialogSpace();
   var canvasHeight;
@@ -2234,7 +2214,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
     //this means height is limiting dimension.
     canvasHeight = dlg.availableHeight;
     canvasWidth = (incommingWidth * dlg.availableHeight) / incommingHeight;
-    canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1px on every repaint.
+    canvasWidth = Math.round(canvasWidth); // Without this line the image width is potentially reduced by 1 pixel every repaint.
     ISDCanvas.width = canvasWidth;
     ISDCanvas.height = canvasHeight;
     ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
@@ -2243,7 +2223,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   {  //this means width is limiting dimension.
     canvasWidth = dlg.availableWidth;
     canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
-    canvasHeight = Math.round(canvasHeight); // Without this line the image height is potentially reduced by 1px on every repaint.
+    canvasHeight = Math.round(canvasHeight);// Without this line the image height is potentially reduced by 1 pixel every repaint.
     ISDCanvas.width = canvasWidth;
     ISDCanvas.height = canvasHeight;
     ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
@@ -2341,7 +2321,7 @@ function ISDSelectMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in ISDSelectMethod: ' + phase); //----Visible!
+    throw new Error('Invalid phase in ISDSelectMethod: ' + phase);
   }
 }
 
@@ -2410,7 +2390,7 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       // Here we need to call insertPageUsingImage(). At this point the image will already exist and be loaded.
       insertPageUsingImage(ISDImageToReturn);
     }
-    document.getElementById('ISDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+    document.getElementById('ISDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -2422,12 +2402,12 @@ function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, 
     toRet.x = orgImageX - selSizeX;
     
     break;
-  case 'botomleft':
+  case 'bottomleft':
     
     toRet.y = orgImageY - selSizeY;
     
     break;
-  case 'botomright':
+  case 'bottomright':
     
     toRet.x = orgImageX - selSizeX;
     toRet.y = orgImageY - selSizeY;
@@ -2446,7 +2426,7 @@ function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, 
     break;
   default:
     // Here we do nothing since for the top left, the coordinates are already correct. 
-    // Also, if something wierd happens, we want to put it in the top left corner anyhow, so doing nothing works.
+    // Also, if something weird happens, we want to put it in the top left corner anyhow, so doing nothing works.
     break;
   }
   return toRet;
@@ -2517,7 +2497,7 @@ function ISDSimpleVariableCleanup(){
 function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
   insertTemplateAsPage(locOfTem);
-  document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  document.getElementById('OPDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
 }
 
 function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
@@ -2540,11 +2520,11 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
     insertPageUsingImage(imageToInsert);
   });
   whiteImage.src = 'images/Blank_White_Page.png';
-  document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+  document.getElementById('OPDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
 }
 
 function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
-  dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [ //----Visible!
+  dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
     { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } //----Visible!
   ]}, function (fileNames) {
     if (typeof fileNames === 'undefined' || fileNames === null){
@@ -2568,7 +2548,6 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
         }
       } else if(err.code === 'ENOENT') {
         // file does not exist
-        //fs.writeFile('log.txt', 'Some log\n');
         alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
       } else {
         //console.log('Some other error: ', err.code);
@@ -2577,7 +2556,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
     });
   
     //insertTemplateAsPage(fileName);
-    document.getElementById('OPDCloseBtn').click();  //Clicking the close btn on dialog after we are done with it.
+    document.getElementById('OPDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
   });
 }
 
@@ -2656,7 +2635,7 @@ function updateTextOfToolBtn(){
     document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
     break;
   default:
-    throw new Error('Invalid tool. Cant update tool btn text: ' + tool);
+    throw new Error('Invalid tool. Cant update tool button text: ' + tool);
   }
 }
 
@@ -2873,7 +2852,6 @@ function pushStateIntoUndoArray(){
     
   }
   else{
-    //console.log('tipical storage');
     var tempImageForInserting = new Image();
     tempImageForInserting.src = context.canvas.toDataURL('image/png');
     imageArrayForUndo.push(tempImageForInserting);
@@ -2916,11 +2894,11 @@ function tellUserToSelectAnAreaFirst(){
 // I appreciate basil's work!!! It works perfectly where nothing else did!
 // It essentially returns the current location of the top left corner of 
 // the applicable element regardless of where it is in the scrollable
-// area. The corrdinates returned are relative to the top left corner of
+// area. The coordinates returned are relative to the top left corner of
 // the main window. This is great for the modal dialogs, because once
 // this location is known, the combination of it and the location of the
 // click can be used to calculate the location of the click on the element.
-function getCoords(elem) { // crossbrowser version
+function getCoords(elem) { // cross browser version
   var box = elem.getBoundingClientRect();
 
   var body = document.body;
