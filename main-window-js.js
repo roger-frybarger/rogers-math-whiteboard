@@ -36,9 +36,7 @@ var userWantsErrorMessages = true;
 
 
 
-
-
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', function (err){
   if(userWantsErrorMessages){
     var stk = 'Empty :(';
     if(err !== null && typeof err !== 'undefined'){
@@ -427,7 +425,7 @@ function initializeCanvas(){
   var image = new Image();
   
   // Maybe draw image on canvas temporarily here and get dimensions before re-drawing?
-  image.addEventListener('load', function() {
+  image.addEventListener('load', function (){
     context.drawImage(image, 0, 0);
     eraserContext.drawImage(image, 0, 0);
     resizeAndLoadImagesOntoCanvases(image, image, image.naturalWidth, image.naturalHeight);
@@ -447,53 +445,51 @@ function initializeEventListenersForCanvas(){
   // These add the event listeners to the canvas, and pass the appropriate information off to the applicable
   // function. I feel that we can safely ignore multi-touch, as the intended audience uses a pen anyway,
   // which is only 1 touch. However, one should also be able to use a mouse if no touch input is available.
-  document.getElementById('canvas1').addEventListener('mousedown', function(e){
+  document.getElementById('canvas1').addEventListener('mousedown', function (e){
     instrumentDown(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
   });
 
-  document.getElementById('canvas1').addEventListener('touchstart', function(e){
-    if(e.touches.length === 1)
-    {
+  document.getElementById('canvas1').addEventListener('touchstart', function (e){
+    if(e.touches.length === 1){
       instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
       this.offsetTop - topToolbarWidth);
       e.preventDefault();
     }
-    else
-    {
+    else    {
       // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
       instrumentUp(prevX, prevY);
     }
   });
 
-  document.getElementById('canvas1').addEventListener('mousemove', function(e){
+  document.getElementById('canvas1').addEventListener('mousemove', function (e){
     instrumentMoved(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
   });
 
-  document.getElementById('canvas1').addEventListener('touchmove', function(e){
+  document.getElementById('canvas1').addEventListener('touchmove', function (e){
     instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
     this.offsetTop - topToolbarWidth);
     e.preventDefault();
   });
 
-  document.getElementById('canvas1').addEventListener('mouseup', function(e){
+  document.getElementById('canvas1').addEventListener('mouseup', function (e){
     instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
   });
 
-  document.getElementById('canvas1').addEventListener('mouseleave', function(e){
+  document.getElementById('canvas1').addEventListener('mouseleave', function (e){
     instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
   });
 
-  document.getElementById('canvas1').addEventListener('touchend', function(e){
+  document.getElementById('canvas1').addEventListener('touchend', function (e){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
     this.offsetTop - topToolbarWidth);
   });
 
-  document.getElementById('canvas1').addEventListener('touchleave', function(e){
+  document.getElementById('canvas1').addEventListener('touchleave', function (e){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
     this.offsetTop - topToolbarWidth);
   });
 
-  document.getElementById('canvas1').addEventListener('touchcancel', function(e){
+  document.getElementById('canvas1').addEventListener('touchcancel', function (e){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
     this.offsetTop - topToolbarWidth);
   });
@@ -508,7 +504,7 @@ function initializeEventListenersForCanvas(){
     let node = e.target;
     
     while(node){
-      if(node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable) {
+      if(node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable){
         InputMenu.popup(remote.getCurrentWindow());
         break;
       }
@@ -526,16 +522,15 @@ function initializeEventListenersForCanvas(){
 function initializeEventListenersForExternalDialogs(){
   
   // Here are the event listeners for the otherColorDialog:
-  document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function(e){
+  document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function (e){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
     //console.log(e.pageX - offset.left);
     //console.log(e.pageY - offset.top);
     OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
   });
 
-  document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function(e){
-    if(e.touches.length === 1)
-    {
+  document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function (e){
+    if(e.touches.length === 1){
       var offset = getCoords(document.getElementById('OCDPickerCanvas'));
       //console.log(e.pageX - offset.left);
       //console.log(e.pageY - offset.top);
@@ -573,8 +568,7 @@ function checkForScreenSizeIssues(){
 // touching the main canvas. I am certain that eventually, this method will call other methods that correspond
 // to the applicable tools that are available. This is because each tool will likely need to handle the
 // event differently.
-function instrumentDown(x, y)
-{
+function instrumentDown(x, y){
   // Make sure we know that they may have changed the images(s):
   safeToClose = false;
   tempImageForWindowResize = null;
@@ -585,7 +579,7 @@ function instrumentDown(x, y)
   //And obviously, we can do things with our tool now:
   canUseTool = true;
   // Now let's pass the event off to the applicable method:
-  switch(tool) {
+  switch(tool){
   case 'pen':
     penToolMethod(x, y, 'down');
     break;
@@ -620,13 +614,11 @@ function instrumentDown(x, y)
 // Here is the instrumentMoved method, which runs every time our tool is moved. Eventually, I am sure this
 // will call multiple methods for the applicable tool, as each tool will likely need to react differently
 // to the event.
-function instrumentMoved(x, y)
-{
-  if(canUseTool) // Note: This validation is critical here. Make sure to put future method calls inside of this if structure.
-  {
+function instrumentMoved(x, y){
+  if(canUseTool){ // Note: This validation is critical here. Make sure to put future method calls inside of this if structure.
     
     // Now let's pass the event off to the applicable method:
-    switch(tool) {
+    switch(tool){
     case 'pen':
       penToolMethod(x, y, 'move');
       break;
@@ -663,13 +655,11 @@ function instrumentMoved(x, y)
 // the drawing area, or is canceled by multiple touches on the screen at once. Here again, it is likely that 
 // this method will eventually call multiple other methods for the applicable tools, as each tool will
 // probably need to handle the event differently.
-function instrumentUp(x, y)
-{
-  if(canUseTool) // Here again, this validation is critical. All future method calls must go inside this if structure
-  {
+function instrumentUp(x, y){
+  if(canUseTool){ // Here again, this validation is critical. All future method calls must go inside this if structure
     
- // Now let's pass the event off to the applicable method:
-    switch(tool) {
+    // Now let's pass the event off to the applicable method:
+    switch(tool){
     case 'pen':
       penToolMethod(x, y, 'up');
       pushStateIntoUndoArray();
@@ -1140,8 +1130,7 @@ function userWantsToClose(){
   }
 }
 
-function onWindowResize()
-{
+function onWindowResize(){
   // First clear the timer, (Remember, if the user is dragging the edge, we only want to fix the image once.)
   clearTimeout(tempForTimer);
   
@@ -1169,15 +1158,14 @@ function fixThingsAfterRezizeIsDone(){
 }
 
 // If the user clicks on a blank area of the window, the dropdowns should probably close:
-window.onclick = function(e) {
-  if (!e.target.matches('.dropbtn')) {
+window.onclick = function (e){
+  if (!e.target.matches('.dropbtn')){
     closeDropdowns();
   }
   
   var id = e.target.id;
   if(id !== 'canvas1' && id !== 'copyBtn' && id !== 'drawRectangleBtn' && id !== 'fillRectangleBtn' &&
-  id !== 'drawEllipseBtn' && id !== 'fillEllipseBtn' && id !== 'topRightMinimizeBtn')
-  {
+  id !== 'drawEllipseBtn' && id !== 'fillEllipseBtn' && id !== 'topRightMinimizeBtn'){
     cancelSelect();
   }
   if(id !== 'pageTextBoxID' && id !== 'goBtnID'){
@@ -1188,9 +1176,9 @@ window.onclick = function(e) {
 //Closes all the other dropdowns except for the one with the name passed in.
 function closeDropdowns(buttonName){
   var dropdowns = document.getElementsByClassName('dropdown-content');
-  for (var d = 0; d < dropdowns.length; d++) {
+  for (var d = 0; d < dropdowns.length; d++){
     var openDropdown = dropdowns[d];
-    if (openDropdown.classList.contains('show')) {
+    if (openDropdown.classList.contains('show')){
       if(openDropdown.id.toString() !== buttonName){
         openDropdown.classList.remove('show');
       }
@@ -1257,8 +1245,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
     eraserContext.canvas.height = canvasHeight;
     eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
   }
-  else
-  { //this means width is limiting dimension.
+  else  { //this means width is limiting dimension.
     canvasWidth = avalibleWidth;
     canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
     canvasHeight = Math.round(canvasHeight);// Without this line the image height is potentially reduced by 1 pixel every repaint.
@@ -1292,7 +1279,7 @@ function insertTemplateAsPage(locationOfTemplate){
   // Get the image from the string that was passed in, then call insertPageUsingImage() and pass in the image.
   var tempImageForInserting = new Image();
   tempImageForInserting.src = locationOfTemplate;
-  tempImageForInserting.addEventListener('load', function() {
+  tempImageForInserting.addEventListener('load', function (){
     insertPageUsingImage(tempImageForInserting);
   });
 }
@@ -1333,7 +1320,7 @@ function saveCurrentImageToArrayBeforeMoving(){
 function tellUserTheyHaveExcededMaxPages(){
   // Here we explain why they can't insert another page:
   // eslint-disable-next-line max-len
-  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the \"Max Pages Allowed\" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
+  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the "Max Pages Allowed" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
 }
 
 function updatePageNumsOnGui(){
@@ -1362,7 +1349,7 @@ function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
 
 function pageInputBoxCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
-  if (key === 13) { // 13 is enter
+  if (key === 13){ // 13 is enter
     goBtnFunction();
   }
 }
@@ -1551,7 +1538,7 @@ function SDOkBtnFunction(){
 
 function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
-  if (key === 13) { // 13 is enter
+  if (key === 13){ // 13 is enter
     SDOkBtnFunction();
   }
 }
@@ -1634,7 +1621,7 @@ function ITDOkBtnFunction(){
 
 function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
-  if (key === 13) { // 13 is enter
+  if (key === 13){ // 13 is enter
     ITDOkBtnFunction();
   }
 }
@@ -1703,9 +1690,6 @@ function OCDUpdateTextBoxes(){
 }
 
 function OCDOnInstrumentDown(x, y){
-  if(x < 0){x = 0;}
-  if(y < 0){y = 0;}
-  
   var canvas = document.getElementById('OCDPickerCanvas');
   var context = canvas.getContext('2d');
   var temp = context.getImageData(x, y, 1, 1);
@@ -1720,13 +1704,16 @@ function OCDOnInstrumentDown(x, y){
   OCDUpdateExample();
 }
 
-function OCDValidateInputAndUpdateIfApplicable(){
+function OCDValidateInputAndUpdateIfApplicable(){ // eslint-disable-line max-statements
   var tempRed = parseInt(document.getElementById('OCDRedTextBox').value, 10);
   var tempGreen = parseInt(document.getElementById('OCDGreenTextBox').value, 10);
   var tempBlue = parseInt(document.getElementById('OCDBlueTextBox').value, 10);
   var tempAlpha = parseInt(document.getElementById('OCDTransparencyTextBox').value, 10);
   
-  var redIsGood = false, greenIsGood = false, blueIsGood = false, alphaIsGood = false;
+  var redIsGood = false;
+  var greenIsGood = false;
+  var blueIsGood = false;
+  var alphaIsGood = false;
 
   if(isNaN(tempRed) || tempRed < 0 || tempRed > 255){
     redIsGood = false;
@@ -1801,7 +1788,7 @@ function OCDOkBtnFunction(){
 
 function OCDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
-  if (key === 13) { // 13 is enter
+  if (key === 13){ // 13 is enter
     OCDOkBtnFunction();
   }
 }
@@ -1858,7 +1845,7 @@ function OSDOkBtnFunction(){
 
 function OSDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
-  if (key === 13) { // 13 is enter
+  if (key === 13){ // 13 is enter
     OSDOkBtnFunction();
   }
 }
@@ -1892,7 +1879,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDAreaSelected = false;
   // get thumbnails of each screen/window & insert into the dialog.
   desktopCapturer.getSources({types: ['window', 'screen'], thumbnailSize: {width: 400, height: 400}}, (error, sources) => {
-    if (error) {
+    if (error){
       alert('Unable to obtain screenshot sources.', 'Error:');
       return;
     }
@@ -1906,7 +1893,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
     document.getElementById('ISDContentDiv').appendChild(br);
     document.getElementById('ISDContentDiv').appendChild(br);
     // Now loop through each source and put its thumbnail in the dialog:
-    for (let i = 0; i < sources.length; ++i) {  // For each one we will...
+    for (let i = 0; i < sources.length; ++i){  // For each one we will...
       // Make the image element:
       var elem = document.createElement('img');
       elem.setAttribute('src', sources[i].thumbnail.toDataURL());
@@ -1964,7 +1951,7 @@ function ISDHandleStream(stream){
   var video = document.createElement('video');
   video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
   // Event connected to stream
-  video.onloadedmetadata = function () {
+  video.onloadedmetadata = function (){
     // Set video ORIGINAL height (screenshot)
     video.style.height = this.videoHeight + 'px'; // videoHeight
     video.style.width = this.videoWidth + 'px'; // videoWidth
@@ -1987,7 +1974,8 @@ function ISDHandleStream(stream){
     try {
       // Destroy connect to stream
       stream.getTracks()[0].stop();
-    } catch (e) {//Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
+    }
+    catch (e){//Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
     }
   };
   video.src = URL.createObjectURL(stream);
@@ -2057,7 +2045,7 @@ function ISDFixCanvas(){
   
   ISDImageToReturn = null;
   ISDImageToReturn = new Image();
-  ISDImageToReturn.onload = function(){
+  ISDImageToReturn.onload = function (){
     ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
     
     // Here seems to be the right place to add the event listeners to the canvas.
@@ -2081,51 +2069,49 @@ function ISDFixCanvas(){
 
 function ISDAddTouchAndClickEventHandelers(){
   
-  ISDCanvas.addEventListener('mousedown', function(e){
+  ISDCanvas.addEventListener('mousedown', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
   });
-  ISDCanvas.addEventListener('touchstart', function(e){
+  ISDCanvas.addEventListener('touchstart', function (e){
     var offset = getCoords(ISDCanvas);
-    if(e.touches.length === 1)
-    {
+    if(e.touches.length === 1){
       ISDInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
       e.preventDefault();
     }
-    else
-    {
+    else    {
       // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
       ISDInstrumentUp(ISDPrevX, ISDPrevY);
     }
   });
-  ISDCanvas.addEventListener('mousemove', function(e){
+  ISDCanvas.addEventListener('mousemove', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentMoved(e.pageX - offset.left, e.pageY - offset.top);
   });
-  ISDCanvas.addEventListener('touchmove', function(e){
+  ISDCanvas.addEventListener('touchmove', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentMoved(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
     e.preventDefault();
   });
-  ISDCanvas.addEventListener('mouseup', function(e){
+  ISDCanvas.addEventListener('mouseup', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
   });
-  ISDCanvas.addEventListener('mouseleave', function(e){
+  ISDCanvas.addEventListener('mouseleave', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentUp(e.pageX - offset.left, e.pageY - offset.top);
   });
-  ISDCanvas.addEventListener('touchend', function(e){
+  ISDCanvas.addEventListener('touchend', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
     e.preventDefault();
   });
-  ISDCanvas.addEventListener('touchleave', function(e){
+  ISDCanvas.addEventListener('touchleave', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
     e.preventDefault();
   });
-  ISDCanvas.addEventListener('touchcancel', function(e){
+  ISDCanvas.addEventListener('touchcancel', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
     e.preventDefault();
@@ -2219,8 +2205,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
     ISDCanvas.height = canvasHeight;
     ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
   }
-  else
-  {  //this means width is limiting dimension.
+  else  {  //this means width is limiting dimension.
     canvasWidth = dlg.availableWidth;
     canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
     canvasHeight = Math.round(canvasHeight);// Without this line the image height is potentially reduced by 1 pixel every repaint.
@@ -2380,7 +2365,7 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       
       ISDImageToReturn = null;
       ISDImageToReturn = new Image();
-      ISDImageToReturn.onload = function () {
+      ISDImageToReturn.onload = function (){
         insertPageUsingImage(this);
       };
       ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
@@ -2452,7 +2437,7 @@ function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
     ISDExtraTextLabel = null;
   }
   if(ISDLocationDropdown !== null && typeof ISDLocationDropdown !== 'undefined'){
-    while (ISDLocationDropdown.firstChild) {
+    while (ISDLocationDropdown.firstChild){
       ISDLocationDropdown.removeChild(ISDLocationDropdown.firstChild);
     }
     document.getElementById('ISDContentDiv').removeChild(ISDLocationDropdown);
@@ -2502,7 +2487,7 @@ function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
 
 function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
   var whiteImage = new Image();
-  whiteImage.addEventListener('load', function() {
+  whiteImage.addEventListener('load', function (){
     var orgWidth = context.canvas.width;
     var orgHeight = context.canvas.height;
     var originalImageOnCanvas = new Image();
@@ -2526,14 +2511,14 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
 function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
     { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } //----Visible!
-  ]}, function (fileNames) {
+  ]}, function (fileNames){
     if (typeof fileNames === 'undefined' || fileNames === null){
       return;
     }
     var fileName = fileNames[0];
     // Now we check to see if the file exists before loading it in.
     
-    fs.stat(fileName, function(err, stats) {
+    fs.stat(fileName, function (err, stats){
       if(err === null){
         
         if(stats.size < 1){
@@ -2546,10 +2531,12 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
         else{
           insertTemplateAsPage(fileName);
         }
-      } else if(err.code === 'ENOENT') {
+      }
+      else if(err.code === 'ENOENT'){
         // file does not exist
         alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
-      } else {
+      }
+      else {
         //console.log('Some other error: ', err.code);
         throw err;
       }
@@ -2898,7 +2885,7 @@ function tellUserToSelectAnAreaFirst(){
 // the main window. This is great for the modal dialogs, because once
 // this location is known, the combination of it and the location of the
 // click can be used to calculate the location of the click on the element.
-function getCoords(elem) { // cross browser version
+function getCoords(elem){ // cross browser version
   var box = elem.getBoundingClientRect();
 
   var body = document.body;
