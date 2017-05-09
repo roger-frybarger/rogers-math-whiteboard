@@ -83,7 +83,7 @@ var textToInsert = '';
 
 var tempImageForWindowResize;
 
-//var locationToCheckWhenPushingDataIntoLocalStorage;
+
 var weGotKeyboardShortcuts = false;
 var temporarilyDisabledKeyboardShortcuts = false;
 
@@ -110,9 +110,9 @@ var topToolbarWidth = 40;
 var SideToolbarWidth = 150;
 
 
-//function onWindowLoad(){
-  //adjustSizeOfMenuButtonsToScreenSize();
-//}
+// function onWindowLoad(){
+  // adjustSizeOfMenuButtonsToScreenSize();
+// }
 
 // Here is the function that executes when the close button signal is sent in from the main process, (main.js).
 // It essentially delegates the validation work off to the userWantsToClose() function.
@@ -524,18 +524,18 @@ function initializeEventListenersForExternalDialogs(){
   // Here are the event listeners for the otherColorDialog:
   document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function (e){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-    //console.log(e.pageX - offset.left);
-    //console.log(e.pageY - offset.top);
+    // console.log(e.pageX - offset.left);
+    // console.log(e.pageY - offset.top);
     OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
   });
 
   document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function (e){
     if(e.touches.length === 1){
       var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-      //console.log(e.pageX - offset.left);
-      //console.log(e.pageY - offset.top);
+      // console.log(e.pageX - offset.left);
+      // console.log(e.pageY - offset.top);
       OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      //onInstrumentDown(e.changedTouches[0].pageX - 20, e.changedTouches[0].pageY - 90);
+      // onInstrumentDown(e.changedTouches[0].pageX - 20, e.changedTouches[0].pageY - 90);
       e.preventDefault();
     }
   });
@@ -552,12 +552,12 @@ function setUpGUIOnStartup(){
 function checkForScreenSizeIssues(){
   var screenX = screen.width;
   var screenY = screen.height;
-  //if(true){
+  // if(true){
   if(screenX < 800 || screenY < 600){
     alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error'); // eslint-disable-line max-len
     ipcRenderer.send('terminate-this-app');
   }
-  //if(true){
+  // if(true){
   if(screenX > 1920 || screenY > 1080){
   
     alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
@@ -576,7 +576,7 @@ function instrumentDown(x, y){
   // Obviously we want to close the dropdowns regardless of what tool is active.
   closeDropdowns();
   
-  //And obviously, we can do things with our tool now:
+  // And obviously, we can do things with our tool now:
   canUseTool = true;
   // Now let's pass the event off to the applicable method:
   switch(tool){
@@ -1140,7 +1140,7 @@ function onWindowResize(){
 
 function fixThingsAfterRezizeIsDone(){
   cancelSelect();
-  //adjustSizeOfMenuButtonsToScreenSize();
+  // adjustSizeOfMenuButtonsToScreenSize();
   if(allLoaded){
     if(tempImageForWindowResize === null || typeof tempImageForWindowResize === 'undefined'){
       tempImageForWindowResize = new Image();
@@ -1173,7 +1173,7 @@ window.onclick = function (e){
   }
 };
 
-//Closes all the other dropdowns except for the one with the name passed in.
+// Closes all the other dropdowns except for the one with the name passed in.
 function closeDropdowns(buttonName){
   var dropdowns = document.getElementsByClassName('dropdown-content');
   for (var d = 0; d < dropdowns.length; d++){
@@ -1234,7 +1234,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
   
   var proportionalHeight = (incommingHeight * avalibleWidth) / incommingWidth;
   if(proportionalHeight > window.innerHeight - topToolbarWidth){
-    //this means height is limiting dimension.
+    // this means height is limiting dimension.
     canvasHeight = avalibleHeight;
     canvasWidth = (incommingWidth * avalibleHeight) / incommingHeight;
     canvasWidth = Math.round(canvasWidth);   // Without this line the image width is potentially reduced by 1 pixel every repaint.
@@ -1245,7 +1245,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
     eraserContext.canvas.height = canvasHeight;
     eraserContext.drawImage(orgImg, 0, 0, canvasWidth, canvasHeight);
   }
-  else  { //this means width is limiting dimension.
+  else  { // this means width is limiting dimension.
     canvasWidth = avalibleWidth;
     canvasHeight = (incommingHeight * avalibleWidth) / incommingWidth;
     canvasHeight = Math.round(canvasHeight);// Without this line the image height is potentially reduced by 1 pixel every repaint.
@@ -1312,7 +1312,7 @@ function insertPageUsingImage(img){
 
 function saveCurrentImageToArrayBeforeMoving(){
   var tempImageForInserting = new Image();
-  //console.log(context.canvas.toDataURL('image/png'));
+  // console.log(context.canvas.toDataURL('image/png'));
   tempImageForInserting.src = context.canvas.toDataURL('image/png');
   arrayOfCurrentImages[currentPg - 1] = tempImageForInserting;
 }
@@ -1381,12 +1381,12 @@ function goBtnFunction(){
 
 function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
-    //Here we question them if they want to delete the page, and delete it if they say yes.
+    // Here we question them if they want to delete the page, and delete it if they say yes.
     // eslint-disable-next-line max-len
     var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
       
     if(ret === 1){
-      //Delete page...
+      // Delete page...
       deleteCurrentPage();
     }
     
@@ -1500,7 +1500,7 @@ function SDInputValidation(){
 }
 
 function SDOkBtnFunction(){
-  //console.log('Settings Function');
+  // console.log('Settings Function');
   
   if(SDValid){
     
@@ -1532,7 +1532,7 @@ function SDOkBtnFunction(){
       userWantsErrorMessages = true;
       ipcRenderer.send('user-wants-error-messages');
     }
-    document.getElementById('SDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+    document.getElementById('SDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1615,7 +1615,7 @@ function ITDOkBtnFunction(){
     textToInsert = document.getElementById('ITDTextBox').value;
     tool = 'text';
     updateTextOfToolBtn();
-    document.getElementById('ITDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+    document.getElementById('ITDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1782,7 +1782,7 @@ function OCDOkBtnFunction(){
   if (OCDValid){
     instrumentColor = OCDColor;
     updateColorOfColorBtn();
-    document.getElementById('OCDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+    document.getElementById('OCDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1839,7 +1839,7 @@ function OSDOkBtnFunction(){
   if (OSDValid){
     instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
     updateTextOfSizeBtn();
-    document.getElementById('OSDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+    document.getElementById('OSDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -1903,7 +1903,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
       var elem2 = document.createElement('p');
       var str2 = sources[i].name;
       if(str2.length > 40){
-        str2 = str2.substring(0, 40) + '...'; //----Visible!
+        str2 = str2.substring(0, 40) + '...'; // ----Visible!
       }
       elem2.innerHTML = '↑ ' + str2;
       // Make a line break element:
@@ -1937,7 +1937,7 @@ function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
     }
   }, ISDHandleStream, ISDHandleError);
 
-  //console.log(id);
+  // console.log(id);
 }
 
 function ISDHandleError(e){
@@ -1945,7 +1945,7 @@ function ISDHandleError(e){
 }
 
 function ISDHandleStream(stream){
-  //console.log('got stream');
+  // console.log('got stream');
   
   // Create hidden video tag
   var video = document.createElement('video');
@@ -1975,7 +1975,7 @@ function ISDHandleStream(stream){
       // Destroy connect to stream
       stream.getTracks()[0].stop();
     }
-    catch (e){//Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
+    catch (e){// Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
     }
   };
   video.src = URL.createObjectURL(stream);
@@ -2013,7 +2013,7 @@ function ISDFixCanvas(){
   var pixelCounter = 0;
   var i = 0;
   
-  //console.log(horizontalPixels.data);
+  // console.log(horizontalPixels.data);
   
   for (i=0; i < horizontalPixels.data.length; i+=4){
     if(horizontalPixels.data[i] !== 0 || horizontalPixels.data[i+1] !== 0 || horizontalPixels.data[i+2] !== 0){
@@ -2063,7 +2063,7 @@ function ISDFixCanvas(){
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
   
-  //ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
+  // ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
   
 }
 
@@ -2149,7 +2149,7 @@ function ISDAddElementsForSelectRegion(){
   ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
   
   // Add the entries to the background color dropdown:
-  var options = ['white', 'color chosen']; //----Visible!
+  var options = ['white', 'color chosen']; // ----Visible!
   var optionValues = ['white', 'globalcolor'];
   
   var opt = null;
@@ -2170,7 +2170,7 @@ function ISDAddLocationDropdown(){
   ISDLocationDropdown.style.fontSize = '30px';
   
   // Add the entries to the location dropdown:
-  var options = ['top left corner', 'top right corner', 'bottom left corner', 'bottom right corner', 'center']; //----Visible!
+  var options = ['top left corner', 'top right corner', 'bottom left corner', 'bottom right corner', 'center']; // ----Visible!
   var optionValues = ['topleft', 'topright', 'bottomleft', 'bottomright', 'center'];
   
   var opt = null;
@@ -2197,7 +2197,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   
   var proportionalHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
   if(proportionalHeight > dlg.availableHeight){
-    //this means height is limiting dimension.
+    // this means height is limiting dimension.
     canvasHeight = dlg.availableHeight;
     canvasWidth = (incommingWidth * dlg.availableHeight) / incommingHeight;
     canvasWidth = Math.round(canvasWidth); // Without this line the image width is potentially reduced by 1 pixel every repaint.
@@ -2205,7 +2205,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
     ISDCanvas.height = canvasHeight;
     ISDContext.drawImage(img, 0, 0, canvasWidth, canvasHeight);
   }
-  else  {  //this means width is limiting dimension.
+  else  {  // this means width is limiting dimension.
     canvasWidth = dlg.availableWidth;
     canvasHeight = (incommingHeight * dlg.availableWidth) / incommingWidth;
     canvasHeight = Math.round(canvasHeight);// Without this line the image height is potentially reduced by 1 pixel every repaint.
@@ -2217,9 +2217,9 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   // Calculate & save scale factor in relation to actual image.
   ISDXScale = ISDImageToReturn.naturalWidth / ISDCanvas.width;
   ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
-  //tool = 'select';
-  //messageDisplayed = false;
-  //chrome.app.window.current().focus();
+  // tool = 'select';
+  // messageDisplayed = false;
+  // chrome.app.window.current().focus();
 }
 
 function ISDGetAvaliableDialogSpace(){
@@ -2232,20 +2232,20 @@ function ISDGetAvaliableDialogSpace(){
 }
 
 function ISDInstrumentDown(x, y){
-  //console.log('down ' + x + ', ' + y);
+  // console.log('down ' + x + ', ' + y);
   ISDCanUseTool = true;
   ISDSelectMethod(x, y, 'down');
 }
 
 function ISDInstrumentMoved(x, y){
-  //console.log('move ' + x + ', ' + y);
+  // console.log('move ' + x + ', ' + y);
   if(ISDCanUseTool){
     ISDSelectMethod(x, y, 'move');
   }
 }
 
 function ISDInstrumentUp(x, y){
-  //console.log('up ' + x + ', ' + y);
+  // console.log('up ' + x + ', ' + y);
   if(ISDCanUseTool){
     ISDSelectMethod(x, y, 'up');
   }
@@ -2375,7 +2375,7 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       // Here we need to call insertPageUsingImage(). At this point the image will already exist and be loaded.
       insertPageUsingImage(ISDImageToReturn);
     }
-    document.getElementById('ISDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+    document.getElementById('ISDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
 
@@ -2482,7 +2482,7 @@ function ISDSimpleVariableCleanup(){
 function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
   insertTemplateAsPage(locOfTem);
-  document.getElementById('OPDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+  document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
@@ -2505,12 +2505,12 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
     insertPageUsingImage(imageToInsert);
   });
   whiteImage.src = 'images/Blank_White_Page.png';
-  document.getElementById('OPDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+  document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
-    { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } //----Visible!
+    { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } // ----Visible!
   ]}, function (fileNames){
     if (typeof fileNames === 'undefined' || fileNames === null){
       return;
@@ -2537,13 +2537,13 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
         alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
       }
       else {
-        //console.log('Some other error: ', err.code);
+        // console.log('Some other error: ', err.code);
         throw err;
       }
     });
   
-    //insertTemplateAsPage(fileName);
-    document.getElementById('OPDCloseBtn').click();  //Clicking the close button on dialog after we are done with it.
+    // insertTemplateAsPage(fileName);
+    document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   });
 }
 
@@ -2818,9 +2818,9 @@ function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
 
 
 function pushStateIntoUndoArray(){
-  //console.log(currentPlaceInUndoArray + ' ' + imageArrayForUndo.length);
+  // console.log(currentPlaceInUndoArray + ' ' + imageArrayForUndo.length);
   if(currentPlaceInUndoArray !== imageArrayForUndo.length - 1){
-    //console.log('just undone and moved on');
+    // console.log('just undone and moved on');
     // This means they have just undone something, and are going on from there, so we have to get the remainder
     // of the undo array, (if applicable), and make the undo array just contain that. Then re-set the 
     // currentPlaceInUndoArray to imageArrayForUndo.length - 1, and also push in the current state.
@@ -2845,7 +2845,7 @@ function pushStateIntoUndoArray(){
     imageArrayForUndo.shift();
   }
   
-  //pushDataIntoLocalStorage(context.canvas.toDataURL('image/png'), currentPg - 1, arrayOfCurrentImages.length);
+  // pushDataIntoLocalStorage(context.canvas.toDataURL('image/png'), currentPg - 1, arrayOfCurrentImages.length);
   
 }
 
