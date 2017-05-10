@@ -44,7 +44,7 @@ var safeToClose = true; // Starting off as true and will be changed once changes
 var allLoaded = false;
 
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
-var context; // This is the context used for drawing the image on the canvas:
+var context; // This is the context used for drawing the image on the canvas
 var eraserContext; // This is the context for the canvas used for the original images,
 // which is where the eraser get's its data from.
 var canUseTool; // This is used to determine when the tool/instrument can be used. For example, once the mouse is down,
@@ -52,7 +52,7 @@ var canUseTool; // This is used to determine when the tool/instrument can be use
 var tool = 'pen';
 var prevX = 'NA'; // These two are typically used as the beginning of the line or the previous location of the instrument.
 var prevY = 'NA';
-var tempX = 'NA'; // These are typically used to hold the current location of the instrument.
+var tempX = 'NA'; // These two are typically used to hold the current location of the instrument.
 var tempY = 'NA';
 var instrumentWidth = 5;
 var instrumentColor = 'rgba(78, 78, 255, 1.0)';
@@ -64,8 +64,8 @@ var maxUndoHistory = 31;  // This needs to be 1 higher than the actual number of
 var imageArrayForUndo = new Array(maxUndoHistory);
 var currentPlaceInUndoArray;
 
-// *****Here are some global variables that relate more to the programmatic side of things, and*****
-// *****storing/ keeping track of the images.*****
+// *****Here are some global variables that relate more to the programmatic side of things, and
+// storing/ keeping track of the images.*****
 var tempImageForWindowResize;
 
 var maxNumberOfPages = 250;
@@ -75,7 +75,7 @@ var temporarilyDisabledKeyboardShortcuts = false;
 // This is for re-sizing the drawing area:
 var tempForTimer;
 
-// Here are the 4 arrays that keep track of the current and original images and their original dimensions.
+// Here are the 4 arrays that store the current and original images and their original dimensions.
 var arrayOfCurrentImages = new Array(1);
 var arrayOfOriginalImages = new Array(1);
 var arrayOfOriginalImagesX = new Array(1);
@@ -97,11 +97,13 @@ ipcRenderer.on('close-button-clicked', () => {
   userWantsToClose();
 });
 
+// Here is the function that executes when the main process is unable to register the keyboard shortcuts:
 ipcRenderer.on('keyboard-shortcuts-not-registered', () => {
   weGotKeyboardShortcuts = false;
   temporarilyDisabledKeyboardShortcuts = false;
 });
 
+// The next several functions simply perform the applicable tasks when the respective keyboard shortcut is pressed:
 ipcRenderer.on('ctrl-z-pressed', () => {
   if(canUseTool === false){
     undoBtnFunction();
@@ -115,6 +117,8 @@ ipcRenderer.on('ctrl-y-pressed', () => {
 });
 
 ipcRenderer.on('esc-pressed', () => {
+  // If they press escape, then we should simply cancel whatever it was that they were doing, & paint the
+  // temporary canvas on the drawing area.
   cancelSelect();
   if(canUseTool){
     if(tool === 'line' || tool === 'select' || tool === 'text' || tool === 'identify' || tool === 'dot' || tool === 'PASTE'){
@@ -213,6 +217,7 @@ ipcRenderer.on('alt-g-pressed', () => {
 });
 
 ipcRenderer.on('ctrl-a-pressed', () => {
+  // The purpose of this function is to select the entire drawing area.
   cancelSelect();
   if(canUseTool === false){
     tool = 'select';
@@ -264,6 +269,8 @@ ipcRenderer.on('ctrl-v-pressed', () => {
 });
 
 ipcRenderer.on('delete-pressed', () => {
+  // If delete is pressed, then we will erase the entire area that is selected.
+  // Otherwise, we will do nothing.
   if(canUseTool === false){
     if(areaSelected === true){
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -298,7 +305,6 @@ ipcRenderer.on('app-finished-loading', () => {
 // This function runs after the initializeCanvas() function finishes its job.
 function continueAfterAppFinishedLoading1(){
   initializeEventListenersForCanvas();
-  initializeEventListenersForExternalDialogs();
   setUpGUIOnStartup();
   checkForScreenSizeIssues();
   enableRightClickMenu();
@@ -314,7 +320,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   var vButtonBarButtons = 
   document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
   
-  // Essentially, this stuff just gets the dropdowns:
+  // Essentially, this stuff just gets the dropdowns into an array so that we can work with them:
   var dropdowns = [];
   var el = document.getElementById('fileDropdown');
   dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
@@ -468,28 +474,6 @@ function initializeEventListenersForCanvas(){
   document.getElementById('canvas1').addEventListener('touchcancel', function (e){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
     this.offsetTop - topToolbarWidth);
-  });
-}
-
-/*
- * Here is the function that initializes the event listeners for all of the external dialogs.
- * It has to be run only once on startup since running it in the code for each window will result
- * in the same functions being added to the events again each time the dialog is opened,
- * which results in noticeable slowness.
-*/
-function initializeEventListenersForExternalDialogs(){
-  // Here are the event listeners for the otherColorDialog:
-  //document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function (e){
-    //var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-    //OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
-  //});
-
-  document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function (e){
-    if(e.touches.length === 1){
-      var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-      OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      e.preventDefault();
-    }
   });
 }
 
