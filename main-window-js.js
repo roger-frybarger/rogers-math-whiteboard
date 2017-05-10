@@ -1,19 +1,14 @@
 
 const { ipcRenderer } = require('electron');
 const { dialog } = require('electron').remote;
-
 const { desktopCapturer } = require('electron');
-
-var fs = require('fs');
-
-
 const remote = require('electron').remote;
 const Menu = remote.Menu;
 var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a reference to the main window so we can use
 // it for dialog boxes.
-
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
+var fs = require('fs');
 
 // This enables the right-click menu over the text boxes. I found it at:
 // https://github.com/electron/electron/issues/4068
@@ -28,13 +23,9 @@ const InputMenu = Menu.buildFromTemplate([{
   { label: 'Select all', role: 'selectall', },
 ]);
 
-
-
 window.addEventListener('resize', onWindowResize);
 
 var userWantsErrorMessages = true;
-
-
 
 process.on('uncaughtException', function (err){
   if(userWantsErrorMessages){
@@ -49,53 +40,42 @@ process.on('uncaughtException', function (err){
   }
 });
 
-
-
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
 
-// This is the context used for drawing the image on the canvas:
-var context;
-
-// This is the context for the canvas used for the original images, which is where the eraser get's its data from.
-var eraserContext;
-
-
-
-
-
-// Some variables used in drawing:
-var canUseTool;
+// *****Here are some global variables that are directly related to drawing & working with the canvas:*****
+var context; // This is the context used for drawing the image on the canvas:
+var eraserContext; // This is the context for the canvas used for the original images,
+// which is where the eraser get's its data from.
+var canUseTool; // This is used to determine when the tool/instrument can be used. For example, once the mouse is down,
+// then the tool/instrument can be used. However, once the mouse is up, the tool/instrument cannot be used any more.
 var tool = 'pen';
-var prevX = 'NA';
+var prevX = 'NA'; // These two are typically used as the beginning of the line or the previous location of the instrument.
 var prevY = 'NA';
+var tempX = 'NA'; // These are typically used to hold the current location of the instrument.
+var tempY = 'NA';
 var instrumentWidth = 5;
 var instrumentColor = 'rgba(78, 78, 255, 1.0)';
-
-var maxNumberOfPages = 250;
 var tempCanvasForInterval = 'NA';
 var copiedSectionOfCanvas = 'NA';
-var tempX = 'NA';
-var tempY = 'NA';
 var areaSelected = false;
-
 var textToInsert = '';
-
-var tempImageForWindowResize;
-
-
-var weGotKeyboardShortcuts = false;
-var temporarilyDisabledKeyboardShortcuts = false;
-
-// var testObjectForStoringGlobalFunctions = {};
-
 var maxUndoHistory = 31;  // This needs to be 1 higher than the actual number of operations desired.
 var imageArrayForUndo = new Array(maxUndoHistory);
 var currentPlaceInUndoArray;
 
+// *****Here are some global variables that relate more to the programmatic side of things, and*****
+// *****storing/ keeping track of the images.*****
+var tempImageForWindowResize;
+
+var maxNumberOfPages = 250;
+var weGotKeyboardShortcuts = false;
+var temporarilyDisabledKeyboardShortcuts = false;
+
 // This is for re-sizing the drawing area:
 var tempForTimer;
 
+// Here are the 4 arrays that keep track of the current and original images and their original dimensions.
 var arrayOfCurrentImages = new Array(1);
 var arrayOfOriginalImages = new Array(1);
 var arrayOfOriginalImagesX = new Array(1);
@@ -110,9 +90,6 @@ var topToolbarWidth = 40;
 var SideToolbarWidth = 150;
 
 
-// function onWindowLoad(){
-  // adjustSizeOfMenuButtonsToScreenSize();
-// }
 
 // Here is the function that executes when the close button signal is sent in from the main process, (main.js).
 // It essentially delegates the validation work off to the userWantsToClose() function.
@@ -324,23 +301,23 @@ function continueAfterAppFinishedLoading1(){
   initializeEventListenersForExternalDialogs();
   setUpGUIOnStartup();
   checkForScreenSizeIssues();
+  enableRightClickMenu();
   allLoaded = true;
 }
 
 function adjustSizeOfMenuButtonsToScreenSize(){
   // I know it is not good practice to hard-code this here, but I do not expect these to change
-  // in any significant way, so for now, I am cool with hard-coding it. Furthermore, adding more
+  // in any significant way, so for now, I am ok with hard-coding it. Furthermore, adding more
   // buttons to the GUI would take up valuable space. I feel that all the buttons that are necessary
   // are already here, and expandability can come within the drop down menus. In sum, I can't think
   // of a good reason to expand this in the future, so I don't see a problem with hard-coding it:
   var vButtonBarButtons = 
   document.querySelectorAll('#fileBtn, #colorBtn, #sizeBtn, #toolBtn, #insertPageBtn, #previousPageBtn, #nextPageBtn');
   
+  // Essentially, this stuff just gets the dropdowns:
   var dropdowns = [];
   var el = document.getElementById('fileDropdown');
-  
   dropdowns = Array.prototype.slice.call(el.getElementsByTagName('a'));
-  
   el = document.getElementById('colorDropdown');
   dropdowns = dropdowns.concat(Array.prototype.slice.call(el.getElementsByTagName('a')));
   el = document.getElementById('sizeDropdown');
@@ -354,6 +331,8 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   // but then decided to pass in the window height instead.
   var screenH = window.innerHeight + 30;
   
+  // Now we will go through and adjust the size of everything so that the dropdowns appropriately use
+  // the available screen real estate.
   var i = 0;
   switch (true){
   case (screenH < 720):
@@ -413,7 +392,7 @@ function adjustSizeOfMenuButtonsToScreenSize(){
   }
 }
 
-function initializeGlobalVariables(){
+function initializeGlobalVariables(){ // These have to be done after the app has had a chance to load. Otherwise they will fail.
   context = document.getElementById('canvas1').getContext('2d');
   eraserContext = document.getElementById('eraserCanvas').getContext('2d');
 }
@@ -421,7 +400,7 @@ function initializeGlobalVariables(){
 function initializeCanvas(){
   var image = new Image();
   
-  // Maybe draw image on canvas temporarily here and get dimensions before re-drawing?
+  // Draw image on canvas temporarily here and get dimensions before re-drawing
   image.addEventListener('load', function (){
     context.drawImage(image, 0, 0);
     eraserContext.drawImage(image, 0, 0);
@@ -490,24 +469,6 @@ function initializeEventListenersForCanvas(){
     instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
     this.offsetTop - topToolbarWidth);
   });
-  
-  // This enables the right-click menu over the text boxes. I found it at:
-  // https://github.com/electron/electron/issues/4068
-  
-  document.body.addEventListener('contextmenu', (e) => { // eslint-disable-line spellcheck/spell-checker
-    e.preventDefault();
-    e.stopPropagation();
-
-    let node = e.target;
-    
-    while(node){
-      if(node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable){
-        InputMenu.popup(remote.getCurrentWindow());
-        break;
-      }
-      node = node.parentNode;
-    }
-  });
 }
 
 /*
@@ -518,20 +479,15 @@ function initializeEventListenersForCanvas(){
 */
 function initializeEventListenersForExternalDialogs(){
   // Here are the event listeners for the otherColorDialog:
-  document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function (e){
-    var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-    // console.log(e.pageX - offset.left);
-    // console.log(e.pageY - offset.top);
-    OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
-  });
+  //document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function (e){
+    //var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+    //OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
+  //});
 
   document.getElementById('OCDPickerCanvas').addEventListener('touchstart', function (e){
     if(e.touches.length === 1){
       var offset = getCoords(document.getElementById('OCDPickerCanvas'));
-      // console.log(e.pageX - offset.left);
-      // console.log(e.pageY - offset.top);
       OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
-      // onInstrumentDown(e.changedTouches[0].pageX - 20, e.changedTouches[0].pageY - 90);
       e.preventDefault();
     }
   });
@@ -555,6 +511,25 @@ function checkForScreenSizeIssues(){
   if(screenX > 1920 || screenY > 1080){
     alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
   }
+}
+
+function enableRightClickMenu(){
+  // This enables the right-click menu over the text boxes. I found it at:
+  // https://github.com/electron/electron/issues/4068
+  document.body.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    let node = e.target;
+    
+    while(node){
+      if(node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable){
+        InputMenu.popup(remote.getCurrentWindow());
+        break;
+      }
+      node = node.parentNode;
+    }
+  });
 }
 
 // Here is the instrumentDown method. It accepts the x and y coordinates of where the tool/instrument started
@@ -1657,6 +1632,19 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   OCDUpdateTextBoxes();
   OCDValidateInputAndUpdateIfApplicable();
   OCDUpdateExample();
+}
+
+function OCDMouseDown(e){ // eslint-disable-line no-unused-vars
+  var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+  OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
+}
+
+function OCDTouchStart(e){ // eslint-disable-line no-unused-vars
+  if(e.touches.length === 1){
+    var offset = getCoords(document.getElementById('OCDPickerCanvas'));
+    OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
+    e.preventDefault();
+  }
 }
 
 function OCDUpdateTextBoxes(){

@@ -244,7 +244,7 @@
         <h2>Pick a Color:</h2>
         <div class="modalBoxContent">
           
-          <canvas id="OCDPickerCanvas" width="350" height="350"></canvas>
+          <canvas id="OCDPickerCanvas" onmousedown="OCDMouseDown(event)" width="350" height="350"></canvas>
           <div>
             <div id="OCDColorValuesInputDiv">
               Red:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="number" class="OCDInputBoxes" oninput="OCDValidateInputAndUpdateIfApplicable();" onkeydown="OCDCheckForEnter(event);" id="OCDRedTextBox" min="0" max="255"><br>
