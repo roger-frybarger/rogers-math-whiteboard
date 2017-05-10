@@ -1,8 +1,8 @@
 
-const {ipcRenderer} = require('electron');
-const {dialog} = require('electron').remote;
+const { ipcRenderer } = require('electron');
+const { dialog } = require('electron').remote;
 
-const {desktopCapturer} = require('electron');
+const { desktopCapturer } = require('electron');
 
 var fs = require('fs');
 
@@ -18,14 +18,14 @@ const osModule = require('os');
 // This enables the right-click menu over the text boxes. I found it at:
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
-  label: 'Undo', role: 'undo',},
-  {label: 'Redo', role: 'redo',},
-  {type: 'separator',},
-  {label: 'Cut', role: 'cut',},
-  {label: 'Copy', role: 'copy',},
-  {label: 'Paste', role: 'paste',},
-  {type: 'separator',},
-  {label: 'Select all', role: 'selectall',},
+  label: 'Undo', role: 'undo', },
+  { label: 'Redo', role: 'redo', },
+  { type: 'separator', },
+  { label: 'Cut', role: 'cut', },
+  { label: 'Copy', role: 'copy', },
+  { label: 'Paste', role: 'paste', },
+  { type: 'separator', },
+  { label: 'Select all', role: 'selectall', },
 ]);
 
 
@@ -138,7 +138,6 @@ ipcRenderer.on('ctrl-y-pressed', () => {
 });
 
 ipcRenderer.on('esc-pressed', () => {
-  
   cancelSelect();
   if(canUseTool){
     if(tool === 'line' || tool === 'select' || tool === 'text' || tool === 'identify' || tool === 'dot' || tool === 'PASTE'){
@@ -255,10 +254,10 @@ ipcRenderer.on('ctrl-a-pressed', () => {
     context.lineWidth = 1;
     context.beginPath();
     // These have to be 1 back from the edges of the canvas so they will be visible.
-    context.moveTo(tempX+1, tempY+1);
-    context.lineTo(prevX-1, tempY+1);
-    context.lineTo(prevX-1, prevY-1);
-    context.lineTo(tempX+1, prevY-1);
+    context.moveTo(tempX + 1, tempY + 1);
+    context.lineTo(prevX - 1, tempY + 1);
+    context.lineTo(prevX - 1, prevY - 1);
+    context.lineTo(tempX + 1, prevY - 1);
     context.closePath();
     context.stroke();
     
@@ -329,8 +328,6 @@ function continueAfterAppFinishedLoading1(){
 }
 
 function adjustSizeOfMenuButtonsToScreenSize(){
-  
-  
   // I know it is not good practice to hard-code this here, but I do not expect these to change
   // in any significant way, so for now, I am cool with hard-coding it. Furthermore, adding more
   // buttons to the GUI would take up valuable space. I feel that all the buttons that are necessary
@@ -520,7 +517,6 @@ function initializeEventListenersForCanvas(){
  * which results in noticeable slowness.
 */
 function initializeEventListenersForExternalDialogs(){
-  
   // Here are the event listeners for the otherColorDialog:
   document.getElementById('OCDPickerCanvas').addEventListener('mousedown', function (e){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
@@ -539,8 +535,6 @@ function initializeEventListenersForExternalDialogs(){
       e.preventDefault();
     }
   });
-  
-  
 }
 
 function setUpGUIOnStartup(){
@@ -559,7 +553,6 @@ function checkForScreenSizeIssues(){
   }
   // if(true){
   if(screenX > 1920 || screenY > 1080){
-  
     alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
   }
 }
@@ -616,7 +609,6 @@ function instrumentDown(x, y){
 // to the event.
 function instrumentMoved(x, y){
   if(canUseTool){ // Note: This validation is critical here. Make sure to put future method calls inside of this if structure.
-    
     // Now let's pass the event off to the applicable method:
     switch(tool){
     case 'pen':
@@ -657,7 +649,6 @@ function instrumentMoved(x, y){
 // probably need to handle the event differently.
 function instrumentUp(x, y){
   if(canUseTool){ // Here again, this validation is critical. All future method calls must go inside this if structure
-    
     // Now let's pass the event off to the applicable method:
     switch(tool){
     case 'pen':
@@ -1114,7 +1105,7 @@ function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('focus-main-win');
     // eslint-disable-next-line max-len
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true});
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
       
     if(ret === 0){
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
@@ -1320,7 +1311,7 @@ function saveCurrentImageToArrayBeforeMoving(){
 function tellUserTheyHaveExcededMaxPages(){
   // Here we explain why they can't insert another page:
   // eslint-disable-next-line max-len
-  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the "Max Pages Allowed" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages +' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true});
+  dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the "Max Pages Allowed" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages + ' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true });
 }
 
 function updatePageNumsOnGui(){
@@ -1383,13 +1374,12 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
     // Here we question them if they want to delete the page, and delete it if they say yes.
     // eslint-disable-next-line max-len
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true});
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true });
       
     if(ret === 1){
       // Delete page...
       deleteCurrentPage();
     }
-    
   }
   else{
     // Here we tell them that the document must have at least one page:
@@ -1439,7 +1429,6 @@ var SDValid = true;
 // Here is the code for the settingsDialog:
 
 function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
-  
   if(document.getElementById('canvas1').style.cursor === 'none'){
     document.getElementById('SDRemoveMousePointerOnCanvas').checked = true;
   }
@@ -1496,14 +1485,12 @@ function SDInputValidation(){
   else{
     SDValid = false;
   }
-  
 }
 
 function SDOkBtnFunction(){
   // console.log('Settings Function');
   
   if(SDValid){
-    
     if(document.getElementById('SDRemoveMousePointerOnCanvas').checked){
       document.getElementById('canvas1').style.cursor = 'none';
     }
@@ -1637,7 +1624,6 @@ var OCDAlpha = 1.0;
 var OCDValid = true;
 
 function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
-
   // Create the color wheel for them to choose from:
   var canvas = document.getElementById('OCDPickerCanvas');
   var context = canvas.getContext('2d');
@@ -1655,8 +1641,8 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
     context.arc(x, y, radius, startAngle, endAngle);
     context.closePath();
     var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-    gradient.addColorStop(0,'hsl('+angle+', 10%, 100%)');
-    gradient.addColorStop(1,'hsl('+angle+', 100%, 50%)');
+    gradient.addColorStop(0,'hsl(' + angle + ', 10%, 100%)');
+    gradient.addColorStop(1,'hsl(' + angle + ', 100%, 50%)');
     context.fillStyle = gradient;
     context.fill();
   }
@@ -1671,11 +1657,9 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   OCDUpdateTextBoxes();
   OCDValidateInputAndUpdateIfApplicable();
   OCDUpdateExample();
-  
 }
 
 function OCDUpdateTextBoxes(){
-  
   document.getElementById('OCDRedTextBox').value = OCDRed;
   document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDGreenTextBox').value = OCDGreen;
@@ -1686,7 +1670,6 @@ function OCDUpdateTextBoxes(){
   document.getElementById('OCDTransparencyTextBox').value = temp;
   document.getElementById('OCDTransparencyTextBox').style.backgroundColor = 'white';
   document.getElementById('OCDRedTextBox').select();
-  
 }
 
 function OCDOnInstrumentDown(x, y){
@@ -1778,7 +1761,6 @@ function OCDUpdateExample(){
 }
 
 function OCDOkBtnFunction(){
-  
   if (OCDValid){
     instrumentColor = OCDColor;
     updateColorOfColorBtn();
@@ -1812,7 +1794,7 @@ function OSDAddCharacter(chr){ // eslint-disable-line no-unused-vars
 function OSDBackspace(){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('OSDSizeTextBox');
   var alreadyThere = textBox.value;
-  textBox.value = alreadyThere.substring(0, alreadyThere.length-1);
+  textBox.value = alreadyThere.substring(0, alreadyThere.length - 1);
   OSDValidateInput();
 }
 
@@ -1835,7 +1817,6 @@ function OSDValidateInput(){
 }
 
 function OSDOkBtnFunction(){
-  
   if (OSDValid){
     instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
     updateTextOfSizeBtn();
@@ -1878,7 +1859,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDCanInsert = false;
   ISDAreaSelected = false;
   // get thumbnails of each screen/window & insert into the dialog.
-  desktopCapturer.getSources({types: ['window', 'screen'], thumbnailSize: {width: 400, height: 400}}, (error, sources) => {
+  desktopCapturer.getSources({ types: ['window', 'screen'], thumbnailSize: { width: 400, height: 400 } }, (error, sources) => {
     if (error){
       alert('Unable to obtain screenshot sources.', 'Error:');
       return;
@@ -1912,10 +1893,8 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
       document.getElementById('ISDContentDiv').appendChild(elem);
       document.getElementById('ISDContentDiv').appendChild(elem2);
       document.getElementById('ISDContentDiv').appendChild(elem3);
-      
     }
   });
-  
 }
 
 function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
@@ -1980,7 +1959,6 @@ function ISDHandleStream(stream){
   };
   video.src = URL.createObjectURL(stream);
   document.body.appendChild(video);
-  
 }
 
 function ISDReadyForCroping(){
@@ -2015,25 +1993,25 @@ function ISDFixCanvas(){
   
   // console.log(horizontalPixels.data);
   
-  for (i=0; i < horizontalPixels.data.length; i+=4){
-    if(horizontalPixels.data[i] !== 0 || horizontalPixels.data[i+1] !== 0 || horizontalPixels.data[i+2] !== 0){
+  for (i = 0; i < horizontalPixels.data.length; i += 4){
+    if(horizontalPixels.data[i] !== 0 || horizontalPixels.data[i + 1] !== 0 || horizontalPixels.data[i + 2] !== 0){
       xPixelsToCrop = pixelCounter;
       i = horizontalPixels.data.length;
     }
     else{
-      pixelCounter+=1;
+      pixelCounter += 1;
     }
   }
   
   pixelCounter = 0;
   
-  for (i=0; i < verticalPixels.data.length; i+=4){
-    if(verticalPixels.data[i] !== 0 || verticalPixels.data[i+1] !== 0 || verticalPixels.data[i+2] !== 0){
+  for (i = 0; i < verticalPixels.data.length; i += 4){
+    if(verticalPixels.data[i] !== 0 || verticalPixels.data[i + 1] !== 0 || verticalPixels.data[i + 2] !== 0){
       yPixelsToCrop = pixelCounter;
       i = verticalPixels.data.length;
     }
     else{
-      pixelCounter+=1;
+      pixelCounter += 1;
     }
   }
   
@@ -2059,16 +2037,13 @@ function ISDFixCanvas(){
     
     // Also here is where to make the ok button work.
     ISDCanInsert = true;
-    
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
   
   // ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
-  
 }
 
 function ISDAddTouchAndClickEventHandelers(){
-  
   ISDCanvas.addEventListener('mousedown', function (e){
     var offset = getCoords(ISDCanvas);
     ISDInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
@@ -2116,11 +2091,9 @@ function ISDAddTouchAndClickEventHandelers(){
     ISDInstrumentUp(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
     e.preventDefault();
   });
-  
 }
 
 function ISDAddElementsForSelectRegion(){
-  
   ISDExtraBreak = document.createElement('br');
   document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak);
   
@@ -2162,7 +2135,6 @@ function ISDAddElementsForSelectRegion(){
   }
   
   document.getElementById('ISDContentDiv').appendChild(ISDBackgroundColorDropdown);
-  
 }
 
 function ISDAddLocationDropdown(){
@@ -2186,7 +2158,6 @@ function ISDAddLocationDropdown(){
 }
 
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
-  
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
   typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
     throw new Error('ISDDisplayImageOnCanvas has been called before the image has loaded!');
@@ -2228,7 +2199,7 @@ function ISDGetAvaliableDialogSpace(){
   var y = (0.68 * window.innerHeight) - 21;
   x = Math.round(x);
   y = Math.round(y);
-  return {availableWidth: x, availableHeight: y };
+  return { availableWidth: x, availableHeight: y };
 }
 
 function ISDInstrumentDown(x, y){
@@ -2324,7 +2295,6 @@ function ISDCancelSelect(){
 function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
   if(ISDCanInsert){
     if(ISDAreaSelected){
-      
       // Now we have to determine where the user wants the selected region, what background color they want,
       // scale the coordinates to original size, re-size canvas to size of ISDImageToReturn, pant ISDImageToReturn onto it,
       // grab selected region from canvas, paint canvas with applicable color, paint selected region in correct spot,
@@ -2369,7 +2339,6 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
         insertPageUsingImage(this);
       };
       ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
-      
     }
     else{
       // Here we need to call insertPageUsingImage(). At this point the image will already exist and be loaded.
@@ -2511,7 +2480,7 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
 function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
     { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } // ----Visible!
-  ]}, function (fileNames){
+  ] }, function (fileNames){
     if (typeof fileNames === 'undefined' || fileNames === null){
       return;
     }
@@ -2520,7 +2489,6 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
     
     fs.stat(fileName, function (err, stats){
       if(err === null){
-        
         if(stats.size < 1){
           alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
         }
@@ -2657,7 +2625,6 @@ function redoBtnFunction(){
 
 function copyBtnFunction(){
   if(areaSelected === true){
-    
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     var drawingX = Math.min(tempX, prevX);
     var drawingY = Math.min(tempY, prevY);
@@ -2687,7 +2654,6 @@ function pasteBtnFunction(){
 
 function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
-    
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
     context.strokeStyle = instrumentColor;
@@ -2715,7 +2681,6 @@ function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
 
 function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
-    
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     var drawingX = Math.min(tempX, prevX);
     var drawingY = Math.min(tempY, prevY);
@@ -2738,7 +2703,6 @@ function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
 
 function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
-    
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
     var widthOfSelection = Math.abs(tempX - prevX);
@@ -2788,7 +2752,6 @@ function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
 
 function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
-    
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     var drawingX = Math.min(tempX, prevX);
     var drawingY = Math.min(tempY, prevY);
@@ -2796,7 +2759,7 @@ function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
     var rh = (Math.abs(tempY - prevY)) / 2;
     context.beginPath();
     context.fillStyle = instrumentColor;
-    context.ellipse((drawingX + rw), (drawingY + rh), rw, rh, 0, 0, Math.PI*2, false);
+    context.ellipse((drawingX + rw), (drawingY + rh), rw, rh, 0, 0, Math.PI * 2, false);
     context.fill();
     
     prevX = 'NA';
@@ -2836,7 +2799,6 @@ function pushStateIntoUndoArray(){
     imageArrayForUndo.push(currentImage);
     imageArrayForUndo.shift();
     currentPlaceInUndoArray = imageArrayForUndo.length - 1;
-    
   }
   else{
     var tempImageForInserting = new Image();
@@ -2846,7 +2808,6 @@ function pushStateIntoUndoArray(){
   }
   
   // pushDataIntoLocalStorage(context.canvas.toDataURL('image/png'), currentPg - 1, arrayOfCurrentImages.length);
-  
 }
 
 function clearUndoHistory(){
