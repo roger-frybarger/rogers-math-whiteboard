@@ -486,12 +486,10 @@ function setUpGUIOnStartup(){
 function checkForScreenSizeIssues(){
   var screenX = screen.width;
   var screenY = screen.height;
-  // if(true){
   if(screenX < 800 || screenY < 600){
     alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error'); // eslint-disable-line max-len
     ipcRenderer.send('terminate-this-app');
   }
-  // if(true){
   if(screenX > 1920 || screenY > 1080){
     alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
   }
@@ -516,10 +514,9 @@ function enableRightClickMenu(){
   });
 }
 
-// Here is the instrumentDown method. It accepts the x and y coordinates of where the tool/instrument started
-// touching the main canvas. I am certain that eventually, this method will call other methods that correspond
-// to the applicable tools that are available. This is because each tool will likely need to handle the
-// event differently.
+// Here is the instrumentDown function. It accepts the x and y coordinates of where the tool/instrument started
+// touching the main canvas. It then calls other functions that correspond
+// to the applicable tools that are available.
 function instrumentDown(x, y){
   // Make sure we know that they may have changed the images(s):
   safeToClose = false;
@@ -530,136 +527,134 @@ function instrumentDown(x, y){
   
   // And obviously, we can do things with our tool now:
   canUseTool = true;
-  // Now let's pass the event off to the applicable method:
+  // Now let's pass the event off to the applicable function:
   switch(tool){
   case 'pen':
-    penToolMethod(x, y, 'down');
+    penToolFunction(x, y, 'down');
     break;
   case 'eraser':
-    eraserToolMethod(x, y, 'down');
+    eraserToolFunction(x, y, 'down');
     break;
   case 'line':
-    lineToolMethod(x, y, 'down');
+    lineToolFunction(x, y, 'down');
     break;
   case 'select':
-    selectToolMethod(x, y, 'down');
+    selectToolFunction(x, y, 'down');
     break;
   case 'text':
-    textToolMethod(x, y, 'down');
+    textToolFunction(x, y, 'down');
     break;
   case 'identify':
-    identifyToolMethod(x, y, 'down');
+    identifyToolFunction(x, y, 'down');
     break;
   case 'dot':
-    dotToolMethod(x, y, 'down');
+    dotToolFunction(x, y, 'down');
     break;
   case 'PASTE':
-    pasteToolMethod(x, y, 'down');
+    pasteToolFunction(x, y, 'down');
     break;
   case 'NA':
     break;
   default:
-    throw new Error('Invalid tool in instrumentDown method: ' + tool);
+    throw new Error('Invalid tool in instrumentDown function: ' + tool);
   }
 }
 
-// Here is the instrumentMoved method, which runs every time our tool is moved. Eventually, I am sure this
-// will call multiple methods for the applicable tool, as each tool will likely need to react differently
-// to the event.
+// Here is the instrumentMoved function, which runs every time our tool/instrument is moved. It passes
+// the event off to the applicable which then handles it appropriately.
 function instrumentMoved(x, y){
-  if(canUseTool){ // Note: This validation is critical here. Make sure to put future method calls inside of this if structure.
-    // Now let's pass the event off to the applicable method:
+  if(canUseTool){ // Note: This validation is critical here. Make sure to put future function calls inside of this if structure.
+    // Now let's pass the event off to the applicable function:
     switch(tool){
     case 'pen':
-      penToolMethod(x, y, 'move');
+      penToolFunction(x, y, 'move');
       break;
     case 'eraser':
-      eraserToolMethod(x, y, 'move');
+      eraserToolFunction(x, y, 'move');
       break;
     case 'line':
-      lineToolMethod(x, y, 'move');
+      lineToolFunction(x, y, 'move');
       break;
     case 'select':
-      selectToolMethod(x, y, 'move');
+      selectToolFunction(x, y, 'move');
       break;
     case 'text':
-      textToolMethod(x, y, 'move');
+      textToolFunction(x, y, 'move');
       break;
     case 'identify':
-      identifyToolMethod(x, y, 'move');
+      identifyToolFunction(x, y, 'move');
       break;
     case 'dot':
-      dotToolMethod(x, y, 'move');
+      dotToolFunction(x, y, 'move');
       break;
     case 'PASTE':
-      pasteToolMethod(x, y, 'move');
+      pasteToolFunction(x, y, 'move');
       break;
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentMoved method: ' + tool);
+      throw new Error('Invalid tool in instrumentMoved function: ' + tool);
     }
   }
 }
 
-// Here is the instrumentUp method. This runs every time our tool is picked up off of the page, leaves
-// the drawing area, or is canceled by multiple touches on the screen at once. Here again, it is likely that 
-// this method will eventually call multiple other methods for the applicable tools, as each tool will
-// probably need to handle the event differently.
+// Here is the instrumentUp function. This runs every time our tool is picked up off of the page, leaves
+// the drawing area, or is canceled by multiple touches on the screen at once. Here again, this function calls
+// multiple other functions for the applicable tools, which then handle the event in the appropriate manner.
 function instrumentUp(x, y){
-  if(canUseTool){ // Here again, this validation is critical. All future method calls must go inside this if structure
-    // Now let's pass the event off to the applicable method:
+  if(canUseTool){ // Here again, this validation is critical. All future function calls must go inside this if structure
+    // Now let's pass the event off to the applicable function:
     switch(tool){
     case 'pen':
-      penToolMethod(x, y, 'up');
+      penToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'eraser':
-      eraserToolMethod(x, y, 'up');
+      eraserToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'line':
-      lineToolMethod(x, y, 'up');
+      lineToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'select':
-      selectToolMethod(x, y, 'up');
+      selectToolFunction(x, y, 'up');
       break;
     case 'text':
-      textToolMethod(x, y, 'up');
+      textToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'identify':
-      identifyToolMethod(x, y, 'up');
+      identifyToolFunction(x, y, 'up');
       break;
     case 'dot':
-      dotToolMethod(x, y, 'up');
+      dotToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'PASTE':
-      pasteToolMethod(x, y, 'up');
+      pasteToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentUp method: ' + tool);
+      throw new Error('Invalid tool in instrumentUp function: ' + tool);
     }
   }
   
   // Although it may seem counter-intuitive to have this OUTSIDE the validation, I wanted to make sure that 
-  // regardless of whether the tool can be used or not; if this method is called, we need to make absolutely
+  // regardless of whether the tool can be used or not; if this function is called, we need to make absolutely
   // sure that more drawing/action CANNOT take place. Remember, this may be called on multi-touch, so we
   // don't want stray lines appearing where they were not intended.
   canUseTool = false;
 }
 
 // Here are the functions that actually do the action that each tool needs to do. I have put them in the
-// same order that they are in the tool dropdown:
+// same order that they are in the tool dropdown with the extras below that:
 
 
-// Here is the penToolMethod. It handles drawing on the canvas:
-function penToolMethod(x, y, phase){
+// Here is the penToolFunction. It handles drawing on the canvas:
+function penToolFunction(x, y, phase){
   var temp1 = instrumentColor.split(',');
   var temp2 = temp1[3].substring(1, (temp1[3].length - 1));
   var colorNotTransparent;
@@ -725,12 +720,12 @@ function penToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in penToolMethod: ' + phase);
+    throw new Error('Invalid phase in penToolFunction: ' + phase);
   }
 }
 
-// Here is the eraserToolMethod. It handles erasing areas of the canvas:
-function eraserToolMethod(x, y, phase){
+// Here is the eraserToolFunction. It handles erasing areas of the canvas:
+function eraserToolFunction(x, y, phase){
   if(phase === 'down' || phase === 'move' || phase === 'up'){
     // 1. grab section of original image under mouse, 2. draw it over the canvas where it belongs.
     var ofset = Math.pow(instrumentWidth, 2);
@@ -742,12 +737,12 @@ function eraserToolMethod(x, y, phase){
     context.putImageData(tempImageData, x - ofset, y - ofset);
   }
   else{
-    throw new Error('Invalid phase in eraserToolMethod: ' + phase);
+    throw new Error('Invalid phase in eraserToolFunction: ' + phase);
   }
 }
 
-// Here is the lineToolMethod. It handles drawing straight lines on the canvas:
-function lineToolMethod(x, y, phase){
+// Here is the lineToolFunction. It handles drawing straight lines on the canvas:
+function lineToolFunction(x, y, phase){
   switch(phase){
   case 'down':
     
@@ -796,12 +791,12 @@ function lineToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in lineToolMethod: ' + phase);
+    throw new Error('Invalid phase in lineToolFunction: ' + phase);
   }
 }
 
-// Here is the selectToolMethod. It handles selecting areas of the canvas:
-function selectToolMethod(x, y, phase){
+// Here is the selectToolFunction. It handles selecting areas of the canvas:
+function selectToolFunction(x, y, phase){
   switch(phase){
   case 'down':
     
@@ -865,12 +860,12 @@ function selectToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in selectToolMethod: ' + phase);
+    throw new Error('Invalid phase in selectToolFunction: ' + phase);
   }
 }
 
-// Here is the textToolMethod. It handles inserting text onto the canvas:
-function textToolMethod(x, y, phase){
+// Here is the textToolFunction. It handles inserting text onto the canvas:
+function textToolFunction(x, y, phase){
   switch(phase){
   case 'down':
     
@@ -912,12 +907,12 @@ function textToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in textToolMethod: ' + phase);
+    throw new Error('Invalid phase in textToolFunction: ' + phase);
   }
 }
 
-// Here is the identifyToolMethod. It handles identifying areas of the canvas:
-function identifyToolMethod(x, y, phase){
+// Here is the identifyToolFunction. It handles identifying areas of the canvas:
+function identifyToolFunction(x, y, phase){
   switch(phase){
   case 'down':
     
@@ -958,12 +953,12 @@ function identifyToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in identifierToolMethod: ' + phase);
+    throw new Error('Invalid phase in identifierToolFunction: ' + phase);
   }
 }
 
-// Here is the dotToolMethod. It handles putting a dot onto the canvas:
-function dotToolMethod(x, y, phase){
+// Here is the dotToolFunction. It handles putting a dot onto the canvas:
+function dotToolFunction(x, y, phase){
   switch(phase){
   case 'down':
     
@@ -1009,12 +1004,12 @@ function dotToolMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in dotToolMethod: ' + phase);
+    throw new Error('Invalid phase in dotToolFunction: ' + phase);
   }
 }
 
-// Here is the pasteToolMethod. It handles pasting onto the canvas:
-function pasteToolMethod(x, y, phase){
+// Here is the pasteToolFunction. It handles pasting onto the canvas:
+function pasteToolFunction(x, y, phase){
   if(copiedSectionOfCanvas !== 'NA'){
     switch(phase){
     case 'down':
@@ -1053,7 +1048,7 @@ function pasteToolMethod(x, y, phase){
       
       break;
     default:
-      throw new Error('Invalid phase in pasteToolMethod: ' + phase);
+      throw new Error('Invalid phase in pasteToolFunction: ' + phase);
     }
   }
 }
@@ -1080,17 +1075,17 @@ function userWantsToClose(){
   }
 }
 
+// Here is the function that executes every time the window resize event is fired:
 function onWindowResize(){
   // First clear the timer, (Remember, if the user is dragging the edge, we only want to fix the image once.)
   clearTimeout(tempForTimer);
-  
   // Then set the timer for half a second, so that the re-sizing is not happening continuously:
   tempForTimer = setTimeout(fixThingsAfterRezizeIsDone, 500);
 }
 
+// Here is the function the executes half a second after the user has finished re-sizing the window:
 function fixThingsAfterRezizeIsDone(){
   cancelSelect();
-  // adjustSizeOfMenuButtonsToScreenSize();
   if(allLoaded){
     if(tempImageForWindowResize === null || typeof tempImageForWindowResize === 'undefined'){
       tempImageForWindowResize = new Image();
@@ -1136,8 +1131,8 @@ function closeDropdowns(buttonName){
   }
 }
 
-
-
+// Here are all of the functions that execute whenever the applicable button on the side bar is clicked or tapped.
+// Essentially, they just reveal or hide the applicable dropdown:
 function fileBtnFunction(){ // eslint-disable-line no-unused-vars
   closeDropdowns('fileDropdown');
   document.getElementById('fileDropdown').classList.toggle('show');
@@ -1211,10 +1206,7 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
 
 
 
-/*
- * Here is the code related to inserting/removing pages:
-*/
-
+// Here is the code related to inserting/removing pages:
 function loadPage(numberOfPageToLoad){
   // load the page that was passed in.
   saveCurrentImageToArrayBeforeMoving();
@@ -1262,7 +1254,6 @@ function insertPageUsingImage(img){
 
 function saveCurrentImageToArrayBeforeMoving(){
   var tempImageForInserting = new Image();
-  // console.log(context.canvas.toDataURL('image/png'));
   tempImageForInserting.src = context.canvas.toDataURL('image/png');
   arrayOfCurrentImages[currentPg - 1] = tempImageForInserting;
 }
@@ -1336,7 +1327,7 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
     var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Are you sure you want to delete this page?', buttons: ['No', 'Yes'], defaultId: 0, noLink: true });
       
     if(ret === 1){
-      // Delete page...
+      // Delete the page...
       deleteCurrentPage();
     }
   }
@@ -1377,15 +1368,18 @@ function registerShortcutsOnModalDialogClose(){ // eslint-disable-line no-unused
   }
 }
 
-
-// ********* Below is the javascript related to the modal dialogs: **********
+// ******************************************************************************
+// *********                                                           **********
+// *********   Below is the javascript related to the modal dialogs:   **********
+// *********                                                           **********
+// ******************************************************************************
 // Variables that need to be global but are still only related to the applicable dialog
 // are named beginning with the initials of the dialog's id.
 // Functions are also named starting with the same initials.
 
-var SDValid = true;
 
 // Here is the code for the settingsDialog:
+var SDValid = true;
 
 function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   if(document.getElementById('canvas1').style.cursor === 'none'){
@@ -1447,8 +1441,6 @@ function SDInputValidation(){
 }
 
 function SDOkBtnFunction(){
-  // console.log('Settings Function');
-  
   if(SDValid){
     if(document.getElementById('SDRemoveMousePointerOnCanvas').checked){
       document.getElementById('canvas1').style.cursor = 'none';
@@ -1490,7 +1482,6 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 }
 
 // Here is the code for the insertTextDialog:
-
 var ITDValid = true;
 
 function ITDReadyInsertTextDialog(){ // eslint-disable-line no-unused-vars
@@ -1574,7 +1565,6 @@ function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 
 
 // Here is the code for the otherColorDialog:
-
 var OCDColor = 'rgba(78, 78, 255, 1.0)';
 var OCDRed = 78;
 var OCDGreen = 78;
@@ -1748,7 +1738,6 @@ function OCDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 }
 
 // Here is the code for the otherSizeDialog:
-
 var OSDValid = true;
 
 function OSDReadyOtherSizeDialog(){ // eslint-disable-line no-unused-vars
@@ -1804,7 +1793,6 @@ function OSDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 }
 
 // Here is the code for the insertScreenshotDialog:
-
 var ISDCanInsert = false;
 var ISDCanUseTool = false;
 var ISDAreaSelected = false;
@@ -1830,7 +1818,7 @@ var ISDBackgroundColorDropdown = null;
 function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDCanInsert = false;
   ISDAreaSelected = false;
-  // get thumbnails of each screen/window & insert into the dialog.
+  // Get thumbnails of each screen/window & insert into the dialog.
   desktopCapturer.getSources({ types: ['window', 'screen'], thumbnailSize: { width: 400, height: 400 } }, (error, sources) => {
     if (error){
       alert('Unable to obtain screenshot sources.', 'Error:');
@@ -1887,8 +1875,6 @@ function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
       }
     }
   }, ISDHandleStream, ISDHandleError);
-
-  // console.log(id);
 }
 
 function ISDHandleError(e){
@@ -1896,8 +1882,6 @@ function ISDHandleError(e){
 }
 
 function ISDHandleStream(stream){
-  // console.log('got stream');
-  
   // Create hidden video tag
   var video = document.createElement('video');
   video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
@@ -1963,8 +1947,6 @@ function ISDFixCanvas(){
   var pixelCounter = 0;
   var i = 0;
   
-  // console.log(horizontalPixels.data);
-  
   for (i = 0; i < horizontalPixels.data.length; i += 4){
     if(horizontalPixels.data[i] !== 0 || horizontalPixels.data[i + 1] !== 0 || horizontalPixels.data[i + 2] !== 0){
       xPixelsToCrop = pixelCounter;
@@ -2011,8 +1993,6 @@ function ISDFixCanvas(){
     ISDCanInsert = true;
   };
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
-  
-  // ISDDisplayImageOnCanvas(ISDImageToReturn, ISDImageToReturn.naturalWidth, ISDImageToReturn.naturalHeight);
 }
 
 function ISDAddTouchAndClickEventHandelers(){
@@ -2160,9 +2140,6 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   // Calculate & save scale factor in relation to actual image.
   ISDXScale = ISDImageToReturn.naturalWidth / ISDCanvas.width;
   ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
-  // tool = 'select';
-  // messageDisplayed = false;
-  // chrome.app.window.current().focus();
 }
 
 function ISDGetAvaliableDialogSpace(){
@@ -2175,27 +2152,24 @@ function ISDGetAvaliableDialogSpace(){
 }
 
 function ISDInstrumentDown(x, y){
-  // console.log('down ' + x + ', ' + y);
   ISDCanUseTool = true;
-  ISDSelectMethod(x, y, 'down');
+  ISDSelectFunction(x, y, 'down');
 }
 
 function ISDInstrumentMoved(x, y){
-  // console.log('move ' + x + ', ' + y);
   if(ISDCanUseTool){
-    ISDSelectMethod(x, y, 'move');
+    ISDSelectFunction(x, y, 'move');
   }
 }
 
 function ISDInstrumentUp(x, y){
-  // console.log('up ' + x + ', ' + y);
   if(ISDCanUseTool){
-    ISDSelectMethod(x, y, 'up');
+    ISDSelectFunction(x, y, 'up');
   }
   ISDCanUseTool = false;
 }
 
-function ISDSelectMethod(x, y, phase){
+function ISDSelectFunction(x, y, phase){
   switch(phase){
   case 'down':
     
@@ -2249,7 +2223,7 @@ function ISDSelectMethod(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in ISDSelectMethod: ' + phase);
+    throw new Error('Invalid phase in ISDSelectFunction: ' + phase);
   }
 }
 
@@ -2477,12 +2451,9 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
         alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
       }
       else {
-        // console.log('Some other error: ', err.code);
         throw err;
       }
     });
-  
-    // insertTemplateAsPage(fileName);
     document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   });
 }
@@ -2753,9 +2724,7 @@ function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
 
 
 function pushStateIntoUndoArray(){
-  // console.log(currentPlaceInUndoArray + ' ' + imageArrayForUndo.length);
   if(currentPlaceInUndoArray !== imageArrayForUndo.length - 1){
-    // console.log('just undone and moved on');
     // This means they have just undone something, and are going on from there, so we have to get the remainder
     // of the undo array, (if applicable), and make the undo array just contain that. Then re-set the 
     // currentPlaceInUndoArray to imageArrayForUndo.length - 1, and also push in the current state.
@@ -2778,8 +2747,6 @@ function pushStateIntoUndoArray(){
     imageArrayForUndo.push(tempImageForInserting);
     imageArrayForUndo.shift();
   }
-  
-  // pushDataIntoLocalStorage(context.canvas.toDataURL('image/png'), currentPg - 1, arrayOfCurrentImages.length);
 }
 
 function clearUndoHistory(){
