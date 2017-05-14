@@ -7,7 +7,7 @@
     <!--Note that all of the "onclick" attributes in this file seem to be executing in the same context as the above file.
     Also, I am aware that putting javascript into the HTML is not considered a good practice. However, I am largely ok
     with doing so in this file in cases where only linkages are made to other functions, and in cases where the code
-    that needs to be executed is very small and does not need anything from the main javascript file.-->
+    that needs to be executed is very small and can fit easily into the line of text.-->
     <link type="text/css" rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
@@ -15,17 +15,17 @@
       <ul>
         <!--These are the entries in the top nav bar. They each have to have the transparent image as the
         source because if that is removed, a border will be shown no matter how they are styled in the css-->
-        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog(); unregisterShortcutsOnModalDialogOpen();"><img id="settingsBtn" src="images/icons/transparent.png" alt="settings"></a></li>
-        <li><a href="#" onclick="undoBtnFunction();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="redoBtnFunction();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="copyBtnFunction();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="pasteBtnFunction();"><img class="topLeftButtons" id="pasteBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="drawRectangleBtnFunction();"><img class="topLeftButtons" id="drawRectangleBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="fillRectangleBtnFunction();"><img class="topLeftButtons" id="fillRectangleBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="drawEllipseBtnFunction();"><img class="topLeftButtons" id="drawEllipseBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="fillEllipseBtnFunction();"><img class="topLeftButtons" id="fillEllipseBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="userWantsToClose();"><img class="topRightButtons" id="topRightCloseBtn" src="images/icons/transparent.png"></a></li>
-        <li><a href="#" onclick="ipcRenderer.send('minimize-main-win');"><img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png"></a></li>
+        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog(); unregisterShortcutsOnModalDialogOpen();"><img id="settingsBtn" src="images/icons/transparent.png" alt="settings button"></a></li>
+        <li><a href="#" onclick="undoBtnFunction();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png" alt="undo button"></a></li>
+        <li><a href="#" onclick="redoBtnFunction();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png" alt="redo button"></a></li>
+        <li><a href="#" onclick="copyBtnFunction();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png" alt="copy button"></a></li>
+        <li><a href="#" onclick="pasteBtnFunction();"><img class="topLeftButtons" id="pasteBtn" src="images/icons/transparent.png" alt="paste button"></a></li>
+        <li><a href="#" onclick="drawRectangleBtnFunction();"><img class="topLeftButtons" id="drawRectangleBtn" src="images/icons/transparent.png" alt="draw rectangle button"></a></li>
+        <li><a href="#" onclick="fillRectangleBtnFunction();"><img class="topLeftButtons" id="fillRectangleBtn" src="images/icons/transparent.png" alt="fill rectangle button"></a></li>
+        <li><a href="#" onclick="drawEllipseBtnFunction();"><img class="topLeftButtons" id="drawEllipseBtn" src="images/icons/transparent.png" alt="draw ellipse button"></a></li>
+        <li><a href="#" onclick="fillEllipseBtnFunction();"><img class="topLeftButtons" id="fillEllipseBtn" src="images/icons/transparent.png" alt="fill ellipse button"></a></li>
+        <li><a href="#" onclick="userWantsToClose();"><img class="topRightButtons" id="topRightCloseBtn" src="images/icons/transparent.png" alt="main close button"></a></li>
+        <li><a href="#" onclick="ipcRenderer.send('minimize-main-win');"><img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png" alt="main minimize button"></a></li>
       </ul>
     </div>
     <div>
@@ -117,7 +117,7 @@
     
     <div id="settingsDialog" class="modalDialogs">
       <div>
-        <a id="SDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="SDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="settings dialog close button"></a>
         <h2>Settings:</h2>
         <div class="modalBoxContent">
           <p>Note: Since this app is designed to be portable, these settings will only remain in effect until you close the app. Unfortunately, that means you will need to re-adjust them to your liking every time you start the app. Portability comes with its costs.</p>
@@ -140,7 +140,7 @@
     
     <div id="insertTextDialog" class="modalDialogs">
       <div>
-        <a id="ITDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="ITDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert text dialog close button"></a>
         <h2>Insert Text:</h2>
         <div class="modalBoxContent">
           
@@ -243,7 +243,7 @@
     
     <div id="otherColorDialog" class="modalDialogs">
       <div>
-        <a id="OCDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="OCDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other color dialog close button"></a>
         <h2>Pick a Color:</h2>
         <div class="modalBoxContent">
           
@@ -270,7 +270,7 @@
     
     <div id="otherSizeDialog" class="modalDialogs">
       <div>
-        <a id="OSDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="OSDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other size dialog close button"></a>
         <h2>New Size:</h2>
         <div class="modalBoxContent">
           <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
@@ -296,7 +296,7 @@
     
     <div id="insertScreenshotDialog" class="modalDialogs">
       <div id="ISDMainDiv">
-        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert screenshot dialog close button"></a>
         <h2>Insert Screenshot</h2>
         <div id="ISDMainContentDiv" class="modalBoxContent">
           <!--Here is where the content of the modal box will go:-->
@@ -313,93 +313,93 @@
     
     <div id="otherPageDialog" class="modalDialogs">
       <div>
-        <a id="OPDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png"></a>
+        <a id="OPDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert other page dialog close button"></a>
         <h2>Click/Tap on the template that you would like to insert/use:</h2>
         <div class="modalBoxContent">
           
-          <a onclick="OPDInsertPageFromImage();"><img class="OPDImages" src="images/other_templates/From_Image.png"></a>
+          <a onclick="OPDInsertPageFromImage();"><img class="OPDImages" src="images/other_templates/From_Image.png" alt="Insert Page Using an Image button"></a>
           <p>↑ Insert Page Using an Image</p>
-          <a onclick="OPDInsertColoredPage();"><img class="OPDImages" src="images/other_templates/Colored_Page.png"></a>
+          <a onclick="OPDInsertColoredPage();"><img class="OPDImages" src="images/other_templates/Colored_Page.png" alt="Insert colored page button"></a>
           <p>↑ Colored Page</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Graph_Paper_Page_Smaller_Squares.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Graph_Paper_Page_Smaller_Squares.png" alt="Graph Paper Smaller Squares button"></a>
           <p>↑ Graph Paper Smaller Squares</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Graph_Paper_Page_Larger_Squares.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Graph_Paper_Page_Larger_Squares.png" alt="Graph Paper Larger Squares button"></a>
           <p>↑ Graph Paper Larger Squares</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Paper_Page_Smaller_Squares.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Paper_Page_Smaller_Squares.png" alt="Coordinate Smaller Squares button"></a>
           <p>↑ Coordinate Smaller Squares</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Paper_Page_Larger_Squares.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Paper_Page_Larger_Squares.png" alt="Coordinate Larger Squares button"></a>
           <p>↑ Coordinate Larger Squares</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_Only.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_Only.png" alt="Coordinate Axes Only button"></a>
           <p>↑ Coordinate Axes Only</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_And_Tickmarks.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_And_Tickmarks.png" alt="Coordinate Axes And Tickmarks button"></a>
           <p>↑ Coordinate Axes And Tickmarks</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_And_Tickmarks_Closer_Together.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_And_Tickmarks_Closer_Together.png" alt="Coordinate Axes And Tickmarks Closer Together button"></a>
           <p>↑ Coordinate Axes And Tickmarks Closer Together</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_And_Tickmarks_Further_Apart.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_X_Y_Graph_Page_Axes_And_Tickmarks_Further_Apart.png" alt="Coordinate Axes And Tickmarks Further Apart button"></a>
           <p>↑ Coordinate Axes And Tickmarks Further Apart</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page.png" alt="Stats Graph button"></a>
           <p>↑ Stats Graph</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Smaller_Squares.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Smaller_Squares.png" alt="Stats Graph Smaller Squares button"></a>
           <p>↑ Stats Graph Smaller Squares</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Larger_Squares.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Larger_Squares.png" alt="Stats Graph Larger Squares button"></a>
           <p>↑ Stats Graph Larger Squares</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Axes_Only.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Axes_Only.png" alt="Stats Graph Axes Only button"></a>
           <p>↑ Stats Graph Axes Only</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Tick_Marks_Only.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Tick_Marks_Only.png" alt="Stats Graph Axes And Tickmarks button"></a>
           <p>↑ Stats Graph Axes And Tickmarks</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Tick_Marks_Closer_Together.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Tick_Marks_Closer_Together.png" alt="Stats Graph Axes And Tickmarks Closer Together button"></a>
           <p>↑ Stats Graph Axes And Tickmarks Closer Together</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Tick_Marks_Further_Apart.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Stats_Graph_Page_Tick_Marks_Further_Apart.png" alt="Stats Graph Axes And Tickmarks Further Apart button"></a>
           <p>↑ Stats Graph Axes And Tickmarks Further Apart</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Partial_Page_X_Y_Graph_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Partial_Page_X_Y_Graph_Page.png" alt="Partial Page Coordinate button"></a>
           <p>↑ Partial Page Coordinate</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Partial_Page_Graph_Paper_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Partial_Page_Graph_Paper_Page.png" alt="Partial Page Graph Paper button"></a>
           <p>↑ Partial Page Graph Paper</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/DRT_Problem_Template_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/DRT_Problem_Template_Page.png" alt="DRT Problem Template button"></a>
           <p>↑ DRT Problem Template</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Synthetic_Division_Template_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Synthetic_Division_Template_Page.png" alt="Synthetic Division Template button"></a>
           <p>↑ Synthetic Division Template</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Unit_Circle_No_Values.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Unit_Circle_No_Values.png" alt="Unit Circle No Values button"></a>
           <p>↑ Unit Circle No Values</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Unit_Circle_With_Values.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Unit_Circle_With_Values.png" alt="Unit Circle With Values button"></a>
           <p>↑ Unit Circle With Values</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Cube_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Cube_Page.png" alt="Cube button"></a>
           <p>↑ Cube</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Cuboid_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Cuboid_Page.png" alt="Cuboid button"></a>
           <p>↑ Cuboid</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Upright_Cylinder_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Upright_Cylinder_Page.png" alt="Upright Cylinder button"></a>
           <p>↑ Upright Cylinder</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Sideways_Cylinder_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Sideways_Cylinder_Page.png" alt="Sideways Cylinder button"></a>
           <p>↑ Sideways Cylinder</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Disjoint_Filled_in_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Disjoint_Filled_in_Page.png" alt="Ven 2 Sets Disjoint Filled in button"></a>
           <p>↑ Ven 2 Sets Disjoint Filled in</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Joined_filled_in_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Joined_filled_in_Page.png" alt="Ven 2 Sets Joined Filled in button"></a>
           <p>↑ Ven 2 Sets Joined Filled in</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_3_Sets_Joined_filled_in_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_3_Sets_Joined_filled_in_Page.png" alt="Ven 3 Sets Joined Filled in button"></a>
           <p>↑ Ven 3 Sets Joined Filled in</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Disjoint_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Disjoint_Page.png" alt="Ven 2 Sets Disjoint button"></a>
           <p>↑ Ven 2 Sets Disjoint</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Joined_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_2_Sets_Joined_Page.png" alt="Ven 2 Sets Joined button"></a>
           <p>↑ Ven 2 Sets Joined</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_3_Sets_Joined_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Ven_3_Sets_Joined_Page.png" alt="Ven 3 Sets Joined button"></a>
           <p>↑ Ven 3 Sets Joined</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Circle_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Circle_Page.png" alt="Circle button"></a>
           <p>↑ Circle</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Equalateral_Triangle_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Equalateral_Triangle_Page.png" alt="Equilateral Triangle button"></a>
           <p>↑ Equilateral Triangle</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/45_45_90_Right_Triangle_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/45_45_90_Right_Triangle_Page.png" alt="45 45 90 Right Triangle button"></a>
           <p>↑ 45 45 90 Right Triangle</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/30_60_90_Right_Triangle_Upright_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/30_60_90_Right_Triangle_Upright_Page.png" alt="30 60 90 Right Triangle Upright button"></a>
           <p>↑ 30 60 90 Right Triangle Upright</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/30_60_90_Right_Triangle_Sideways_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/30_60_90_Right_Triangle_Sideways_Page.png" alt="30 60 90 Right Triangle Upright button"></a>
           <p>↑ 30 60 90 Right Triangle Sideways</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Dimond_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Dimond_Page.png" alt="Diamond button"></a>
           <p>↑ Diamond</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Parallelogram_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Parallelogram_Page.png" alt="Parallelogram button"></a>
           <p>↑ Parallelogram</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Rhombus_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Rhombus_Page.png" alt="Rhombus button"></a>
           <p>↑ Rhombus</p>
-          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Lined_Page.png"></a>
+          <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Lined_Page.png" alt="Lined Page button"></a>
           <p>↑ Lined Page</p>
           
           

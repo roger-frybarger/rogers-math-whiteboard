@@ -1614,6 +1614,7 @@ function OCDMouseDown(e){ // eslint-disable-line no-unused-vars
 }
 
 function OCDTouchStart(e){ // eslint-disable-line no-unused-vars
+  console.log(e);
   if(e.touches.length === 1){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
     OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
