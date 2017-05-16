@@ -427,54 +427,92 @@ function initializeEventListenersForCanvas(){
   // These add the event listeners to the canvas, and pass the appropriate information off to the applicable
   // function. I feel that we can safely ignore multi-touch, as the intended audience uses a pen anyway,
   // which is only 1 touch. However, one should also be able to use a mouse if no touch input is available.
-  document.getElementById('canvas1').addEventListener('mousedown', function (e){
-    instrumentDown(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  });
+  //document.getElementById('canvas1').addEventListener('mousedown', function (e){
+    //instrumentDown(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  //});
 
-  document.getElementById('canvas1').addEventListener('touchstart', function (e){
-    if(e.touches.length === 1){
-      instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-      this.offsetTop - topToolbarWidth);
-      e.preventDefault();
-    }
-    else    {
-      // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
-      instrumentUp(prevX, prevY);
-    }
-  });
+  //document.getElementById('canvas1').addEventListener('touchstart', function (e){
+    //if(e.touches.length === 1){
+      //instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+      //this.offsetTop - topToolbarWidth);
+      //e.preventDefault();
+    //}
+    //else    {
+      //// Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+      //instrumentUp(prevX, prevY);
+    //}
+  //});
 
-  document.getElementById('canvas1').addEventListener('mousemove', function (e){
-    instrumentMoved(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  });
+  //document.getElementById('canvas1').addEventListener('mousemove', function (e){
+    //instrumentMoved(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  //});
 
-  document.getElementById('canvas1').addEventListener('touchmove', function (e){
-    instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    this.offsetTop - topToolbarWidth);
+  //document.getElementById('canvas1').addEventListener('touchmove', function (e){
+    //instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    //this.offsetTop - topToolbarWidth);
+    //e.preventDefault();
+  //});
+
+  //document.getElementById('canvas1').addEventListener('mouseup', function (e){
+    //instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  //});
+
+  //document.getElementById('canvas1').addEventListener('mouseleave', function (e){
+    //instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
+  //});
+
+  //document.getElementById('canvas1').addEventListener('touchend', function (e){
+    //instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    //this.offsetTop - topToolbarWidth);
+  //});
+
+  //document.getElementById('canvas1').addEventListener('touchleave', function (e){
+    //instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    //this.offsetTop - topToolbarWidth);
+  //});
+
+  //document.getElementById('canvas1').addEventListener('touchcancel', function (e){
+    //instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
+    //this.offsetTop - topToolbarWidth);
+  //});
+}
+
+// Main canvas mouse down function:
+function MCMDown(e){
+  instrumentDown(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
+}
+
+// Main canvas touch down/start function:
+function MCTDown(e){
+  if(e.touches.length === 1){
+    instrumentDown(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
     e.preventDefault();
-  });
+  }
+  else{
+    // Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
+    instrumentUp(prevX, prevY);
+  }
+}
 
-  document.getElementById('canvas1').addEventListener('mouseup', function (e){
-    instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  });
+// Main canvas mouse moved function:
+function MCMMoved(e){
+  instrumentMoved(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
+}
 
-  document.getElementById('canvas1').addEventListener('mouseleave', function (e){
-    instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  });
+// Main canvas touch moved function:
+function MCTMoved(e){
+  instrumentMoved(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
+  e.preventDefault();
+}
 
-  document.getElementById('canvas1').addEventListener('touchend', function (e){
-    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    this.offsetTop - topToolbarWidth);
-  });
+// Main canvas mouse ended function:
+function MCMEnded(e){
+  instrumentUp(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
+}
 
-  document.getElementById('canvas1').addEventListener('touchleave', function (e){
-    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    this.offsetTop - topToolbarWidth);
-  });
-
-  document.getElementById('canvas1').addEventListener('touchcancel', function (e){
-    instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    this.offsetTop - topToolbarWidth);
-  });
+// Main canvas touch ended function:
+function MCTEnded(e){
+  instrumentUp(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
 }
 
 function setUpGUIOnStartup(){
@@ -518,6 +556,7 @@ function enableRightClickMenu(){
 // touching the main canvas. It then calls other functions that correspond
 // to the applicable tools that are available.
 function instrumentDown(x, y){
+  console.log(x + ', ' + y);
   // Make sure we know that they may have changed the images(s):
   safeToClose = false;
   tempImageForWindowResize = null;
