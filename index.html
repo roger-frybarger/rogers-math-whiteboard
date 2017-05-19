@@ -107,7 +107,13 @@
       <canvas id="eraserCanvas" width="2200" height="1700"></canvas>
     </div>
     
-    <!--Below is the html code for all of the modal dialog boxes that pop up and allow access to functionality not available
+    <!--
+    ******************************************************************************
+    *********                                                           **********
+    *********   Below is the HTML code related to the modal dialogs:    **********
+    *********                                                           **********
+    ******************************************************************************
+    Below is the html code for all of the modal dialog boxes that pop up and allow access to functionality not available
     in the main user interface. These follow a strict naming convention. All ids of all elements related to a particular 
     dialog must start with the initials of the id of that dialog. Any classes must also start with the initials of the id 
     of the applicable dialog unless of course they are meant to be available globally to all dialogs. The dialogs are in order from
@@ -299,7 +305,9 @@
         <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert screenshot dialog close button"></a>
         <h2>Insert Screenshot</h2>
         <div id="ISDMainContentDiv" class="modalBoxContent">
-          <!--Here is where the content of the modal box will go:-->
+          <!--Here is where the content of the modal box will go. Note that here is a case where the canvas that allows
+          the user to select a region of the captured screenshot is added as needed in the javascript. Thus, the event
+          linsteners are also added and removed as needed in the javascript.-->
           <p id="ISDContentHeader">Nothing to display.</p>
           <div id="ISDContentDiv">
           </div>

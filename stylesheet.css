@@ -276,7 +276,9 @@ input[type="number"] {
 
 
 /*
- * Below is the css that describes the modal windows from a general perspective:
+ * **************************************************************************************************
+ * ********* Below is the css that describes the modal windows from a general perspective: **********
+ * **************************************************************************************************
 */
 
 ::-webkit-scrollbar {
@@ -422,6 +424,16 @@ input[type='checkbox']:checked {
   color: white;
 }
 
+
+/*
+ * ******************************************************************************
+ * *********                                                           **********
+ * *********    Below is the css code related to the modal dialogs:    **********
+ * *********                                                           **********
+ * ******************************************************************************
+*/
+
+
 /*
  * Below is the css that is speciffic to the settingsDialog:
 */
@@ -493,7 +505,6 @@ input[type='checkbox']:checked {
 }
 
 #ITDBackspaceBtn {
-  //position: absolute;
   left: 282px;
   bottom: -0px;
   height: 40px;
@@ -501,7 +512,6 @@ input[type='checkbox']:checked {
 }
 
 #ITDClearBtn {
-  //position: absolute;
   left: 420px;
   bottom: -0px;
   height: 40px;

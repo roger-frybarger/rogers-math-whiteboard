@@ -304,7 +304,6 @@ ipcRenderer.on('app-finished-loading', () => {
 
 // This function runs after the initializeCanvas() function finishes its job.
 function continueAfterAppFinishedLoading1(){
-  initializeEventListenersForCanvas();
   setUpGUIOnStartup();
   checkForScreenSizeIssues();
   enableRightClickMenu();
@@ -423,67 +422,13 @@ function initializeCanvas(){
   image.src = 'images/Blank_White_Page.png';
 }
 
-function initializeEventListenersForCanvas(){
-  // These add the event listeners to the canvas, and pass the appropriate information off to the applicable
-  // function. I feel that we can safely ignore multi-touch, as the intended audience uses a pen anyway,
-  // which is only 1 touch. However, one should also be able to use a mouse if no touch input is available.
-  //document.getElementById('canvas1').addEventListener('mousedown', function (e){
-    //instrumentDown(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  //});
-
-  //document.getElementById('canvas1').addEventListener('touchstart', function (e){
-    //if(e.touches.length === 1){
-      //instrumentDown(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-      //this.offsetTop - topToolbarWidth);
-      //e.preventDefault();
-    //}
-    //else    {
-      //// Here we are ignoring multi-touch. It is likely a stray elbow or something anyway, so no real reason to do anything.
-      //instrumentUp(prevX, prevY);
-    //}
-  //});
-
-  //document.getElementById('canvas1').addEventListener('mousemove', function (e){
-    //instrumentMoved(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  //});
-
-  //document.getElementById('canvas1').addEventListener('touchmove', function (e){
-    //instrumentMoved(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    //this.offsetTop - topToolbarWidth);
-    //e.preventDefault();
-  //});
-
-  //document.getElementById('canvas1').addEventListener('mouseup', function (e){
-    //instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  //});
-
-  //document.getElementById('canvas1').addEventListener('mouseleave', function (e){
-    //instrumentUp(e.pageX - this.offsetLeft - SideToolbarWidth, e.pageY - this.offsetTop - topToolbarWidth);
-  //});
-
-  //document.getElementById('canvas1').addEventListener('touchend', function (e){
-    //instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    //this.offsetTop - topToolbarWidth);
-  //});
-
-  //document.getElementById('canvas1').addEventListener('touchleave', function (e){
-    //instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    //this.offsetTop - topToolbarWidth);
-  //});
-
-  //document.getElementById('canvas1').addEventListener('touchcancel', function (e){
-    //instrumentUp(e.changedTouches[0].pageX - this.offsetLeft - SideToolbarWidth, e.changedTouches[0].pageY -
-    //this.offsetTop - topToolbarWidth);
-  //});
-}
-
 // Main canvas mouse down function:
-function MCMDown(e){
+function MCMDown(e){ // eslint-disable-line no-unused-vars
   instrumentDown(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
 }
 
 // Main canvas touch down/start function:
-function MCTDown(e){
+function MCTDown(e){ // eslint-disable-line no-unused-vars
   if(e.touches.length === 1){
     instrumentDown(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
     e.preventDefault();
@@ -495,23 +440,23 @@ function MCTDown(e){
 }
 
 // Main canvas mouse moved function:
-function MCMMoved(e){
+function MCMMoved(e){ // eslint-disable-line no-unused-vars
   instrumentMoved(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
 }
 
 // Main canvas touch moved function:
-function MCTMoved(e){
+function MCTMoved(e){ // eslint-disable-line no-unused-vars
   instrumentMoved(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
   e.preventDefault();
 }
 
 // Main canvas mouse ended function:
-function MCMEnded(e){
+function MCMEnded(e){ // eslint-disable-line no-unused-vars
   instrumentUp(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
 }
 
 // Main canvas touch ended function:
-function MCTEnded(e){
+function MCTEnded(e){ // eslint-disable-line no-unused-vars
   instrumentUp(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
 }
 
@@ -556,7 +501,6 @@ function enableRightClickMenu(){
 // touching the main canvas. It then calls other functions that correspond
 // to the applicable tools that are available.
 function instrumentDown(x, y){
-  console.log(x + ', ' + y);
   // Make sure we know that they may have changed the images(s):
   safeToClose = false;
   tempImageForWindowResize = null;
@@ -1653,7 +1597,6 @@ function OCDMouseDown(e){ // eslint-disable-line no-unused-vars
 }
 
 function OCDTouchStart(e){ // eslint-disable-line no-unused-vars
-  console.log(e);
   if(e.touches.length === 1){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
     OCDOnInstrumentDown(e.changedTouches[0].pageX - offset.left, e.changedTouches[0].pageY - offset.top);
@@ -2035,6 +1978,9 @@ function ISDFixCanvas(){
   ISDImageToReturn.src = ISDContext.canvas.toDataURL('image/png');
 }
 
+// Here is the function that adds the event handlers for the canvas that allows the user to select a region of
+// the captured screenshot to insert. This is an important exception from the formality of making these linkages
+// inside of the HTML.
 function ISDAddTouchAndClickEventHandelers(){
   ISDCanvas.addEventListener('mousedown', function (e){
     var offset = getCoords(ISDCanvas);
