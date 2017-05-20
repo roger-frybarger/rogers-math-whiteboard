@@ -353,25 +353,25 @@ input[type='checkbox']:checked {
 .modalBoxContent {
   max-height: 50vh;
   overflow: auto;
-  padding: 20px 20px 0px 20px;
+  padding: 20px 20px 0 20px;
   border: 2px solid black;
 }
 
 .modalDialogs h2 {
-  padding: 0px 48px 0px 20px;
+  padding: 0 48px 0 20px;
 }
 
 .modalDialogsCloseBtns {
   background: #428cFF;
   position: absolute;
   text-align: center;
-  right: -0px;
-  top: -0px;
+  right: 0;
+  top: 0;
   height: 40px;
   width: 48px;
   text-decoration: none;
   font-weight: bold;
-  border-radius: 0px 5px 0px 0px;
+  border-radius: 0 5px 0 0;
 }
 
 .modalDialogsCloseBtns:hover {
@@ -384,19 +384,19 @@ input[type='checkbox']:checked {
 }
 
 .modalDialogsCloseBtns img:hover {
-  background-position: -48px 0px;
+  background-position: -48px 0;
 }
 
 .modalBoxOkBtns {
   background: #428cFF;
   position: absolute;
   text-align: center;
-  right: -0px;
-  bottom: -0px;
+  right: 0;
+  bottom: 0;
   height: 40px;
   width: 48px;
   text-decoration: none;
-  border-radius: 0px 0px 5px 0px;
+  border-radius: 0 0 5px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -411,7 +411,7 @@ input[type='checkbox']:checked {
   background: #3C7FE7;
   padding: 11px 25px 11px 25px;
   border: 1px solid transparent;
-  margin: 0px 3px 0px 3px;
+  margin: 0 3px 0 3px;
   line-height: 60px;
   font-size: 20px;
 }
@@ -436,11 +436,11 @@ input[type='checkbox']:checked {
 */
 
 #SDUnorderedList {
-  list-style-type:none;
+  list-style-type: none;
 }
 
 #SDUnorderedList li {
-  padding: 15px 0px 15px 0px;
+  padding: 15px 0 15px 0;
 }
 
 /*
@@ -466,8 +466,8 @@ input[type='checkbox']:checked {
 #ITDTextLabel {
   position: absolute;
   left: 20px;
-  margin: 0px;
-  bottom: -0px;
+  margin: 0;
+  bottom: 0;
   height: 40px;
   width: 48px;
   display: flex;
@@ -479,7 +479,7 @@ input[type='checkbox']:checked {
 #ITDTextBox {
   position: absolute;
   left: 70px;
-  bottom: -0px;
+  bottom: 0;
   height: 34px;
   width: 200px;
   font-size: 20px;
@@ -487,14 +487,14 @@ input[type='checkbox']:checked {
 
 #ITDBackspaceBtn {
   left: 282px;
-  bottom: -0px;
+  bottom: 0;
   height: 40px;
   width: 130px;
 }
 
 #ITDClearBtn {
   left: 420px;
-  bottom: -0px;
+  bottom: 0;
   height: 40px;
   width: 90px;
 }
@@ -507,12 +507,12 @@ input[type='checkbox']:checked {
 #OCDColorChosenLabel {
   position: absolute;
   text-align: center;
-  left: -0px;
-  bottom: -0px;
+  left: 0;
+  bottom: 0;
   height: 40px;
   width: 140px;
-  margin: 0px;
-  border-radius: 0px 0px 0px 5px;
+  margin: 0;
+  border-radius: 0 0 0 5px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -522,7 +522,7 @@ input[type='checkbox']:checked {
   position: absolute;
   text-align: center;
   left: 140px;
-  bottom: -0px;
+  bottom: 0;
   height: 40px;
   width: 200px;
 }
