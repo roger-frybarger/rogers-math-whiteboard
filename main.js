@@ -18,7 +18,6 @@ let win;
 // This is critical for enabling touch events:
 app.commandLine.appendSwitch('touch-events', 'enabled');
 
-
 var shouldQuit = app.makeSingleInstance(function (){
   // Someone tried to run a second instance, we should focus our window.
   if(win){
