@@ -4,6 +4,7 @@ const url = require('url');
 const ipcMain = require('electron').ipcMain;
 const globalShortcut = require('electron').globalShortcut;
 const dialog = require('electron').dialog;
+const shell = require('electron').shell;
 
 const appVersion = app.getVersion();
 const osModule = require('os');
@@ -77,6 +78,11 @@ function createWindow(){
     setTimeout(function (){
       win.webContents.send('app-finished-loading');
     },500);
+  });
+  
+  win.webContents.on('new-window', function (event, url){
+    event.preventDefault();
+    open(url);
   });
   
   win.on('focus', registerShortcuts);
@@ -185,3 +191,7 @@ ipcMain.on('close-dev-tools', () => {
 ipcMain.on('user-doesnt-want-error-messages', () => {
   userWantsErrorMessagesMain = false;
 });
+
+function open(url){
+  shell.openExternal(url);
+}

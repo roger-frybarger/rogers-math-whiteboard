@@ -1464,6 +1464,19 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
+
+
+// Here is the code for the Open Images Dialog:
+var OIDHalfMaxPages;
+
+function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
+  OIDHalfMaxPages = Math.round(maxNumberOfPages / 2);
+  // eslint-disable-next-line max-len
+  document.getElementById('OIDImportWarningLine').innerHTML = 'If you try to open/import more than ' + OIDHalfMaxPages + ' images/slides at once, you will find that only the first ' + OIDHalfMaxPages + ' are imported. If you need to import more than ' + OIDHalfMaxPages + ' images/slides, you will need to break them up into sets of ' + OIDHalfMaxPages + ' each. However, remember that few audiences can remain attentive after viewing ' + OIDHalfMaxPages + ' slides in one sitting. Thus; this limit provides a convenient point for a short break if nothing else.';
+}
+
+
+
 // Here is the code for the insertTextDialog:
 var ITDValid = true;
 

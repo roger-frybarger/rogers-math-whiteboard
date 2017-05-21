@@ -421,6 +421,26 @@ input[type='checkbox']:checked {
   color: white;
 }
 
+/*
+ * The two classes below are avaliable so that if a modal dialog needs extra bottom buttons,
+ * it can simply use them instead of re-inventing the wheel.
+ */
+
+.extraBottomButtons {
+  background: #3C7FE7;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  position: absolute;
+}
+
+.extraBottomButtons:hover {
+  background: #0000FF;
+  color: white;
+}
 
 /*
  * **********************************************************************************
@@ -444,24 +464,40 @@ input[type='checkbox']:checked {
 }
 
 /*
- * Below is the css that is speciffic to the insertTextDialog:
+ * Below is the css that is speciffic to the openImagesDialog:
 */
 
-.ITDBtn {
-  background: #3C7FE7;
-  text-align: center;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  position: absolute;
+#OIDOrderedList {
+  list-style-type: decimal;
+  margin: 10px 30px 10px 10px;
 }
 
-.ITDBtn:hover {
-  background: #0000FF;
-  color: white;
+#OIDOrderedList li {
+  margin: 10px 0;
 }
+
+#OIDBrowseBtn {
+  left: 20px;
+  bottom: 0;
+  height: 40px;
+  width: 106px;
+}
+
+#OIDIgnoreThumbnailsCheckbox {
+  position: absolute;
+  left: 136px;
+  bottom: 0;
+}
+
+#OIDIgnoreThumbnailsCheckboxLabel {
+  position: absolute;
+  left: 210px;
+  bottom: 0;
+}
+
+/*
+ * Below is the css that is speciffic to the insertTextDialog:
+*/
 
 #ITDTextLabel {
   position: absolute;

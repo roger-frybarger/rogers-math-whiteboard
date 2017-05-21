@@ -39,7 +39,7 @@
           <a class="dropbtn" onclick="fileBtnFunction();" id="fileBtn">File</a>
             <div class="dropdown-content" id="fileDropdown">
               <a id="reMaximizeBtn" onclick="ipcRenderer.send('maximize-main-win');">Re-Maximize</a>
-              <a id="openImagesBtn">Open Images</a>
+              <a href="#openImagesDialog" onclick="OIDReadyOpenImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="openImagesBtn">Open Images</a>
               <a id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
@@ -148,6 +148,41 @@
       </div>
     </div>
     
+    <div id="openImagesDialog" class="modalDialogs">
+      <div>
+        <a id="OIDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="open images dialog close button"></a>
+        <h2>Open Images</h2>
+        <div class="modalBoxContent">
+          
+          <p><strong>If you have not already done so, please read through the following notes about how this program opens images:</strong></p>
+          
+          <ol id="OIDOrderedList">
+            <li>It is possible to import PowerPoint content into this program. The basic steps to accomplish this are:</li>
+            <ol>
+              <li>Create a temporary folder somewhere on your computer.</li>
+              <li>Open the file that you wish to import using PowerPoint or LibreOffice/OpenOffice Impress.</li>
+              <li>If you are using PowerPoint, save the file into the temporary folder using the PNG format and specify that you wish to export all the slides if it asks you. <br>If you are using LibreOffice/OpenOffice Impress, Export the document into the temporary folder using the HTML format, and specifying PNG images with the largest resolution available. (The HTML Design name does not matter.)</li>
+              <li>Open Roger's Math Whiteboard, (This program), and import all the images in the temporary folder, or a sub-folder if applicable, using this window.</li>
+              <li>Once you have successfully imported all the images, the temporary folder, and its contents, can be deleted.</li>
+              <li>Need more detail? Here are two videos showing this process using <a href="https://youtu.be/ux_Qv1wbVFs" target="_blank" >PowerPoint</a> and <a href="https://youtu.be/xQPksViGtEM" target="_blank" >LibreOffice/OpenOffice Impress</a></li>
+            </ol>
+            <!--Note that the inner html of the line below is assigned as needed via javascript.
+            The number of images that can be opened needs to be half of the maxPages value, so
+            that needs to be calculated in order to display the text.-->
+            <li id="OIDImportWarningLine"></li>
+            <li>Also remember that Image files can be quite large. Thus; depending on the size and quantity of files you try to open, and the speed of your computer, this process may take some time.</li>
+            <li>Since each image that you select will be opened as a page, you will need to be aware of the order in which they are selected. If they are not in the correct order when you import them, the pages will probably be out of order. Look for "Order by" or "Sort by" on the "Open Files" window to correct this sorting order.</li>
+            <li>Remember that only PNG files will be imported into this program. All other files, including images that are not in PNG format, will be ignored even if you select them.</li>
+            <li>For reference, the keyboard shortcut to select all files is: ctrl+a  This means while holding down the ctrl key, press the letter "A." Once you see all the files selected, you can release both keys. Replace ctrl with Command if you are on a Mac.<br><br><br></li>
+          </ol>
+          
+        </div>
+        <a class="extraBottomButtons" id="OIDBrowseBtn" onclick="">Browse</a>
+        <input id="OIDIgnoreThumbnailsCheckbox" type="checkbox" checked>
+        <p id="OIDIgnoreThumbnailsCheckboxLabel">Ignore files that start with "thumb"</p>
+      </div>
+    </div>
+    
     <!--Here is the insert text dialog-->
     
     <div id="insertTextDialog" class="modalDialogs">
@@ -245,8 +280,8 @@
         </div>
         <p id="ITDTextLabel">Text:</p>
         <input type="text" oninput="ITDValidationFunction();" onkeydown="ITDCheckForEnter(event);" id="ITDTextBox" size="20" autofocus>
-        <a class="ITDBtn" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
-        <a class="ITDBtn" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
+        <a class="extraBottomButtons" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
+        <a class="extraBottomButtons" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
         <a onclick="ITDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
       </div>
     </div>
