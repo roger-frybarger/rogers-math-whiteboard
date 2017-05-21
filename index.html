@@ -7,7 +7,11 @@
     <!--Note that all of the "onclick" attributes in this file seem to be executing in the same context as the above file.
     Also, I am aware that putting javascript into the HTML is not considered a good practice. However, I am largely ok
     with doing so in this file in cases where only linkages are made to other functions, and in cases where the code
-    that needs to be executed is very small and can fit easily into the line of text.-->
+    that needs to be executed is very small and can fit easily into the line of text. Furthermore, the standard practice
+    that I have been following is to put as many linkages in this html as is possible. That way, if later on someone
+    needs to know what happens when x button is clicked, they can look in this file first, then follow the method
+    calls as needed. In cases when this standard does not apply, a comment should indicate the exception and the reasoning
+    behind the exception.-->
     <link type="text/css" rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
@@ -28,6 +32,7 @@
         <li><a href="#" onclick="ipcRenderer.send('minimize-main-win');"><img class="topRightButtons" id="topRightMinimizeBtn" src="images/icons/transparent.png" alt="main minimize button"></a></li>
       </ul>
     </div>
+    <!--These are the entries in the side bar.-->
     <div>
       <ul id="verticalButtonBar">
         <li class="dropdown">
@@ -100,6 +105,7 @@
     <div id="totalPagesDivID">
       Total Pages: 1
     </div>
+    <!--Here is the main canvas and the eraser canvas. The eraser canvas is hidden off screen, but is necessary for the eraser.-->
     <div id="canvasDiv">
       <canvas id="canvas1" onmousedown="MCMDown(event);" ontouchstart="MCTDown(event);" onmousemove="MCMMoved(event);" ontouchmove="MCTMoved(event);" onmouseup="MCMEnded(event);" onmouseleave="MCMEnded(event);" ontouchend="MCTEnded(event);" ontouchleave="MCTEnded(event);" ontouchcancel="MCTEnded(event);" width="2200" height="1700"></canvas>
     </div>
@@ -149,7 +155,7 @@
         <a id="ITDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert text dialog close button"></a>
         <h2>Insert Text:</h2>
         <div class="modalBoxContent">
-          
+          <!--All of these are the buttons that insert various symbols into the text box when clicked:-->
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">+</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">-</a>
           <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8226;</a>
@@ -305,9 +311,11 @@
         <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert screenshot dialog close button"></a>
         <h2>Insert Screenshot</h2>
         <div id="ISDMainContentDiv" class="modalBoxContent">
-          <!--Here is where the content of the modal box will go. Note that here is a case where the canvas that allows
+          <!--Here is where the content of the modal box will go. Note that this is a case where the canvas that allows
           the user to select a region of the captured screenshot is added as needed in the javascript. Thus, the event
-          linsteners are also added and removed as needed in the javascript.-->
+          listeners are also added and removed as needed in the javascript as well. The canvas gets added to the page
+          in the ISDReadyForCroping() function, and the event listeners get added in the
+          ISDAddTouchAndClickEventHandelers() function. They get removed in the ISDCleanupFunction() function.-->
           <p id="ISDContentHeader">Nothing to display.</p>
           <div id="ISDContentDiv">
           </div>
@@ -325,10 +333,13 @@
         <h2>Click/Tap on the template that you would like to insert/use:</h2>
         <div class="modalBoxContent">
           
+          <!--These are all of the templates/options that can be inserted/used. The uppermost ones call functions as
+          opposed to inserting the applicable template.-->
           <a onclick="OPDInsertPageFromImage();"><img class="OPDImages" src="images/other_templates/From_Image.png" alt="Insert Page Using an Image button"></a>
           <p>↑ Insert Page Using an Image</p>
           <a onclick="OPDInsertColoredPage();"><img class="OPDImages" src="images/other_templates/Colored_Page.png" alt="Insert colored page button"></a>
           <p>↑ Colored Page</p>
+          <!--From here on down, clicking a particular image will simply insert the applicable template.-->
           <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Graph_Paper_Page_Smaller_Squares.png" alt="Graph Paper Smaller Squares button"></a>
           <p>↑ Graph Paper Smaller Squares</p>
           <a onclick="OPDInsertPage(event);"><img class="OPDImages" src="images/other_templates/Blank_Graph_Paper_Page_Larger_Squares.png" alt="Graph Paper Larger Squares button"></a>

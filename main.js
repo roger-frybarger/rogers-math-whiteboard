@@ -35,7 +35,7 @@ if (shouldQuit){
 
 process.on('uncaughtException', function (err){
   if(userWantsErrorMessagesMain){
-    var stk = 'Empty :(';
+    var stk = 'Empty :('; // ----Visible!
     if(err !== null && typeof err !== 'undefined'){
       stk = err.stack;
     }

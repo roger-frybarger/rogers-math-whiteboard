@@ -29,7 +29,7 @@ var userWantsErrorMessages = true;
 
 process.on('uncaughtException', function (err){
   if(userWantsErrorMessages){
-    var stk = 'Empty :(';
+    var stk = 'Empty :('; // ----Visible!
     if(err !== null && typeof err !== 'undefined'){
       stk = err.stack;
     }
