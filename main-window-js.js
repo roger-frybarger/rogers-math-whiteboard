@@ -8,6 +8,7 @@ var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a 
 // it for dialog boxes.
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
+const path = require('path');
 var fs = require('fs');
 
 // This enables the right-click menu over the text boxes. I found it at:
@@ -1472,7 +1473,61 @@ var OIDHalfMaxPages;
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   OIDHalfMaxPages = Math.round(maxNumberOfPages / 2);
   // eslint-disable-next-line max-len
-  document.getElementById('OIDImportWarningLine').innerHTML = 'If you try to open/import more than ' + OIDHalfMaxPages + ' images/slides at once, you will find that only the first ' + OIDHalfMaxPages + ' are imported. If you need to import more than ' + OIDHalfMaxPages + ' images/slides, you will need to break them up into sets of ' + OIDHalfMaxPages + ' each. However, remember that few audiences can remain attentive after viewing ' + OIDHalfMaxPages + ' slides in one sitting. Thus; this limit provides a convenient point for a short break if nothing else.';
+  document.getElementById('OIDImportWarningLine').innerHTML = 'If you try to open/import more than ' + OIDHalfMaxPages + ' images/slides at once, you will find that only the first ' + OIDHalfMaxPages + ' are imported. If you need to import more than ' + OIDHalfMaxPages + ' images/slides, you will need to break them up into sets of ' + OIDHalfMaxPages + ' each. However, remember that few audiences can remain attentive after viewing ' + OIDHalfMaxPages + ' slides in one sitting. Thus; this limit provides a convenient point for a short break if nothing else. Also note that this limit can be adjusted by changing the "Max Pages Allowed" parameter in the settings. It will always be about half of this value.';
+}
+
+function OIDBrowseBtnFunction(){ // eslint-disable-line no-unused-vars
+  dialog.showOpenDialog(theMainWindow, { title: 'Open Images', filters: [
+    { name: 'Image', extensions: ['png'] } // ----Visible!
+  ], properties: ['openFile', 'multiSelections'] }, function (fileNames){
+    if (typeof fileNames === 'undefined' || fileNames === null){
+      return;
+    }
+    
+    //console.log(fileNames);
+    
+    var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
+    
+    for(var i = 0; i < fileNames.length; ++i){
+      if(excludeThumbnails){
+        // If we are excluding thumbnails, then we will get the basename, check it for thumb, and then continue if 
+        // thumb is not found.
+        if(path.basename(fileNames[i]).substring(0, 5) !== 'thumb'){
+          // TODO: Here is where we check that the file exists & add it to the array.
+          //console.log(fileNames[i]);
+        }
+      }
+      else{
+        // If we are not excluding thumbnails, then we simply check that the file exists & seems readable.
+      }
+    }
+    
+    //var fileName = fileNames[0];
+    // Now we check to see if the file exists before loading it in.
+    
+    //fs.stat(fileName, function (err, stats){
+      //if(err === null){
+        //if(stats.size < 1){
+          //alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
+        //}
+        //else if(stats.size > 25000000){
+          //// eslint-disable-next-line max-len
+          //alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
+        //}
+        //else{
+          //insertTemplateAsPage(fileName);
+        //}
+      //}
+      //else if(err.code === 'ENOENT'){
+        //// file does not exist
+        //alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
+      //}
+      //else {
+        //throw err;
+      //}
+    //});
+    document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+  });
 }
 
 

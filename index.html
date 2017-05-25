@@ -164,20 +164,21 @@
               <li>If you are using PowerPoint, save the file into the temporary folder using the PNG format and specify that you wish to export all the slides if it asks you. <br>If you are using LibreOffice/OpenOffice Impress, Export the document into the temporary folder using the HTML format, and specifying PNG images with the largest resolution available. (The HTML Design name does not matter.)</li>
               <li>Open Roger's Math Whiteboard, (This program), and import all the images in the temporary folder, or a sub-folder if applicable, using this window.</li>
               <li>Once you have successfully imported all the images, the temporary folder, and its contents, can be deleted.</li>
-              <li>Need more detail? Here are two videos showing this process using <a href="https://youtu.be/ux_Qv1wbVFs" target="_blank" >PowerPoint</a> and <a href="https://youtu.be/xQPksViGtEM" target="_blank" >LibreOffice/OpenOffice Impress</a></li>
+              <!--TODO: Fill in the hrefs below with the correct urls of new youtube videos.-->
+              <li>Need more detail? Here are two videos showing this process using <a href="#" target="_blank" >PowerPoint</a> and <a href="#" target="_blank" >LibreOffice/OpenOffice Impress</a></li>
             </ol>
             <!--Note that the inner html of the line below is assigned as needed via javascript.
             The number of images that can be opened needs to be half of the maxPages value, so
             that needs to be calculated in order to display the text.-->
             <li id="OIDImportWarningLine"></li>
             <li>Also remember that Image files can be quite large. Thus; depending on the size and quantity of files you try to open, and the speed of your computer, this process may take some time.</li>
-            <li>Since each image that you select will be opened as a page, you will need to be aware of the order in which they are selected. If they are not in the correct order when you import them, the pages will probably be out of order. Look for "Order by" or "Sort by" on the "Open Files" window to correct this sorting order.</li>
+            <li>Since each image that you select will be opened as a page, you will need to be aware of the order in which they are selected. If they are not in the correct order when you import them, the pages will probably be out of order. Look for "Order by" or "Sort by" on the "Open Files" window to correct this sorting order. Also note that you can import individual images if needed. To do this use the "Insert Page" menu, choose "Other", and then choose "From Image."</li>
             <li>Remember that only PNG files will be imported into this program. All other files, including images that are not in PNG format, will be ignored even if you select them.</li>
             <li>For reference, the keyboard shortcut to select all files is: ctrl+a  This means while holding down the ctrl key, press the letter "A." Once you see all the files selected, you can release both keys. Replace ctrl with Command if you are on a Mac.<br><br><br></li>
           </ol>
           
         </div>
-        <a class="extraBottomButtons" id="OIDBrowseBtn" onclick="">Browse</a>
+        <a class="extraBottomButtons" id="OIDBrowseBtn" onclick="OIDBrowseBtnFunction();">Browse</a>
         <input id="OIDIgnoreThumbnailsCheckbox" type="checkbox" checked>
         <p id="OIDIgnoreThumbnailsCheckboxLabel">Ignore files that start with "thumb"</p>
       </div>
