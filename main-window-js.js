@@ -1469,6 +1469,11 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 
 // Here is the code for the Open Images Dialog:
 var OIDHalfMaxPages;
+var OIDFilesArray = null;
+var OIDSkippedForBad;
+var OIDSkippedForTooLarge;
+var OIDSkippedForNotFound;
+var OIDLoaded;
 
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   OIDHalfMaxPages = Math.round(maxNumberOfPages / 2);
@@ -1487,47 +1492,104 @@ function OIDBrowseBtnFunction(){ // eslint-disable-line no-unused-vars
     //console.log(fileNames);
     
     var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
+    OIDFilesArray = null;
+    OIDFilesArray = [];
+    OIDSkippedForBad = 0;
+    OIDSkippedForTooLarge = 0;
+    OIDSkippedForNotFound = 0;
+    OIDLoaded = 0;
     
-    for(var i = 0; i < fileNames.length; ++i){
-      if(excludeThumbnails){
-        // If we are excluding thumbnails, then we will get the basename, check it for thumb, and then continue if 
-        // thumb is not found.
+    var orgFilNum = 0;
+    
+    if(excludeThumbnails){
+      // If we are excluding thumbnails, then we will go through the filenNames array, and...
+      for(var i = 0; i < fileNames.length; ++i){
+        // Check the basename for thumb...
         if(path.basename(fileNames[i]).substring(0, 5) !== 'thumb'){
-          // TODO: Here is where we check that the file exists & add it to the array.
-          //console.log(fileNames[i]);
+          // And if it isn't found, we will push the entry into the array.
+          OIDFilesArray.push({orgFileIndex: orgFilNum, img: fileNames[i]});
+          ++orgFilNum;
         }
       }
-      else{
-        // If we are not excluding thumbnails, then we simply check that the file exists & seems readable.
+    }
+    else{
+      // If we are not excluding thumbnails, then we will go through the filenNames array, and...
+      for(var i = 0; i < fileNames.length; ++i){
+        // Simply push the entry into the array.
+        OIDFilesArray.push({orgFileIndex: orgFilNum, img: fileNames[i]});
+        ++orgFilNum;
       }
     }
     
-    //var fileName = fileNames[0];
-    // Now we check to see if the file exists before loading it in.
+    OIDCleanArray();
     
-    //fs.stat(fileName, function (err, stats){
+    document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+  });
+}
+
+function OIDCleanArray(){
+  
+  //for(var i = 0; i < OIDFilesArray.length; ++i){
+    //fs.stat(OIDFilesArray[i].img, function (err, stats){
       //if(err === null){
+        //console.log(stats.size);
         //if(stats.size < 1){
-          //alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
+          //// If the file has a size of 0, then there is something wrong with it.
+          //// Remove it from the list and increment OIDSkippedForBad.
+          //OIDFilesArray.splice(i, 1);
+          //++OIDSkippedForBad;
         //}
         //else if(stats.size > 25000000){
-          //// eslint-disable-next-line max-len
-          //alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
-        //}
-        //else{
-          //insertTemplateAsPage(fileName);
+          //// If the file is too large, we will remove it from the list and increment OIDSkippedForTooLarge
+          //OIDFilesArray.splice(i, 1);
+          //++OIDSkippedForTooLarge;
         //}
       //}
       //else if(err.code === 'ENOENT'){
-        //// file does not exist
-        //alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
+        //// If the file does not exist, remove it from the list and increment OIDSkippedForNotFound
+        //OIDFilesArray.splice(i, 1);
+        //++OIDSkippedForNotFound;
       //}
-      //else {
+      //else{
         //throw err;
       //}
     //});
-    document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
-  });
+  //}
+  
+  for(var i = 0; i < OIDFilesArray.length; ++i){
+    
+    //fs.readFile(OIDFilesArray[i].img, 'base64', OIDHandleFile(err, data, OIDFilesArray[i].orgFileIndex));
+    var reader = new FileReader();
+    reader.onload = function(e){
+      console.log('File Loaded.');
+    }
+    //reader.readAsDataURL(OIDFilesArray.img);
+    //console.log(reader);
+    
+  }
+  
+  //OIDFilesArray.sort(OIDCompare);
+  //console.log(OIDFilesArray);
+}
+
+function OIDHandleFile(err, data, num){
+  console.log(arguments);
+  if (err) {
+    console.log(err);
+  }
+  else{
+    //console.log(data);
+  }
+}
+
+function OIDCompare(a,b){
+  if (a.orgFileIndex < b.orgFileIndex){
+    return -1;
+  }
+  if (a.orgFileIndex > b.orgFileIndex){
+    return 1;
+  }
+  return 0;
 }
 
 
@@ -2856,4 +2918,6 @@ function getCoords(elem){ // cross browser version
 
   return { top: Math.round(top), left: Math.round(left) };
 }
+
+
 
