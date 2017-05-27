@@ -173,12 +173,12 @@
             <li id="OIDImportWarningLine"></li>
             <li>Also remember that Image files can be quite large. Thus; depending on the size and quantity of files you try to open, and the speed of your computer, this process may take some time.</li>
             <li>Since each image that you select will be opened as a page, you will need to be aware of the order in which they are selected. If they are not in the correct order when you import them, the pages will probably be out of order. Look for "Order by" or "Sort by" on the "Open Files" window to correct this sorting order. Also note that you can import individual images if needed. To do this use the "Insert Page" menu, choose "Other", and then choose "From Image."</li>
-            <li>Remember that only PNG files will be imported into this program. All other files, including images that are not in PNG format, will be ignored even if you select them.</li>
+            <li>Remember that only valid PNG files smaller than 25MB in size will be imported into this program. All other files, including images that are not in PNG format, will be ignored even if you select them.</li>
             <li>For reference, the keyboard shortcut to select all files is: ctrl+a  This means while holding down the ctrl key, press the letter "A." Once you see all the files selected, you can release both keys. Replace ctrl with Command if you are on a Mac.<br><br><br></li>
           </ol>
           
         </div>
-        <input id="OIDChooseFilesBtn" type="file" onchange="OIDFilesSelectedFunction();" accept="image/png" multiple>
+        <input id="OIDChooseFilesBtn" type="file" onchange="OIDFilesSelectedFunction();" oninput="OIDTest();" accept="image/png" multiple>
         <!--<a class="extraBottomButtons" id="OIDBrowseBtn" onclick="OIDBrowseBtnFunction();">Browse</a>-->
         <input id="OIDIgnoreThumbnailsCheckbox" type="checkbox" checked>
         <p id="OIDIgnoreThumbnailsCheckboxLabel">Ignore files that start with "thumb"</p>

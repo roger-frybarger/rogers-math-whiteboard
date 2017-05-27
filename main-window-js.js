@@ -1043,7 +1043,7 @@ function userWantsToClose(){
   if(!safeToClose){
     ipcRenderer.send('focus-main-win');
     // eslint-disable-next-line max-len
-    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
       
     if(ret === 0){
       ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
@@ -1470,13 +1470,18 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 // Here is the code for the Open Images Dialog:
 var OIDHalfMaxPages;
 var OIDFilesArray = null;
+var OIDTempFilesArray = null;
 var OIDSkippedForBad;
 var OIDSkippedForTooLarge;
 var OIDSkippedForNotFound;
 var OIDLoaded;
+var OIDFilesHandeled;
+var OIDFilesToHandle;
 
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   OIDHalfMaxPages = Math.round(maxNumberOfPages / 2);
+  // Clear out any files that they chose the last time they opened the dialog.
+  document.getElementById('OIDChooseFilesBtn').value = '';
   // eslint-disable-next-line max-len
   document.getElementById('OIDImportWarningLine').innerHTML = 'If you try to open/import more than ' + OIDHalfMaxPages + ' images/slides at once, you will find that only the first ' + OIDHalfMaxPages + ' are imported. If you need to import more than ' + OIDHalfMaxPages + ' images/slides, you will need to break them up into sets of ' + OIDHalfMaxPages + ' each. However, remember that few audiences can remain attentive after viewing ' + OIDHalfMaxPages + ' slides in one sitting. Thus; this limit provides a convenient point for a short break if nothing else. Also note that this limit can be adjusted by changing the "Max Pages Allowed" parameter in the settings. It will always be about half of this value.';
 }
@@ -1498,6 +1503,8 @@ function OIDBrowseBtnFunction(){ // eslint-disable-line no-unused-vars
     OIDSkippedForTooLarge = 0;
     OIDSkippedForNotFound = 0;
     OIDLoaded = 0;
+    OIDFilesHandeled = 0;
+    OIDFilesToHandle = 0;
     
     var orgFilNum = 0;
     
@@ -1527,6 +1534,10 @@ function OIDBrowseBtnFunction(){ // eslint-disable-line no-unused-vars
   });
 }
 
+function OIDTest(){
+  console.log('OIDTest');
+}
+
 function OIDFilesSelectedFunction(){
   var files = document.getElementById('OIDChooseFilesBtn').files;
   // First we will check to see if the user selected any files:
@@ -1534,14 +1545,18 @@ function OIDFilesSelectedFunction(){
     // Now that we know they did select one or more files, let's see if there are unsaved changs to deal with:
     if(safeToClose){
       // Ok, so now we can continue safely:
+      //console.log(files);
+      OIDCleanArray(files);
     }
     else{
       // Here we have to ask the user if they want to save their changes:
       // eslint-disable-next-line max-len
-      var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
+      var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any changes\nmade to the current set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
         
       if(ret === 0){
-        // Here we can continue anyway because they said it is ok.
+        // Here we can continue anyway because the user said it is ok.
+        //console.log(files);
+        OIDCleanArray(files);
       }
       
     }
@@ -1549,49 +1564,54 @@ function OIDFilesSelectedFunction(){
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
-function OIDCleanArray(){
+function OIDCleanArray(filesArray){
   
-  //for(var i = 0; i < OIDFilesArray.length; ++i){
-    //fs.stat(OIDFilesArray[i].img, function (err, stats){
-      //if(err === null){
-        //console.log(stats.size);
-        //if(stats.size < 1){
-          //// If the file has a size of 0, then there is something wrong with it.
-          //// Remove it from the list and increment OIDSkippedForBad.
-          //OIDFilesArray.splice(i, 1);
-          //++OIDSkippedForBad;
-        //}
-        //else if(stats.size > 25000000){
-          //// If the file is too large, we will remove it from the list and increment OIDSkippedForTooLarge
-          //OIDFilesArray.splice(i, 1);
-          //++OIDSkippedForTooLarge;
-        //}
-      //}
-      //else if(err.code === 'ENOENT'){
-        //// If the file does not exist, remove it from the list and increment OIDSkippedForNotFound
-        //OIDFilesArray.splice(i, 1);
-        //++OIDSkippedForNotFound;
-      //}
-      //else{
-        //throw err;
-      //}
-    //});
-  //}
+  var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
+  OIDFilesArray = null;
+  OIDFilesArray = [];
+  OIDFilesHandeled = 0;
+  OIDFilesToHandle = 0;
   
-  for(var i = 0; i < OIDFilesArray.length; ++i){
-    
-    //fs.readFile(OIDFilesArray[i].img, 'base64', OIDHandleFile(err, data, OIDFilesArray[i].orgFileIndex));
-    var reader = new FileReader();
-    reader.onload = function(e){
-      console.log('File Loaded.');
+  var limit = Math.min(filesArray.length, OIDHalfMaxPages);
+  
+  if(excludeThumbnails){
+    // If we are excluding thumbnails, then we will go through the filenNames array, and...
+    for(var i = 0; i < filesArray.length; ++i){
+      // Check the basename for thumb...
+      if(filesArray[i].name.substring(0, 5) !== 'thumb'){
+        // And if it isn't found, we will push the entry into the array.
+        //OIDFilesArray.push(filesArray[i]);
+        if(filesArray[i].size > 0 && filesArray[i].size < 25000000 && filesArray[i].type === 'image/png'){
+          OIDFilesArray.push(filesArray[i]);
+          if(OIDFilesArray >= limit){
+            i = filesArray.length;
+          }
+        }
+      }
     }
-    //reader.readAsDataURL(OIDFilesArray.img);
-    //console.log(reader);
-    
   }
+  else{
+    // If we are not excluding thumbnails, then we will go through the filenNames array, and...
+    for(var i = 0; i < filesArray.length; ++i){
+    // Add the entry to the array if it looks like a real file, is within the limits & is a png image.
+    if(filesArray[i].size > 0 && filesArray[i].size < 25000000 && filesArray[i].type === 'image/png'){
+        OIDFilesArray.push(filesArray[i]);
+        if(OIDFilesArray >= limit){
+          i = filesArray.length;
+        }
+      }
+    }
+  }
+  OIDTempFilesArray = null;
+  OIDTempFilesArray = new Array(OIDFilesArray.length);
+  Arrays.fill(OIDTempFilesArray, '');
+  console.log(OIDFilesArray);
+  // Now that the array has the correct files in it, we can work on loading them.
+}
+
+function OIDIncrementAndCheck(){
+  ++OIDFilesHandeled
   
-  //OIDFilesArray.sort(OIDCompare);
-  //console.log(OIDFilesArray);
 }
 
 function OIDHandleFile(err, data, num){
