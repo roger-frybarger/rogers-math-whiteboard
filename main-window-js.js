@@ -1143,6 +1143,33 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 }
 
 
+function loadImagesUsingArrayOfDataURLs(arrayOfURLs){
+  arrayOfOriginalImages = [];  // Clear out the arrays that store page data.
+  arrayOfCurrentImages = [];
+  arrayOfOriginalImagesX = [];
+  arrayOfOriginalImagesY = [];
+  for(var i = 0; i < arrayOfURLs.length; ++i){
+    var justAnotherTempImage = new Image();
+    justAnotherTempImage.onLoad = function (){ // eslint-disable-line no-loop-func
+      // Remember that 'this' essentially refers to 'justAnotherTempImage'
+      arrayOfOriginalImages.push(this);
+      arrayOfCurrentImages.push(this);
+      arrayOfOriginalImagesX.push(this.naturalWidth);
+      arrayOfOriginalImagesY.push(this.naturalHeight);
+    };
+    justAnotherTempImage.src = arrayOfURLs[i];
+    if(justAnotherTempImage.complete){
+      justAnotherTempImage.onLoad();
+    }
+  }
+  currentPg = 1;
+  // eslint-disable-next-line max-len
+  resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
+  updatePageNumsOnGui();
+  clearUndoHistory();
+}
+
+
 // Here is the function that takes care of scaling the image/drawing area in the optimal way, given the
 // size of the window.
 function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingHeight){
@@ -1471,10 +1498,10 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 var OIDHalfMaxPages;
 var OIDFilesArray = null;
 var OIDTempFilesArray = null;
-var OIDSkippedForBad;
-var OIDSkippedForTooLarge;
-var OIDSkippedForNotFound;
-var OIDLoaded;
+
+
+
+
 var OIDFilesHandeled;
 var OIDFilesToHandle;
 
@@ -1484,68 +1511,20 @@ function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OIDChooseFilesBtn').value = '';
   // eslint-disable-next-line max-len
   document.getElementById('OIDImportWarningLine').innerHTML = 'If you try to open/import more than ' + OIDHalfMaxPages + ' images/slides at once, you will find that only the first ' + OIDHalfMaxPages + ' are imported. If you need to import more than ' + OIDHalfMaxPages + ' images/slides, you will need to break them up into sets of ' + OIDHalfMaxPages + ' each. However, remember that few audiences can remain attentive after viewing ' + OIDHalfMaxPages + ' slides in one sitting. Thus; this limit provides a convenient point for a short break if nothing else. Also note that this limit can be adjusted by changing the "Max Pages Allowed" parameter in the settings. It will always be about half of this value.';
+  // Clean out some variables:
+  OIDFilesArray = [];
+  OIDTempFilesArray = [];
+  OIDFilesHandeled = 0;
+  OIDFilesToHandle = 0;
 }
 
-function OIDBrowseBtnFunction(){ // eslint-disable-line no-unused-vars
-  dialog.showOpenDialog(theMainWindow, { title: 'Open Images', filters: [
-    { name: 'Image', extensions: ['png'] } // ----Visible!
-  ], properties: ['openFile', 'multiSelections'] }, function (fileNames){
-    if (typeof fileNames === 'undefined' || fileNames === null){
-      return;
-    }
-    
-    //console.log(fileNames);
-    
-    var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
-    OIDFilesArray = null;
-    OIDFilesArray = [];
-    OIDSkippedForBad = 0;
-    OIDSkippedForTooLarge = 0;
-    OIDSkippedForNotFound = 0;
-    OIDLoaded = 0;
-    OIDFilesHandeled = 0;
-    OIDFilesToHandle = 0;
-    
-    var orgFilNum = 0;
-    
-    if(excludeThumbnails){
-      // If we are excluding thumbnails, then we will go through the filenNames array, and...
-      for(var i = 0; i < fileNames.length; ++i){
-        // Check the basename for thumb...
-        if(path.basename(fileNames[i]).substring(0, 5) !== 'thumb'){
-          // And if it isn't found, we will push the entry into the array.
-          OIDFilesArray.push({orgFileIndex: orgFilNum, img: fileNames[i]});
-          ++orgFilNum;
-        }
-      }
-    }
-    else{
-      // If we are not excluding thumbnails, then we will go through the filenNames array, and...
-      for(var i = 0; i < fileNames.length; ++i){
-        // Simply push the entry into the array.
-        OIDFilesArray.push({orgFileIndex: orgFilNum, img: fileNames[i]});
-        ++orgFilNum;
-      }
-    }
-    
-    OIDCleanArray();
-    
-    document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
-  });
-}
-
-function OIDTest(){
-  console.log('OIDTest');
-}
-
-function OIDFilesSelectedFunction(){
+function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
   var files = document.getElementById('OIDChooseFilesBtn').files;
   // First we will check to see if the user selected any files:
   if(files.length !== 0){
-    // Now that we know they did select one or more files, let's see if there are unsaved changs to deal with:
+    // Now that we know they did select one or more files, let's see if there are unsaved changes to deal with:
     if(safeToClose){
       // Ok, so now we can continue safely:
-      //console.log(files);
       OIDCleanArray(files);
     }
     else{
@@ -1554,36 +1533,32 @@ function OIDFilesSelectedFunction(){
       var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any changes\nmade to the current set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
         
       if(ret === 0){
-        // Here we can continue anyway because the user said it is ok.
-        //console.log(files);
+        // Here we can continue anyway because the user said it was ok.
         OIDCleanArray(files);
       }
-      
     }
   }
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 function OIDCleanArray(filesArray){
-  
+  // First let's get the state of the check box:
   var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
-  OIDFilesArray = null;
-  OIDFilesArray = [];
-  OIDFilesHandeled = 0;
-  OIDFilesToHandle = 0;
-  
+  // And calculate the limit for the list of good files:
   var limit = Math.min(filesArray.length, OIDHalfMaxPages);
   
+  var i = 0;
   if(excludeThumbnails){
-    // If we are excluding thumbnails, then we will go through the filenNames array, and...
-    for(var i = 0; i < filesArray.length; ++i){
-      // Check the basename for thumb...
+    // If we are excluding thumbnails, then we will go through the filesArray, and...
+    for(i = 0; i < filesArray.length; ++i){
+      // Check the name for thumb...
       if(filesArray[i].name.substring(0, 5) !== 'thumb'){
-        // And if it isn't found, we will push the entry into the array.
-        //OIDFilesArray.push(filesArray[i]);
+        // And if it isn't found, we will check to see that it is a png file within the size limits:
         if(filesArray[i].size > 0 && filesArray[i].size < 25000000 && filesArray[i].type === 'image/png'){
+          // If it looks like a good file, we will push it into the array:
           OIDFilesArray.push(filesArray[i]);
-          if(OIDFilesArray >= limit){
+          // And quit the loop if the list of good files has reached its size limit:
+          if(OIDFilesArray.length >= limit){
             i = filesArray.length;
           }
         }
@@ -1591,49 +1566,98 @@ function OIDCleanArray(filesArray){
     }
   }
   else{
-    // If we are not excluding thumbnails, then we will go through the filenNames array, and...
-    for(var i = 0; i < filesArray.length; ++i){
-    // Add the entry to the array if it looks like a real file, is within the limits & is a png image.
-    if(filesArray[i].size > 0 && filesArray[i].size < 25000000 && filesArray[i].type === 'image/png'){
+    // If we are not excluding thumbnails, then we will go through the filesArray array, and...
+    for(i = 0; i < filesArray.length; ++i){
+      // Check to see that it is a png file within the size limits:
+      if(filesArray[i].size > 0 && filesArray[i].size < 25000000 && filesArray[i].type === 'image/png'){
+        // If it looks like a good file, we will push it into the array:
         OIDFilesArray.push(filesArray[i]);
-        if(OIDFilesArray >= limit){
+        // And quit the loop if the list of good files has reached its size limit:
+        if(OIDFilesArray.length >= limit){
           i = filesArray.length;
         }
       }
     }
   }
+  // Now let's set up an empty array to use as a landing place for the files as they load asynchronously.
+  // Eventually, (once all the files have loaded), we will go through this list and remove any empty entries.
   OIDTempFilesArray = null;
   OIDTempFilesArray = new Array(OIDFilesArray.length);
-  Arrays.fill(OIDTempFilesArray, '');
-  console.log(OIDFilesArray);
-  // Now that the array has the correct files in it, we can work on loading them.
+  OIDTempFilesArray.fill(''); 
+  // We also need to know how many files there are that need to be loaded:
+  OIDFilesToHandle = OIDFilesArray.length;
+  // Now that the array has the correct files in it, we can work on actually loading them:
+  OIDActuallyLoadImages();
+}
+
+function OIDActuallyLoadImages(){
+  // Loop through the list of files to load and...
+  for(var i = 0; i < OIDFilesToHandle; ++i){
+    // Give each file a new FileReader object with...
+    var reader = new FileReader();
+    // The current index of the loop, so that we know where each image should be placed in
+    // the array of landing places:
+    reader.theIndex = i;
+    // An onload function that places the base64 data url into the applicable location in the
+    // array of landing places once the image finishes loading, and then checks to see if all
+    // of the images have been handled:
+    reader.onload = function(e){
+      OIDTempFilesArray[this.theIndex] = e.target.result;
+      OIDIncrementAndCheck();
+    };
+    // An onerror function that simply checks to see if all of the images have been handeled:
+    reader.onerror = OIDIncrementAndCheck;
+    // And finally, the file to load:
+    reader.readAsDataURL(OIDFilesArray[i]);
+  }
 }
 
 function OIDIncrementAndCheck(){
+  // Each time this function is called, it means that either:
+  // 1. A file has finished loading, or:
+  // 2. A file has failed to load.
+  // In either case, we need to keep track of how manny files have handeled so that
+  // we can move on to the next step once all of them have been handeled. Thus:
+  // we will increment the OIDFilesHandeled counter, and...
   ++OIDFilesHandeled
+  // check to see if all of the files have been handeled:
+  if(OIDFilesHandeled === OIDFilesToHandle){
+    // If they have all ben handeled, we will move on to the next step:
+    OIDFinalizeArray();
+  }
+}
+
+function OIDFinalizeArray(){
+  // Here is where we need to go through the temp array and remove any empty or invalid entries.
+  // From there, we can assign the temp array to the main one & null out the temp one.
   
+  // First, let's copy all of the entries in the OIDTempFilesArray into a different
+  // local array so that if somehow OIDTempFilesArray changes while we are working,
+  // we will be working on a snapshot of it instead of the real thing:
+  var tmp = [];
+  var i = 0;
+  for(i = 0; i < OIDTempFilesArray.length; ++i){
+    tmp.push(OIDTempFilesArray[i]);
+  }
+  
+  // Now we will empty out the main OIDFilesArray...
+  OIDFilesArray = [];
+  // And loop through the local array and only push entries into the main array if they are not empty
+  // and seem to be valid png images:
+  for(i = 0; i < tmp.length; ++i){
+    if(tmp[i] !== '' && checkPNGImage(tmp[i])){
+      OIDFilesArray.push(tmp[i]);
+    }
+  }
+  
+  // Now that the main array has the finalized set of data urls in it, it is time for some cleanup:
+  tmp = [];
+  OIDTempFilesArray = [];
+  // And loading the end result:
+  loadImagesUsingArrayOfDataURLs(OIDFilesArray);
+  // And finally, the last bit of cleanup:
+  OIDFilesArray = [];
 }
-
-function OIDHandleFile(err, data, num){
-  console.log(arguments);
-  if (err) {
-    console.log(err);
-  }
-  else{
-    //console.log(data);
-  }
-}
-
-function OIDCompare(a,b){
-  if (a.orgFileIndex < b.orgFileIndex){
-    return -1;
-  }
-  if (a.orgFileIndex > b.orgFileIndex){
-    return 1;
-  }
-  return 0;
-}
-
 
 
 // Here is the code for the insertTextDialog:
@@ -2959,6 +2983,29 @@ function getCoords(elem){ // cross browser version
   var left = box.left + scrollLeft - clientLeft;
 
   return { top: Math.round(top), left: Math.round(left) };
+}
+
+
+// This function was taken from https://jsfiddle.net/Lnyxuchw/
+// Which was referenced in a post by Panama Prophet located at:
+// https://stackoverflow.com/a/41635312
+// I appreciate the work of Panama Prophet or whomever created
+// this function. It seems to work quite well for validating PNG
+// images before they are loaded.
+
+function checkPNGImage(base64string){
+
+   var src = base64string;
+   var imageData = Uint8Array.from(atob(src.replace('data:image/png;base64,', '')), c => c.charCodeAt(0));
+   var sequence = [0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130]; // in hex: 
+   
+   // check last 12 elements of array so they contains needed values
+   for(var i = 12; i > 0; i--){
+     if(imageData[imageData.length - i] !== sequence[12-i]){
+       return false;
+     }
+   }
+   return true;
 }
 
 
