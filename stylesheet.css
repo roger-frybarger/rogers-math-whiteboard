@@ -476,22 +476,28 @@ input[type='checkbox']:checked {
   margin: 10px 0;
 }
 
+/*
 #OIDBrowseBtn {
   left: 20px;
   bottom: 0;
   height: 40px;
   width: 106px;
 }
+*/
+
+#OIDChooseFilesBtn {
+  font-size: 25px;
+}
 
 #OIDIgnoreThumbnailsCheckbox {
   position: absolute;
-  left: 136px;
+  left: 20px;
   bottom: 0;
 }
 
 #OIDIgnoreThumbnailsCheckboxLabel {
   position: absolute;
-  left: 210px;
+  left: 96px;
   bottom: 0;
 }
 

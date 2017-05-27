@@ -178,7 +178,8 @@
           </ol>
           
         </div>
-        <a class="extraBottomButtons" id="OIDBrowseBtn" onclick="OIDBrowseBtnFunction();">Browse</a>
+        <input id="OIDChooseFilesBtn" type="file" onchange="OIDFilesSelectedFunction();" accept="image/png" multiple>
+        <!--<a class="extraBottomButtons" id="OIDBrowseBtn" onclick="OIDBrowseBtnFunction();">Browse</a>-->
         <input id="OIDIgnoreThumbnailsCheckbox" type="checkbox" checked>
         <p id="OIDIgnoreThumbnailsCheckboxLabel">Ignore files that start with "thumb"</p>
       </div>

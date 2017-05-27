@@ -1527,6 +1527,28 @@ function OIDBrowseBtnFunction(){ // eslint-disable-line no-unused-vars
   });
 }
 
+function OIDFilesSelectedFunction(){
+  var files = document.getElementById('OIDChooseFilesBtn').files;
+  // First we will check to see if the user selected any files:
+  if(files.length !== 0){
+    // Now that we know they did select one or more files, let's see if there are unsaved changs to deal with:
+    if(safeToClose){
+      // Ok, so now we can continue safely:
+    }
+    else{
+      // Here we have to ask the user if they want to save their changes:
+      // eslint-disable-next-line max-len
+      var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\n' + 'changes made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
+        
+      if(ret === 0){
+        // Here we can continue anyway because they said it is ok.
+      }
+      
+    }
+  }
+  document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+}
+
 function OIDCleanArray(){
   
   //for(var i = 0; i < OIDFilesArray.length; ++i){
