@@ -40,7 +40,7 @@
             <div class="dropdown-content" id="fileDropdown">
               <a id="reMaximizeBtn" onclick="ipcRenderer.send('maximize-main-win');">Re-Maximize</a>
               <a href="#openImagesDialog" onclick="OIDReadyOpenImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="openImagesBtn">Open Images</a>
-              <a id="saveImagesBtn">Save Images</a>
+              <a onclick="SIDReadySaveImagesDialog();" id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a id="helpBtn" >Help</a>

@@ -1662,6 +1662,18 @@ function OIDFinalizeArray(){
 }
 
 
+// Here is the code for the saveImagesBtn
+
+function SIDReadySaveImagesDialog(){
+  dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', properties: ['openDirectory', 'createDirectory'] }, function (paths){
+    if (typeof paths === 'undefined' || paths === null){
+      return;
+    }
+    console.log(paths);
+  });
+}
+
+
 // Here is the code for the insertTextDialog:
 var ITDValid = true;
 
