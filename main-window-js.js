@@ -1150,13 +1150,7 @@ function loadImagesUsingArrayOfDataURLs(arrayOfURLs){
   arrayOfOriginalImagesY = [];
   for(var i = 0; i < arrayOfURLs.length; ++i){
     var justAnotherTempImage = new Image();
-    justAnotherTempImage.onLoad = function (){ // eslint-disable-line no-loop-func
-      // Remember that 'this' essentially refers to 'justAnotherTempImage'
-      arrayOfOriginalImages.push(this);
-      arrayOfCurrentImages.push(this);
-      arrayOfOriginalImagesX.push(this.naturalWidth);
-      arrayOfOriginalImagesY.push(this.naturalHeight);
-    };
+    justAnotherTempImage.onLoad = loadingFromDataUrlsImageLoaded;
     justAnotherTempImage.src = arrayOfURLs[i];
     if(justAnotherTempImage.complete){
       justAnotherTempImage.onLoad();
@@ -1167,6 +1161,13 @@ function loadImagesUsingArrayOfDataURLs(arrayOfURLs){
   resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
   updatePageNumsOnGui();
   clearUndoHistory();
+}
+
+function loadingFromDataUrlsImageLoaded(){
+  arrayOfOriginalImages.push(this);
+  arrayOfCurrentImages.push(this);
+  arrayOfOriginalImagesX.push(this.naturalWidth);
+  arrayOfOriginalImagesY.push(this.naturalHeight);
 }
 
 
@@ -1502,7 +1503,7 @@ var OIDTempFilesArray = null;
 
 
 
-var OIDFilesHandeled;
+var OIDFilesHandled;
 var OIDFilesToHandle;
 
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
@@ -1514,7 +1515,7 @@ function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   // Clean out some variables:
   OIDFilesArray = [];
   OIDTempFilesArray = [];
-  OIDFilesHandeled = 0;
+  OIDFilesHandled = 0;
   OIDFilesToHandle = 0;
 }
 
@@ -1601,28 +1602,30 @@ function OIDActuallyLoadImages(){
     // An onload function that places the base64 data url into the applicable location in the
     // array of landing places once the image finishes loading, and then checks to see if all
     // of the images have been handled:
-    reader.onload = function(e){
-      OIDTempFilesArray[this.theIndex] = e.target.result;
-      OIDIncrementAndCheck();
-    };
-    // An onerror function that simply checks to see if all of the images have been handeled:
+    reader.onload = OIDOnImageLoaded;
+    // An onerror function that simply checks to see if all of the images have been handled:
     reader.onerror = OIDIncrementAndCheck;
     // And finally, the file to load:
     reader.readAsDataURL(OIDFilesArray[i]);
   }
 }
 
+function OIDOnImageLoaded(e){
+  OIDTempFilesArray[this.theIndex] = e.target.result;
+  OIDIncrementAndCheck();
+}
+
 function OIDIncrementAndCheck(){
   // Each time this function is called, it means that either:
   // 1. A file has finished loading, or:
   // 2. A file has failed to load.
-  // In either case, we need to keep track of how manny files have handeled so that
-  // we can move on to the next step once all of them have been handeled. Thus:
-  // we will increment the OIDFilesHandeled counter, and...
-  ++OIDFilesHandeled
-  // check to see if all of the files have been handeled:
-  if(OIDFilesHandeled === OIDFilesToHandle){
-    // If they have all ben handeled, we will move on to the next step:
+  // In either case, we need to keep track of how many files have handled so that
+  // we can move on to the next step once all of them have been handled. Thus:
+  // we will increment the OIDFilesHandled counter, and...
+  ++OIDFilesHandled;
+  // check to see if all of the files have been handled:
+  if(OIDFilesHandled === OIDFilesToHandle){
+    // If they have all been handled, we will move on to the next step:
     OIDFinalizeArray();
   }
 }
@@ -1650,7 +1653,7 @@ function OIDFinalizeArray(){
     }
   }
   
-  // Now that the main array has the finalized set of data urls in it, it is time for some cleanup:
+  // Now that the main array has the finalized set of data URLs in it, it is time for some cleanup:
   tmp = [];
   OIDTempFilesArray = [];
   // And loading the end result:
@@ -2959,7 +2962,8 @@ function tellUserToSelectAnAreaFirst(){
 
 
 
-// This function was taken from: http://stackoverflow.com/a/26230989
+// This function was taken from:
+// http://stackoverflow.com/a/26230989
 // I appreciate basil's work!!! It works perfectly where nothing else did!
 // It essentially returns the current location of the top left corner of 
 // the applicable element regardless of where it is in the scrollable
@@ -2988,7 +2992,7 @@ function getCoords(elem){ // cross browser version
 
 // This function was taken from https://jsfiddle.net/Lnyxuchw/
 // Which was referenced in a post by Panama Prophet located at:
-// https://stackoverflow.com/a/41635312
+// http://stackoverflow.com/a/41635312
 // I appreciate the work of Panama Prophet or whomever created
 // this function. It seems to work quite well for validating PNG
 // images before they are loaded.
