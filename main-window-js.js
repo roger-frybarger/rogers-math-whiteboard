@@ -1642,7 +1642,6 @@ function OIDFinalizeArray(){
   for(i = 0; i < OIDTempFilesArray.length; ++i){
     tmp.push(OIDTempFilesArray[i]);
   }
-  
   // Now we will empty out the main OIDFilesArray...
   OIDFilesArray = [];
   // And loop through the local array and only push entries into the main array if they are not empty
@@ -2990,26 +2989,40 @@ function getCoords(elem){ // cross browser version
 }
 
 
-// This function was taken from https://jsfiddle.net/Lnyxuchw/
+// This function was taken from:
+// https://jsfiddle.net/Lnyxuchw/
 // Which was referenced in a post by Panama Prophet located at:
 // http://stackoverflow.com/a/41635312
 // I appreciate the work of Panama Prophet or whomever created
 // this function. It seems to work quite well for validating PNG
-// images before they are loaded.
+// images before they are loaded. I have also added the try-catch
+// structure so that if the string is not a base64 string, the
+// function correctly returns false instead of throwing an exception.
 
 function checkPNGImage(base64string){
+  var src = base64string;
+  var imageData = [];
+  try{
+    imageData = Uint8Array.from(atob(src.replace('data:image/png;base64,', '')), c => c.charCodeAt(0));
+  }
+  catch(err){
+    // If the string cannot even be decoded correctly, there is no reason to continue checking it,
+    // since it will obviously be invalid:
+    return false;
+  }
+  if(imageData.length < 12){
+    return false;
+  }
+  var sequence = [0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130]; // in hex: 
 
-   var src = base64string;
-   var imageData = Uint8Array.from(atob(src.replace('data:image/png;base64,', '')), c => c.charCodeAt(0));
-   var sequence = [0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130]; // in hex: 
-   
-   // check last 12 elements of array so they contains needed values
-   for(var i = 12; i > 0; i--){
-     if(imageData[imageData.length - i] !== sequence[12-i]){
-       return false;
-     }
-   }
-   return true;
+  // check the last 12 elements of the array to see if they contain the correct values:
+  for(var i = 12; i > 0; i--){
+    if(imageData[imageData.length - i] !== sequence[12 - i]){
+      // If any incorrect values are found, immediately return false:
+      return false;
+    }
+  }
+  return true;
 }
 
 
