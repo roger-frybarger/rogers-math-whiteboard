@@ -77,6 +77,14 @@ function createWindow(){
   win.webContents.on('did-finish-load', function (){
     setTimeout(function (){
       win.webContents.send('app-finished-loading');
+      var dir;
+      try{
+        dir = app.getPath('home');
+      }
+      catch(err){
+        dir = '';
+      }
+      win.webContents.send('users-home-folder', {hf: dir});
     },500);
   });
   

@@ -8,7 +8,6 @@ var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a 
 // it for dialog boxes.
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
-const path = require('path');
 var fs = require('fs');
 
 // This enables the right-click menu over the text boxes. I found it at:
@@ -90,6 +89,7 @@ var currentPg = 1;
 var topToolbarWidth = 40;
 var SideToolbarWidth = 150;
 
+var hf = '';
 
 
 // Here is the function that executes when the close button signal is sent in from the main process, (main.js).
@@ -310,6 +310,10 @@ function continueAfterAppFinishedLoading1(){
   enableRightClickMenu();
   allLoaded = true;
 }
+
+ipcRenderer.on('users-home-folder' , function (event , data){
+  hf = data.hf;
+});
 
 function adjustSizeOfMenuButtonsToScreenSize(){
   // I know it is not good practice to hard-code this here, but I do not expect these to change
@@ -1662,15 +1666,16 @@ function OIDFinalizeArray(){
 }
 
 
-// Here is the code for the saveImagesBtn
+// Here is the code for the saveImagesDialog:
 
-function SIDReadySaveImagesDialog(){
-  dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', properties: ['openDirectory', 'createDirectory'] }, function (paths){
-    if (typeof paths === 'undefined' || paths === null){
-      return;
-    }
-    console.log(paths);
-  });
+function SIDReadySaveImagesDialog(){// eslint-disable-line no-unused-vars
+  dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', defaultPath: hf,
+    properties: ['openDirectory', 'createDirectory'] }, function (paths){
+      if (typeof paths === 'undefined' || paths === null){
+        return;
+      }
+      console.log(paths);
+    });
 }
 
 
