@@ -8,6 +8,7 @@ var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a 
 // it for dialog boxes.
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
+const path = require('path');
 var fs = require('fs');
 
 // This enables the right-click menu over the text boxes. I found it at:
@@ -1665,25 +1666,66 @@ function OIDFinalizeArray(){
 // Here is the code for the saveImagesDialog:
 
 var SIDPath = '';
+var SIDNameForFiles = '';
 var SIDValidInput = true;
+var SIDValidCharsString = 'abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890';
+var SIDFilesToHandle;
+var SIDFilesHandled;
+var SIDErrorsSavingFiles = false;
 
 function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
+  saveCurrentImageToArrayBeforeMoving();
   SIDPath = '';
+  SIDNameForFiles = '';
 }
 
-function SIDFileNamesInputTextboxValidator(){
-  // TODO: Validate Input!!!!
-  // For now:
-  SIDValidInput = true;
+function SIDFileNamesInputTextboxValidator(){ // eslint-disable-line no-unused-vars
+  var rawInput = document.getElementById('SIDFileNamesTextBox').value;
+  if(rawInput.length === 0){
+    document.getElementById('SIDFileNamesTextBox').style.backgroundColor = 'white';
+    SIDValidInput = true;
+  }
+  else{
+    if(rawInput.length > 50){
+      document.getElementById('SIDFileNamesTextBox').style.backgroundColor = 'red';
+      SIDValidInput = false;
+    }
+    else{
+      for(var i = 0; i < rawInput.length; ++i){
+        if(!SIDGoodChar(rawInput.charAt(i))){
+          document.getElementById('SIDFileNamesTextBox').style.backgroundColor = 'red';
+          SIDValidInput = false;
+          i = rawInput.length;
+        }
+        else{
+          document.getElementById('SIDFileNamesTextBox').style.backgroundColor = 'white';
+          SIDValidInput = true;
+        }
+      }
+    }
+  }
+}
+
+function SIDGoodChar(chr){
+  if(SIDValidCharsString.indexOf(chr) === -1){
+    return false;
+  }
+  else{
+    return true;
+  }
 }
 
 function SIDChooseFolderBtnFunction(){ // eslint-disable-line no-unused-vars
   if(SIDValidInput){
     SIDLaunchOpenFolderWindow();
   }
+  else{
+    alert('Error: Please choose a valid name to put on all of the files or leave the field empty.', '');
+  }
 }
 
 function SIDLaunchOpenFolderWindow(){
+  SIDNameForFiles = document.getElementById('SIDFileNamesTextBox').value;
   dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', defaultPath: hf,
     properties: ['openDirectory', 'createDirectory'] }, function (paths){
       if (typeof paths === 'undefined' || paths === null){
@@ -1707,7 +1749,7 @@ function SIDHandleFolderPath(){
       var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: The folder that you have selected is not empty. If you continue, some or all of its contents may be deleted and replaced. Are you sure you want to continue?', buttons: ['Overwrite', 'Cancel'], defaultId: 1, noLink: true });
       if(ret === 0){
         // Here we can continue anyway because the user said it was ok.
-        console.log('next step');
+        SIDActuallySaveFiles();
       }
       else{
         return;
@@ -1715,11 +1757,37 @@ function SIDHandleFolderPath(){
     }
     else{
       // Here we are good to move on to the next step.
-      console.log('next step');
+      SIDActuallySaveFiles();
     }
   });
 }
 
+function SIDActuallySaveFiles(){
+  SIDErrorsSavingFiles = false;
+  SIDFilesToHandle = arrayOfCurrentImages.length;
+  SIDFilesHandled = 0;
+  for(var i = 0; i < SIDFilesToHandle; ++i){
+    var name = SIDPath + path.sep + SIDNameForFiles + (i + 1) + '.png';
+    
+    fs.writeFile(name, SIDDecodeBase64Image(arrayOfCurrentImages[i].src), (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+    });
+  }
+}
+
+// The function below is a modified version of the function found at:
+// https://stackoverflow.com/a/20272545
+// I appreciate Julian Lannigan's work!      eslint-disable-line spellcheck
+function SIDDecodeBase64Image(dataString){
+  var matches = dataString.match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+
+  if(matches.length !== 3){
+    throw new Error('Invalid base64 input string in SIDDecodeBase64Image');
+  }
+
+  return new Buffer(matches[2], 'base64');
+}
 
 // Here is the code for the insertTextDialog:
 var ITDValid = true;
