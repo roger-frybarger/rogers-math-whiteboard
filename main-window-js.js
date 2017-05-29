@@ -1508,6 +1508,7 @@ var OIDFilesHandled;
 var OIDFilesToHandle;
 
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
+  document.getElementById('OIDHeader').innerHTML = 'Open Images';
   OIDHalfMaxPages = Math.round(maxNumberOfPages / 2);
   // Clear out any files that they chose the last time they opened the dialog.
   document.getElementById('OIDChooseFilesBtn').value = '';
@@ -1540,10 +1541,10 @@ function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
       }
     }
   }
-  document.getElementById('OIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 function OIDCleanArray(filesArray){
+  document.getElementById('OIDHeader').innerHTML = 'Processing...';
   // First let's get the state of the check box:
   var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
   // And calculate the limit for the list of good files:
@@ -1624,6 +1625,7 @@ function OIDIncrementAndCheck(){
   // we can move on to the next step once all of them have been handled. Thus:
   // we will increment the OIDFilesHandled counter, and...
   ++OIDFilesHandled;
+  document.getElementById('OIDHeader').innerHTML = 'Processing file ' + OIDFilesHandled + ' of ' + OIDFilesToHandle;
   // check to see if all of the files have been handled:
   if(OIDFilesHandled === OIDFilesToHandle){
     // If they have all been handled, we will move on to the next step:
@@ -1632,6 +1634,7 @@ function OIDIncrementAndCheck(){
 }
 
 function OIDFinalizeArray(){
+  document.getElementById('OIDHeader').innerHTML = 'Cleaning Up...';
   // Here is where we need to go through the temp array and remove any empty or invalid entries.
   // From there, we can assign the temp array to the main one & null out the temp one.
   
@@ -1660,6 +1663,7 @@ function OIDFinalizeArray(){
   loadImagesUsingArrayOfDataURLs(OIDFilesArray);
   // And finally, the last bit of cleanup:
   OIDFilesArray = [];
+  document.getElementById('OIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 
@@ -1763,16 +1767,44 @@ function SIDHandleFolderPath(){
 }
 
 function SIDActuallySaveFiles(){
+  document.getElementById('saveImagesDialog').style.cursor = 'wait';
   SIDErrorsSavingFiles = false;
   SIDFilesToHandle = arrayOfCurrentImages.length;
   SIDFilesHandled = 0;
   for(var i = 0; i < SIDFilesToHandle; ++i){
     var name = SIDPath + path.sep + SIDNameForFiles + (i + 1) + '.png';
-    
-    fs.writeFile(name, SIDDecodeBase64Image(arrayOfCurrentImages[i].src), (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-    });
+    fs.writeFile(name, SIDDecodeBase64Image(arrayOfCurrentImages[i].src), SIDFileSaved);
+  }
+}
+
+function SIDFileSaved(err){
+  if(err){
+    SIDIncrementAndCheck();
+    SIDErrorsSavingFiles = true;
+  }
+  else{
+    SIDIncrementAndCheck();
+  }
+}
+
+function SIDIncrementAndCheck(){
+  ++SIDFilesHandled;
+  if(SIDFilesHandled === SIDFilesToHandle){
+    SIDFinishedSaving();
+  }
+}
+
+function SIDFinishedSaving(){
+  document.getElementById('saveImagesDialog').style.cursor = 'default';
+  if(SIDErrorsSavingFiles){
+    // eslint-disable-next-line max-len
+    alert('Error: One or more files did not save correctly. Ensure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+  }
+  else{
+    // Here we can simply close the dialog, set the mouse back to normal if applicable, and
+    // set the applicable variable to true so that they can close the document without the warning.
+    safeToClose = true;
+    document.getElementById('SIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
 

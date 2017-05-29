@@ -84,7 +84,7 @@ function createWindow(){
       catch(err){
         dir = '';
       }
-      win.webContents.send('users-home-folder', {hf: dir});
+      win.webContents.send('users-home-folder', { hf: dir });
     },500);
   });
   
