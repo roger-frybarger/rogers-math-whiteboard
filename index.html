@@ -40,7 +40,7 @@
             <div class="dropdown-content" id="fileDropdown">
               <a id="reMaximizeBtn" onclick="ipcRenderer.send('maximize-main-win');">Re-Maximize</a>
               <a href="#openImagesDialog" onclick="OIDReadyOpenImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="openImagesBtn">Open Images</a>
-              <a onclick="SIDReadySaveImagesDialog();" id="saveImagesBtn">Save Images</a>
+              <a href="#saveImagesDialog" onclick="SIDReadySaveImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a id="helpBtn" >Help</a>
@@ -181,6 +181,32 @@
         <input id="OIDChooseFilesBtn" type="file" onchange="OIDFilesSelectedFunction();" accept="image/png" multiple>
         <input id="OIDIgnoreThumbnailsCheckbox" type="checkbox" checked>
         <p id="OIDIgnoreThumbnailsCheckboxLabel">Ignore files that start with "thumb"</p>
+      </div>
+    </div>
+    
+    <!--Here is the save images dialog-->
+    
+    <div id="saveImagesDialog" class="modalDialogs">
+      <div>
+        <a id="SIDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="save images dialog close button"></a>
+        <h2>Save Images</h2>
+        <div class="modalBoxContent">
+          
+          <p><strong>If you have not already done so, please read through the following notes about how this program saves images:</strong></p>
+          <ol id="SIDOrderedList">
+            <li><strong>Warning:</strong> if there are any existing files in the folder that you select, they may be deleted. It is best to select an empty folder or create a new empty folder to put the images in.</li>
+            <li>Each page in the current document will be saved as an individual PNG image file in the folder that you choose.</li>
+            <li>The text that you specify below will get added to all of the PNG Image file names. This is useful if, for example, you want all of the images to have names such as "Page1.png, Page2.png, Page3.png..." etc. However, only uppercase & lowercase letters, numbers, dashes, and underscores are accepted in this text box, so if you wish to add a space, you will need to use an underscore or dash instead.</li>
+            <li>If you wish to give your students a single file instead of many individual image files, (which is highly recommend), you can add all of the image files to a zip file by selecting all of them, (The keyboard shortcut to do this is Ctrl+a), right-clicking over one of them, and choosing to send them to a compressed (zipped) folder. Your students can then download this single zip file, and extract the contents into a folder on their computer. Here are some links that explain this process in detail on 
+            <a href="http://www.wikihow.com/Zip-Files-Together" target="_blank" >Windows & Mac</a>,
+            <a href="http://www.digitaltrends.com/computing/how-to-zip-and-unzip-files-on-a-chromebook" target="_blank" >Chromebooks</a>, and 
+            <a href="https://askubuntu.com/a/660875" target="_blank" >Ubuntu</a>.</li>
+            <li>Also, if you plan to distribute these images using zip files, please see the detailed instructions for viewing & printing images in zip files in the "Help" section of the "File" menu. These instructions are designed to be distributed to students, so that they can make full use of the content.<br><br><br></li>
+          </ol>
+          
+        </div>
+        Name for File(s): <input oninput="SIDFileNamesInputTextboxValidator();" type="text" id="SIDFileNamesTextBox" value="Page" autofocus>x.png &nbsp;&nbsp;(x = Page Number)
+        <a class="extraBottomButtons" onclick="SIDChooseFolderBtnFunction();" id="SIDChooseFolderBtn">Choose Folder</a>
       </div>
     </div>
     

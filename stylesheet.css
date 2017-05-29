@@ -493,6 +493,31 @@ input[type='checkbox']:checked {
 }
 
 /*
+ * Below is the css that is speciffic to the saveImagesDialog:
+*/
+
+#SIDOrderedList {
+  list-style-type: decimal;
+  margin: 10px 30px 10px 10px;
+}
+
+#SIDOrderedList li {
+  margin: 10px 0;
+}
+
+#SIDFileNamesTextBox {
+  font-size: 20px;
+  margin-top: 18px;
+}
+
+#SIDChooseFolderBtn {
+  left: 20px;
+  bottom: 0;
+  height: 40px;
+  width: 150px;
+}
+
+/*
  * Below is the css that is speciffic to the insertTextDialog:
 */
 

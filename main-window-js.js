@@ -1503,10 +1503,6 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
 var OIDHalfMaxPages;
 var OIDFilesArray = null;
 var OIDTempFilesArray = null;
-
-
-
-
 var OIDFilesHandled;
 var OIDFilesToHandle;
 
@@ -1543,7 +1539,7 @@ function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
       }
     }
   }
-  document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+  document.getElementById('OIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 function OIDCleanArray(filesArray){
@@ -1668,14 +1664,60 @@ function OIDFinalizeArray(){
 
 // Here is the code for the saveImagesDialog:
 
-function SIDReadySaveImagesDialog(){// eslint-disable-line no-unused-vars
+var SIDPath = '';
+var SIDValidInput = true;
+
+function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
+  SIDPath = '';
+}
+
+function SIDFileNamesInputTextboxValidator(){
+  // TODO: Validate Input!!!!
+  // For now:
+  SIDValidInput = true;
+}
+
+function SIDChooseFolderBtnFunction(){ // eslint-disable-line no-unused-vars
+  if(SIDValidInput){
+    SIDLaunchOpenFolderWindow();
+  }
+}
+
+function SIDLaunchOpenFolderWindow(){
   dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', defaultPath: hf,
     properties: ['openDirectory', 'createDirectory'] }, function (paths){
       if (typeof paths === 'undefined' || paths === null){
         return;
       }
-      console.log(paths);
+      SIDPath = paths[0];
+      SIDHandleFolderPath();
     });
+}
+
+function SIDHandleFolderPath(){
+  fs.readdir(SIDPath, function (err, files){
+    if (err){
+      // eslint-disable-next-line max-len
+      alert('Error: An error occured while trying to inspect the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+      return;
+    }
+    if(files.length !== 0){
+      // Here we have to ask the user if they want to continue:
+      // eslint-disable-next-line max-len
+      var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: The folder that you have selected is not empty. If you continue, some or all of its contents may be deleted and replaced. Are you sure you want to continue?', buttons: ['Overwrite', 'Cancel'], defaultId: 1, noLink: true });
+      if(ret === 0){
+        // Here we can continue anyway because the user said it was ok.
+        console.log('next step');
+      }
+      else{
+        return;
+      }
+    }
+    else{
+      // Here we are good to move on to the next step.
+      console.log('next step');
+    }
+  });
 }
 
 
