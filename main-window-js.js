@@ -476,11 +476,11 @@ function checkForScreenSizeIssues(){
   var screenX = screen.width;
   var screenY = screen.height;
   if(screenX < 800 || screenY < 600){
-    alert('Error: Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', ''); // eslint-disable-line max-len
+    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error'); // eslint-disable-line max-len
     ipcRenderer.send('terminate-this-app');
   }
   if(screenX > 1920 || screenY > 1080){
-    alert('Warning: You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', ''); // eslint-disable-line max-len
+    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
   }
 }
 
@@ -1650,7 +1650,7 @@ function OIDIncrementAndCheck(){
   // we can move on to the next step once all of them have been handled. Thus:
   // we will increment the OIDFilesHandled counter, and...
   ++OIDFilesHandled;
-  document.getElementById('OIDHeader').innerHTML = 'Processing file ' + OIDFilesHandled + ' of ' + OIDFilesToHandle + '...';
+  document.getElementById('OIDHeader').innerHTML = 'Processing file ' + OIDFilesHandled + ' of ' + OIDFilesToHandle;
   // check to see if all of the files have been handled:
   if(OIDFilesHandled === OIDFilesToHandle){
     // If they have all been handled, we will move on to the next step:
@@ -1707,7 +1707,7 @@ function OIDFinalizeArray(){
 function OIDInformIfNecessary(){
   if(OIDSomeSkipped){
     // eslint-disable-next-line max-len
-    alert('Note: Some files were skipped because one or more of the following situations occurred:\n\n1. More than ' + OIDHalfMaxPages + ' images were selected\n2. One or more images was larger than 25MB\n3. One or more images failed to load\n4. One or more files had a size of 0 bytes\n5. One or more files was not a PNG image\n6. One or more files was corrupt.', '');
+    alert('Note: Some files were skipped because one or more of the following situations applied:\n\n1. More than ' + OIDHalfMaxPages + ' images were selected\n2. One or more images was larger than 25MB\n3. One or more images failed to load\n4. One or more files had a size of 0 bytes\n5. One or more files was not a PNG image\n6. One or more files was corrupt.', '');
   }
 }
 
@@ -1827,7 +1827,7 @@ function SIDActuallySaveFiles(){
 }
 
 function SIDFileSaved(err){
-  document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle + '...';
+  document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
   if(err){
     SIDErrorsSavingFiles = true;
     SIDIncrementAndCheck();
@@ -2212,7 +2212,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   // Get thumbnails of each screen/window & insert into the dialog.
   desktopCapturer.getSources({ types: ['window', 'screen'], thumbnailSize: { width: 400, height: 400 } }, (error, sources) => {
     if (error){
-      alert('Error: Unable to obtain screenshot sources.', '');
+      alert('Unable to obtain screenshot sources.', 'Error:');
       return;
     }
     // clear out the dialog:
@@ -2269,7 +2269,7 @@ function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
 }
 
 function ISDHandleError(e){
-  alert('Error: An error occurred while obtaining the screenshot. Here is the error:\n\n' + e.name, '');
+  alert('An error occurred while obtaining the screenshot. Here is the error:\n\n' + e.name, 'Error:');
 }
 
 function ISDHandleStream(stream){
@@ -2830,11 +2830,11 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
     fs.stat(fileName, function (err, stats){
       if(err === null){
         if(stats.size < 1){
-          alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', '');
+          alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
         }
         else if(stats.size > 25000000){
           // eslint-disable-next-line max-len
-          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', '');
+          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
         }
         else{
           insertTemplateAsPage(fileName);
@@ -2842,7 +2842,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
       }
       else if(err.code === 'ENOENT'){
         // file does not exist
-        alert('Error: That file does not seem to exist.\nTry opening a different one.', '');
+        alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
       }
       else {
         throw err;
