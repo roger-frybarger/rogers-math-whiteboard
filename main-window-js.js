@@ -1545,6 +1545,7 @@ function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
 
 function OIDCleanArray(filesArray){
   document.getElementById('OIDHeader').innerHTML = 'Processing...';
+  document.getElementById('openImagesDialog').style.cursor = 'wait';
   // First let's get the state of the check box:
   var excludeThumbnails = document.getElementById('OIDIgnoreThumbnailsCheckbox').checked;
   // And calculate the limit for the list of good files:
@@ -1663,6 +1664,7 @@ function OIDFinalizeArray(){
   loadImagesUsingArrayOfDataURLs(OIDFilesArray);
   // And finally, the last bit of cleanup:
   OIDFilesArray = [];
+  document.getElementById('openImagesDialog').style.cursor = 'default';
   document.getElementById('OIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
@@ -1679,6 +1681,7 @@ var SIDErrorsSavingFiles = false;
 
 function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
+  document.getElementById('SIDHeader').innerHTML = 'Save Images';
   SIDPath = '';
   SIDNameForFiles = '';
 }
@@ -1741,10 +1744,14 @@ function SIDLaunchOpenFolderWindow(){
 }
 
 function SIDHandleFolderPath(){
+  document.getElementById('SIDHeader').innerHTML = 'Processing...';
+  document.getElementById('saveImagesDialog').style.cursor = 'wait';
   fs.readdir(SIDPath, function (err, files){
     if (err){
       // eslint-disable-next-line max-len
       alert('Error: An error occured while trying to inspect the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+      document.getElementById('SIDHeader').innerHTML = 'Save Images';
+      document.getElementById('saveImagesDialog').style.cursor = 'default';
       return;
     }
     if(files.length !== 0){
@@ -1767,7 +1774,6 @@ function SIDHandleFolderPath(){
 }
 
 function SIDActuallySaveFiles(){
-  document.getElementById('saveImagesDialog').style.cursor = 'wait';
   SIDErrorsSavingFiles = false;
   SIDFilesToHandle = arrayOfCurrentImages.length;
   SIDFilesHandled = 0;
@@ -1778,6 +1784,7 @@ function SIDActuallySaveFiles(){
 }
 
 function SIDFileSaved(err){
+  document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
   if(err){
     SIDIncrementAndCheck();
     SIDErrorsSavingFiles = true;
@@ -1796,6 +1803,7 @@ function SIDIncrementAndCheck(){
 
 function SIDFinishedSaving(){
   document.getElementById('saveImagesDialog').style.cursor = 'default';
+  document.getElementById('SIDHeader').innerHTML = 'Save Images';
   if(SIDErrorsSavingFiles){
     // eslint-disable-next-line max-len
     alert('Error: One or more files did not save correctly. Ensure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
