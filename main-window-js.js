@@ -476,11 +476,11 @@ function checkForScreenSizeIssues(){
   var screenX = screen.width;
   var screenY = screen.height;
   if(screenX < 800 || screenY < 600){
-    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error'); // eslint-disable-line max-len
+    alert('Error: Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', ''); // eslint-disable-line max-len
     ipcRenderer.send('terminate-this-app');
   }
   if(screenX > 1920 || screenY > 1080){
-    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
+    alert('Warning: You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', ''); // eslint-disable-line max-len
   }
 }
 
@@ -1506,6 +1506,7 @@ var OIDFilesArray = null;
 var OIDTempFilesArray = null;
 var OIDFilesHandled;
 var OIDFilesToHandle;
+var OIDSomeSkipped = false;
 
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OIDHeader').innerHTML = 'Open Images';
@@ -1544,6 +1545,7 @@ function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
 }
 
 function OIDCleanArray(filesArray){
+  OIDSomeSkipped = false;
   document.getElementById('OIDHeader').innerHTML = 'Processing...';
   document.getElementById('openImagesDialog').style.cursor = 'wait';
   // First let's get the state of the check box:
@@ -1563,8 +1565,14 @@ function OIDCleanArray(filesArray){
           OIDFilesArray.push(filesArray[i]);
           // And quit the loop if the list of good files has reached its size limit:
           if(OIDFilesArray.length >= limit){
+            if(OIDFilesArray.length === OIDHalfMaxPages){
+              OIDSomeSkipped = true;
+            }
             i = filesArray.length;
           }
+        }
+        else{
+          OIDSomeSkipped = true;
         }
       }
     }
@@ -1578,8 +1586,14 @@ function OIDCleanArray(filesArray){
         OIDFilesArray.push(filesArray[i]);
         // And quit the loop if the list of good files has reached its size limit:
         if(OIDFilesArray.length >= limit){
+          if(OIDFilesArray.length === OIDHalfMaxPages){
+            OIDSomeSkipped = true;
+          }
           i = filesArray.length;
         }
+      }
+      else{
+        OIDSomeSkipped = true;
       }
     }
   }
@@ -1595,6 +1609,11 @@ function OIDCleanArray(filesArray){
 }
 
 function OIDActuallyLoadImages(){
+  // First check to see if there are actually files to load:
+  if(OIDFilesToHandle <= 0){
+    OIDFinalizeArray();
+    return;
+  }
   // Loop through the list of files to load and...
   for(var i = 0; i < OIDFilesToHandle; ++i){
     // Give each file a new FileReader object with...
@@ -1607,7 +1626,7 @@ function OIDActuallyLoadImages(){
     // of the images have been handled:
     reader.onload = OIDOnImageLoaded;
     // An onerror function that simply checks to see if all of the images have been handled:
-    reader.onerror = OIDIncrementAndCheck;
+    reader.onerror = OIDLoadFailed;
     // And finally, the file to load:
     reader.readAsDataURL(OIDFilesArray[i]);
   }
@@ -1618,6 +1637,11 @@ function OIDOnImageLoaded(e){
   OIDIncrementAndCheck();
 }
 
+function OIDLoadFailed(){
+  OIDIncrementAndCheck();
+  OIDSomeSkipped = true;
+}
+
 function OIDIncrementAndCheck(){
   // Each time this function is called, it means that either:
   // 1. A file has finished loading, or:
@@ -1626,7 +1650,7 @@ function OIDIncrementAndCheck(){
   // we can move on to the next step once all of them have been handled. Thus:
   // we will increment the OIDFilesHandled counter, and...
   ++OIDFilesHandled;
-  document.getElementById('OIDHeader').innerHTML = 'Processing file ' + OIDFilesHandled + ' of ' + OIDFilesToHandle;
+  document.getElementById('OIDHeader').innerHTML = 'Processing file ' + OIDFilesHandled + ' of ' + OIDFilesToHandle + '...';
   // check to see if all of the files have been handled:
   if(OIDFilesHandled === OIDFilesToHandle){
     // If they have all been handled, we will move on to the next step:
@@ -1652,20 +1676,39 @@ function OIDFinalizeArray(){
   // And loop through the local array and only push entries into the main array if they are not empty
   // and seem to be valid png images:
   for(i = 0; i < tmp.length; ++i){
-    if(tmp[i] !== '' && checkPNGImage(tmp[i])){
-      OIDFilesArray.push(tmp[i]);
+    if(tmp[i] !== ''){
+      if(checkPNGImage(tmp[i])){
+        OIDFilesArray.push(tmp[i]);
+      }
+      else{
+        OIDSomeSkipped = true;
+      }
     }
   }
   
   // Now that the main array has the finalized set of data URLs in it, it is time for some cleanup:
   tmp = [];
   OIDTempFilesArray = [];
-  // And loading the end result:
-  loadImagesUsingArrayOfDataURLs(OIDFilesArray);
+  // Let's also let the user know how things worked out:
+  OIDInformIfNecessary();
+  // And loading the end result if that is possible:
+  if(OIDFilesArray.length > 0){
+    loadImagesUsingArrayOfDataURLs(OIDFilesArray);
+  }
+  else{
+    alert('Error: No valid images were found', '');
+  }
   // And finally, the last bit of cleanup:
   OIDFilesArray = [];
   document.getElementById('openImagesDialog').style.cursor = 'default';
   document.getElementById('OIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+}
+
+function OIDInformIfNecessary(){
+  if(OIDSomeSkipped){
+    // eslint-disable-next-line max-len
+    alert('Note: Some files were skipped because one or more of the following situations occurred:\n\n1. More than ' + OIDHalfMaxPages + ' images were selected\n2. One or more images was larger than 25MB\n3. One or more images failed to load\n4. One or more files had a size of 0 bytes\n5. One or more files was not a PNG image\n6. One or more files was corrupt.', '');
+  }
 }
 
 
@@ -1749,7 +1792,7 @@ function SIDHandleFolderPath(){
   fs.readdir(SIDPath, function (err, files){
     if (err){
       // eslint-disable-next-line max-len
-      alert('Error: An error occured while trying to inspect the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+      alert('Error: An error occurred while trying to inspect the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
       document.getElementById('SIDHeader').innerHTML = 'Save Images';
       document.getElementById('saveImagesDialog').style.cursor = 'default';
       return;
@@ -1784,10 +1827,10 @@ function SIDActuallySaveFiles(){
 }
 
 function SIDFileSaved(err){
-  document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
+  document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle + '...';
   if(err){
-    SIDIncrementAndCheck();
     SIDErrorsSavingFiles = true;
+    SIDIncrementAndCheck();
   }
   else{
     SIDIncrementAndCheck();
@@ -2169,7 +2212,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   // Get thumbnails of each screen/window & insert into the dialog.
   desktopCapturer.getSources({ types: ['window', 'screen'], thumbnailSize: { width: 400, height: 400 } }, (error, sources) => {
     if (error){
-      alert('Unable to obtain screenshot sources.', 'Error:');
+      alert('Error: Unable to obtain screenshot sources.', '');
       return;
     }
     // clear out the dialog:
@@ -2226,7 +2269,7 @@ function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
 }
 
 function ISDHandleError(e){
-  alert('An error occurred while obtaining the screenshot. Here is the error:\n\n' + e.name, 'Error:');
+  alert('Error: An error occurred while obtaining the screenshot. Here is the error:\n\n' + e.name, '');
 }
 
 function ISDHandleStream(stream){
@@ -2787,11 +2830,11 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
     fs.stat(fileName, function (err, stats){
       if(err === null){
         if(stats.size < 1){
-          alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', ' ');
+          alert('Error: That file seems to be empty, broken or corrupt.\nTry opening a different one.', '');
         }
         else if(stats.size > 25000000){
           // eslint-disable-next-line max-len
-          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
+          alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', '');
         }
         else{
           insertTemplateAsPage(fileName);
@@ -2799,7 +2842,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
       }
       else if(err.code === 'ENOENT'){
         // file does not exist
-        alert('Error: That file does not seem to exist.\nTry opening a different one.', ' ');
+        alert('Error: That file does not seem to exist.\nTry opening a different one.', '');
       }
       else {
         throw err;
