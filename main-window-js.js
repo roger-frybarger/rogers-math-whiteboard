@@ -1351,7 +1351,7 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   else{
     // Here we tell them that the document must have at least one page:
     // eslint-disable-next-line max-len
-    alert('The document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.', '');
+    alert('Sorry, the document must have at least one page at all times.\nHowever, you can add another page and then come back and delete this one.', '');
   }
 }
 
