@@ -43,7 +43,7 @@
               <a href="#saveImagesDialog" onclick="SIDReadySaveImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
-              <a id="helpBtn" >Help</a>
+              <a href="#helpDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="helpBtn" >Help</a>
               <a id="aboutBtn">About</a>
             </div>
         </li>
@@ -215,10 +215,163 @@
     <div id="helpDialog" class="modalDialogs">
       <div>
         <a id="HDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="help dialog close button"></a>
-        <h2>Help:</h2>
+        <h2>Here are some help topics:</h2>
         <div class="modalBoxContent">
-          <!--Here is where the content of the modal box will go:-->
-          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
+          
+          <p>Here are directions for viewing & printing images in zip files. Feel free to distribute them to your students:</p>
+            <textarea style="resize:none" rows="17" cols="75" readonly>
+The following instructions require you to know what operating
+system you are using, (e.g. Windows). If you do not know what
+operating system you are using, go to www.whatsmyos.com to find
+out. Also, if you can't figure out how to "go to" a website, you
+will need to find someone who can show you how to do that, as it
+is easier to show than explain.
+
+It is also assumed that you have downloaded the applicable
+zip file from whatever site/email you received it through if
+applicable.
+
+
+*********************************************************
+If you are using Windows XP, Vista, 7, 8, 8.1, or 10...
+*********************************************************
+To view the slides, you should be able to simply double-click
+on the downloaded zip file to open it, and then double-click
+on the first image to open it. You should not need to install
+any additional software, as the zip file should open with
+Windows Explorer, and the images should open with Windows
+Photo Viewer, Windows Picture and Fax Viewer or the newer Photos
+app. If you are only able to view one image at a time, then you
+should try extracting the files first. To do this, double-click
+the downloaded zip file, and then click "Extract." It will then
+walk you through the process of extracting the files. Once they
+are extracted, you should be able to double-click on the first
+file to view it. To navigate between slides, use the arrow
+buttons on the bottom or sides of the window.
+
+To print the slides, you must extract them from the zip file
+first. To do this, simply double-click the downloaded zip file,
+and click "Extract." It will then walk you through the process
+of extracting the files. Once that process is finished, select
+all the files in the folder by holding down the Ctrl key, and
+then pressing the letter a. Once you see all the files selected,
+you can release both keys. From there, right-click over one of
+the selected files, and click "Print." Windows will then walk
+you through the printing process. In this process, make sure to
+choose a layout that does not crop off part of the image(s).
+
+
+*********************************************************
+If you are using Ubuntu 10.04 or higher...
+*********************************************************
+The first step in either viewing or printing is to extract the
+files from the zip folder. To do this, you should be able to 
+double-click on the downloaded zip file, and then click 
+"Extract" in the default extraction program. From there, choose
+or create a folder to extract the files into, and proceed to
+extract the files.
+
+To view the slides once you have extracted them, simply open the
+folder that you extracted them into, and open the first image.
+This is probably done by double-clicking on it. The default
+program for opening images is probably sufficient, but if you
+want, you can install Shotwell Photo Manager:
+http://apps.ubuntu.com/cat/applications/precise/shotwell
+or on the terminal: sudo apt-get install shotwell
+Once installed, you can right-click the first extracted photo,
+and select "Open With," then choose "Shotwell Viewer" from the
+list of programs.
+
+To print the slides, you will either need to install Shotwell
+Photo Manager as described above, or use the web-based method
+described in the section for Mac and Chromebook users. For those
+who choose to go with Shotwell, the process is fairly simple. 
+First open Shotwell and import your photos from the folder that
+you extracted them into. Next, click "Edit," and then
+"Select All," or just use Ctrl+a. From there, click "File," and
+then "Print." This will allow you to print all of the files
+in one process. Also be aware of the "Page Setup" tab where you
+can specify the Orientation. Generally speaking, a Landscape
+orientation will yield better results. you can also adjust other
+settings like the number of images per page on the
+"Image Settings" tab.
+
+
+*********************************************************
+If you are using Mac OS X 10.6 or higher;
+or Chome OS, (A Chromebook)...
+*********************************************************
+The first step in either viewing or printing is to extract the
+files from the zip folder. If you are on a Mac, go to 
+www.wikihow.com/Extract-Files#Mac_OS_sub for detailed
+instructions on how to extract the files from the zip file. If
+you are on a Chromebook, go to
+www.makeuseof.com/tag/3-simple-ways-zip-unzip-files-chromebook
+for instructions on how to access the content inside of zip
+files on your Chromebook. The next step is to convert the set of
+images into a PDF file using an online converter. The one
+located at
+cloudconvert.com/combine-to-pdf  is the best, as it does not
+limit the number of files you can upload. However, png2pdf.com
+could also be used instead. Both of these websites are fairly
+simple to use, just upload all of the image files from the zip
+file, (Hold down the Ctrl/Command key and then press the letter
+a to select all the files, or just hold down the Ctrl/Command
+key while clicking on them to select multiple files), then
+download the resulting PDF file(s). From there, you should be
+able to open, view, and/or print the PDF file(s) using the
+default tools that came with your system.
+
+
+*********************************************************
+If you are using Android or iOS, (A Mobile Device)...
+*********************************************************
+While not officially supported, you can have a look at the
+following websites to get an idea of how to open & print the
+slides on mobile devices:
+
+For Android:
+howtogeek.com/215539/how-to-open-and-create-zip-files-on-an-android-device
+howtogeek.com/220899/how-to-print-photos-from-an-android-smartphone-or-tablet
+
+For iOS:
+howtogeek.com/212703/how-to-open-zip-files-on-an-iphone-or-ipad
+howtogeek.com/181594/how-to-print-from-an-ipad-iphone-or-ipod-touch
+
+
+*********************************************************
+If you are using an Operating System not on this list...
+*********************************************************
+If your operating system is not on this list, don't assume that
+you cannot view/print the images contained in the zip file(s).
+You can experiment on your own, and likely open up the zip file
+and view/print the slides. Try searching the web for
+instructions on how to open/extract zip files, and also how to
+print pictures on your system. However, since the number of
+operating systems available is large and growing, this guide can
+only cover the most common ones.
+
+
+
+Last updated: Aug 9, 2016.
+            </textarea>
+          <p>Here are the links explaining how to zip up the images that this program produces on
+            <a href="http://www.wikihow.com/Zip-Files-Together" target="_blank" >Windows & Mac</a>,
+            <a href="http://www.digitaltrends.com/computing/how-to-zip-and-unzip-files-on-a-chromebook" target="_blank" >Chromebooks</a>, and 
+            <a href="https://askubuntu.com/a/660875" target="_blank" >Ubuntu</a>.
+          </p>
+          <p>Here are some links that explain how to change your screen resolution on 
+          </p>
+          <p>
+            <a href="http://www.thewindowsclub.com/change-screen-resolution-windows-10-2" target="_blank" >Windows 10&nbsp;</a>
+            <a href="http://www.wikihow.com/Change-the-Screen-Resolution-on-a-PC" target="_blank" >Windows 8, 7, Vista, and XP&nbsp;</a>
+            <a href="https://support.apple.com/kb/PH19043" target="_blank" >Mac&nbsp;</a>
+            <a href="http://www.chromestory.com/2014/03/change-screen-resolution-chromebook" target="_blank" >Chromebooks&nbsp;</a>
+            <a href="https://help.ubuntu.com/lts/ubuntu-help/look-resolution.html" target="_blank" >Ubuntu</a>
+          </p>
+          <p>Here are two videos showing how to import presentations using <a href="#" target="_blank" >PowerPoint</a> and <a href="#" target="_blank" >LibreOffice/OpenOffice Impress</a>
+          </p>
+          <p>More help topics comming soon!</p>
           
         </div>
         <a onclick="" title="" class="modalBoxOkBtns">OK</a>
