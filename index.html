@@ -44,7 +44,7 @@
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a href="#helpDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="helpBtn" >Help</a>
-              <a id="aboutBtn">About</a>
+              <a href="#aboutDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="aboutBtn">About</a>
             </div>
         </li>
         <li>
@@ -374,6 +374,20 @@ Last updated: Aug 9, 2016.
           <p>For more help see the FAQ and Help sections of the main website <a href="http://www.rogersmathwhiteboard.com" target="_blank" >rogersmathwhiteboard.com</a>
           </p>
           <p>More help topics comming soon!</p>
+          
+        </div>
+      </div>
+    </div>
+    
+    <!--Here is the about dialog-->
+    
+    <div id="aboutDialog" class="modalDialogs">
+      <div>
+        <a id="openModalTestCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="about dialog close button"></a>
+        <h2>About Roger's Math Whiteboard</h2>
+        <div class="modalBoxContent">
+          <!--Here is where the content of the modal box will go:-->
+          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
           
         </div>
       </div>
