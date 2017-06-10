@@ -219,7 +219,7 @@
         <div class="modalBoxContent">
           
           <p>Here are directions for viewing & printing images in zip files. Feel free to distribute them to your students:</p>
-            <textarea style="resize:none" rows="17" cols="75" readonly>
+          <textarea id="HDInstructionsTextArea" style="resize:none" rows="17" cols="75" readonly>
 The following instructions require you to know what operating
 system you are using, (e.g. Windows). If you do not know what
 operating system you are using, go to www.whatsmyos.com to find
@@ -354,7 +354,9 @@ only cover the most common ones.
 
 
 Last updated: Aug 9, 2016.
-            </textarea>
+          </textarea>
+          <br>
+          <a class="modalBoxKeypadBtns" onclick="copyTextareaValueToClipboard('HDInstructionsTextArea');">Copy Instructions To Clipboard</a>
           <p>Here are the links explaining how to zip up the images that this program produces on
             <a href="http://www.wikihow.com/Zip-Files-Together" target="_blank" >Windows & Mac</a>,
             <a href="http://www.digitaltrends.com/computing/how-to-zip-and-unzip-files-on-a-chromebook" target="_blank" >Chromebooks</a>, and 

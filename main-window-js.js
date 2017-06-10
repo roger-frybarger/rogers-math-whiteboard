@@ -2,6 +2,7 @@
 const { ipcRenderer } = require('electron');
 const { dialog } = require('electron').remote;
 const { desktopCapturer } = require('electron');
+const { clipboard } = require('electron');
 const remote = require('electron').remote;
 const Menu = remote.Menu;
 var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a reference to the main window so we can use
@@ -3235,5 +3236,14 @@ function checkPNGImage(base64string){
   return true;
 }
 
+function copyTextareaValueToClipboard(elid){
+  var txt = document.getElementById(elid).value;
+  clipboard.writeText(txt);
+  alert('Copied');
+}
 
+function copyStrToClipboard(s){
+  clipboard.writeText(s);
+  alert('Copied');
+}
 
