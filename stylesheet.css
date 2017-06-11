@@ -518,6 +518,26 @@ input[type='checkbox']:checked {
 }
 
 /*
+ * Below is the css that is speciffic to the aboutDialog:
+*/
+
+#ADMainIcon {
+  float: left;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+#ADTitle {
+  float: left;
+  padding-top: 45px;
+  padding-right: 0px;
+}
+
+#ADContentArea {
+  clear: both;
+}
+
+/*
  * Below is the css that is speciffic to the insertTextDialog:
 */
 
