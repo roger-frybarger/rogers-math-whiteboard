@@ -12,13 +12,12 @@ const osModule = require('os');
 const path = require('path');
 var fs = require('fs');
 
-// This enables the right-click menu over the text boxes. I found it at:
+// This enables the right-click menu over the text boxes.
+// It is a simplified/modified version of the code written
+// by raleksandar found at:
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
-  label: 'Undo', role: 'undo', },
-  { label: 'Redo', role: 'redo', },
-  { type: 'separator', },
-  { label: 'Cut', role: 'cut', },
+  label: 'Cut', role: 'cut', },
   { label: 'Copy', role: 'copy', },
   { label: 'Paste', role: 'paste', },
   { type: 'separator', },
@@ -486,14 +485,14 @@ function checkForScreenSizeIssues(){
 }
 
 function enableRightClickMenu(){
-  // This enables the right-click menu over the text boxes. I found it at:
+  // This enables the right-click menu over the text boxes.
+  // It is a simplified/modified version of the code written
+  // by raleksandar found at:
   // https://github.com/electron/electron/issues/4068
   document.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     e.stopPropagation();
-
     let node = e.target;
-    
     while(node){
       if(node.nodeName.match(/^(input|textarea)$/i) || node.isContentEditable){
         InputMenu.popup(remote.getCurrentWindow());
@@ -1966,6 +1965,9 @@ var OCDValid = true;
 
 function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   // Create the color wheel for them to choose from:
+  // This code is a modified version of the code written by shoo found at:
+  // https://stackoverflow.com/a/29452034
+  // I appreciate shoo's work!
   var canvas = document.getElementById('OCDPickerCanvas');
   var context = canvas.getContext('2d');
   var x = canvas.width / 2;
