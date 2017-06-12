@@ -524,7 +524,7 @@ input[type='checkbox']:checked {
 #ADMainIcon {
   float: left;
   padding-top: 15px;
-  padding-bottom: 15px;
+  padding-bottom: 20px;
 }
 
 #ADTitle {

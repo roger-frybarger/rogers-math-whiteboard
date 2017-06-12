@@ -1872,6 +1872,13 @@ function SIDDecodeBase64Image(dataString){
   return new Buffer(matches[2], 'base64');
 }
 
+// Here is the code for the aboutDialog:
+
+function ADReadyAboutDialog(){
+  document.getElementById('ADVersionLine').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roger’s Math Whiteboard version ' + appVersion + ' can be best understood as a multi-page image editor designed around the specific needs of math and science teachers who want to take advantage of pen/touch/stylus input while presenting. It is designed to be used while presenting content in class, and/or while working through questions from students.';
+}
+
+
 // Here is the code for the insertTextDialog:
 var ITDValid = true;
 

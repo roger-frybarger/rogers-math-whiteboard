@@ -44,7 +44,7 @@
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a href="#helpDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="helpBtn" >Help</a>
-              <a href="#aboutDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="aboutBtn">About</a>
+              <a href="#aboutDialog" onclick="ADReadyAboutDialog(); unregisterShortcutsOnModalDialogOpen();" id="aboutBtn">About</a>
             </div>
         </li>
         <li>
@@ -389,8 +389,43 @@ Last updated: Aug 9, 2016.
         <img id="ADMainIcon" src="images/icons/scribble-128.png" alt="Rogers Math Whiteboard Icon">
         <h2 id="ADTitle">About Roger's Math Whiteboard</h2>
         <div id="ADContentArea" class="modalBoxContent">
-          <!--Here is where the content of the modal box will go:-->
-          <p>This is a sample modal box that can be created using the powers of CSS3.</p>
+          
+          <!--The line below is a case where the inner html is assigned when the dialog opens.
+          The version number of the app is needed, so it must be obtained through javascript.-->
+          <p id="ADVersionLine"></p>
+          
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roger’s Math Whiteboard is open source and is distributed free of charge. It will never incorporate adds, collect your data, spy on you, or engage in any other such revenue generating but questionable behavior. Instead, we hope you will help support this program by <a href="#" target="_blank" >donating</a> what you can to the lead programmer, maintainer, and original founder of this project. Doing so will give him the maximum flexibility to allocate the funds as he sees fit. We appreciate your support.</p>
+          
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Like this program? Help spread the word! Send your friends the link to:<br> <a id="ADMainSiteLink" href="http://www.rogersmathwhiteboard.com" target="_blank" >www.rogersmathwhiteboard.com</a>.</p>
+          <a class="modalBoxKeypadBtns" onclick="copyStrToClipboard(document.getElementById('ADMainSiteLink').href)">↑ Copy Link ↑</a>
+          
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A note from the lead programmer, maintainer and original founder of this project:</p>
+          <textarea rows="17" cols="55" readonly>
+
+
+	Hello, I am Roger Frybarger, the original creator and maintainer of this program. After watching many math teachers struggle with various touchscreen technologies as an embedded math tutor, I decided to create a whiteboard app designed specifically for them. This program is my best and latest attempt at doing just that. Since I have built it as a portable app inside of the Electron framework, it should work on many various operating systems, including Windows, Mac, and Ubuntu. While this program is designed to work with touch/stylus input, it will accept whatever input is available. Thus, it should work well on a Touchscreen, Interactive Whiteboard, Smartboard, Smart Podium, graphics/drawing tablet, or even with a good mouse. This program can also be used in conjunction with screen-sharing software such as Skype, Zoom, appear.in, or any other system/program/service that allows the sharing and/or recording of your screen. 
+  
+	It is my hope that you will find my hard work useful. However, I do not profess to be the world's best programmer. If you run into any mistakes/issues that I did not catch, feel free to send a description of the issue to rogersmathwhiteboard@gmail.com. While I reserve the right to ignore any message sent to that address at my discretion, I will try to resolve any issues that crop up as my schedule allows. However, if you want to help resolve the issue and have the required programming skills, you are also welcome to fork the source code from the Github link below, make your proposed changes and create a pull request. If your request is reasonable and follows the project’s contributing guidelines, I will consider incorporating your ideas/changes.
+
+	Also, I must thank the following people and organizations for supporting me throughout the creation of this program: 
+1. My mother Becky for sharing her design perspective.
+2. The Github & Electron teams for creating and maintaining the Electron framework on which this program is built.
+3. Mohave Community College, EJ Media on YouTube, w3schools.com, Stackoverflow.com and codecademy.com for helping me hone my programming skills.
+4. Timothy Mayo, Laurel Clifford, and Chris Reed for keeping me motivated to build this app.
+
+	Thank you for using Roger’s Math Whiteboard! I hope you enjoy it!
+  
+          </textarea>
+          
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Github repository containing the source code for this program can be found <a href="#" target="_blank" >here</a>.</p>
+          
+          <p><strong>License Information:</strong></p>
+          
+          <p>Roger's Math Whiteboard<br>Copyright 2016-2017 Roger Frybarger</p>
+          
+          <p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation. </p>
+          
+          <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License version 2 below for more details.</p>
           
         </div>
       </div>
