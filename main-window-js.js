@@ -14,7 +14,7 @@ var fs = require('fs');
 
 // This enables the right-click menu over the text boxes.
 // It is a simplified/modified version of the code written
-// by raleksandar found at:
+// by raleksandar found at:                                 eslint-disable-line spellcheck
 // https://github.com/electron/electron/issues/4068
 const InputMenu = Menu.buildFromTemplate([{
   label: 'Cut', role: 'cut', },
@@ -487,7 +487,7 @@ function checkForScreenSizeIssues(){
 function enableRightClickMenu(){
   // This enables the right-click menu over the text boxes.
   // It is a simplified/modified version of the code written
-  // by raleksandar found at:
+  // by raleksandar found at:                                eslint-disable-line spellcheck
   // https://github.com/electron/electron/issues/4068
   document.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -1874,7 +1874,8 @@ function SIDDecodeBase64Image(dataString){
 
 // Here is the code for the aboutDialog:
 
-function ADReadyAboutDialog(){
+function ADReadyAboutDialog(){ // eslint-disable-line no-unused-vars
+  // eslint-disable-next-line max-len
   document.getElementById('ADVersionLine').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roger’s Math Whiteboard version ' + appVersion + ' can be best understood as a multi-page image editor designed around the specific needs of math and science teachers who want to take advantage of pen/touch/stylus input while presenting. It is designed to be used while presenting content in class, and/or while working through questions from students.';
 }
 
@@ -3245,13 +3246,13 @@ function checkPNGImage(base64string){
   return true;
 }
 
-function copyTextareaValueToClipboard(elid){
+function copyTextareaValueToClipboard(elid){ // eslint-disable-line no-unused-vars
   var txt = document.getElementById(elid).value;
   clipboard.writeText(txt);
   alert('Copied');
 }
 
-function copyStrToClipboard(s){
+function copyStrToClipboard(s){ // eslint-disable-line no-unused-vars
   clipboard.writeText(s);
   alert('Copied');
 }
