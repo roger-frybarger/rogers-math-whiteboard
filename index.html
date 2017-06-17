@@ -66,6 +66,7 @@
               <a id="redBtn" onclick="instrumentColor = 'rgba(255, 0, 0, 1.0)'; updateColorOfColorBtn();">Red</a>
               <a id="greenBtn" onclick="instrumentColor = 'rgba(0, 109, 0, 1.0)'; updateColorOfColorBtn();">Green</a>
               <a id="blueBtn" onclick="instrumentColor = 'rgba(78, 78, 255, 1.0)'; updateColorOfColorBtn();">Blue</a>
+              <a id="whiteBtn" onclick="instrumentColor = 'rgba(255, 255, 255, 1.0)'; updateColorOfColorBtn();">White</a>
               <a href="#otherColorDialog" onclick="OCDReadyOtherColorDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherColorBtn">Other Color</a>
             </div>
         </li>
@@ -891,7 +892,7 @@ Public License instead of this License.
         <h2>Pick a Color:</h2>
         <div class="modalBoxContent">
           
-          <canvas id="OCDPickerCanvas" onmousedown="OCDMouseDown(event)" ontouchstart="OCDTouchStart(event);" width="350" height="350"></canvas>
+          <canvas id="OCDPickerCanvas" onmousedown="OCDMouseDown(event)" ontouchstart="OCDTouchStart(event);" width="350" height="700"></canvas>
           <div>
             <div id="OCDColorValuesInputDiv">
               Red:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" class="OCDInputBoxes" oninput="OCDValidateInputAndUpdateIfApplicable();" onkeydown="OCDCheckForEnter(event);" id="OCDRedTextBox" min="0" max="255"><br>

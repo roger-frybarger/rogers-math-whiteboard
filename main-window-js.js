@@ -1972,31 +1972,22 @@ var OCDAlpha = 1.0;
 var OCDValid = true;
 
 function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
-  // Create the color wheel for them to choose from:
-  // This code is a modified version of the code written by shoo found at:
-  // https://stackoverflow.com/a/29452034
-  // I appreciate shoo's work!
+  // Set up the canvas on which the two color wheels will be painted:
   var canvas = document.getElementById('OCDPickerCanvas');
   var context = canvas.getContext('2d');
   var x = canvas.width / 2;
-  var y = canvas.height / 2;
-  var radius = 175;
-  context.rect(0, 0, canvas.width, canvas.height);
+  var y = canvas.height / 4;
+  var radius = canvas.width / 2;
+  
   context.fillStyle = 'white';
-  context.fill();
-  for(var angle = 0; angle <= 360; angle += 1){
-    var startAngle = (angle - 1) * Math.PI / 180;
-    var endAngle = (angle + 1) * Math.PI / 180;
-    context.beginPath();
-    context.moveTo(x, y);
-    context.arc(x, y, radius, startAngle, endAngle);
-    context.closePath();
-    var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-    gradient.addColorStop(0,'hsl(' + angle + ', 10%, 100%)');
-    gradient.addColorStop(1,'hsl(' + angle + ', 100%, 50%)');
-    context.fillStyle = gradient;
-    context.fill();
-  }
+  context.fillRect(0, 0, canvas.width, (canvas.height / 2));
+
+  context.fillStyle = 'black';
+  context.fillRect(0, (canvas.height / 2), canvas.width, (canvas.height / 2));
+  
+  // Draw the two color wheels:
+  OCDDrawColorCircle(x, y, radius, context, false);
+  OCDDrawColorCircle(x, 3 * y, radius, context, true);
   
   var value = instrumentColor.split(',');
   OCDRed = parseInt(value[0].substring(5), 10);
@@ -2008,6 +1999,31 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   OCDUpdateTextBoxes();
   OCDValidateInputAndUpdateIfApplicable();
   OCDUpdateExample();
+}
+
+function OCDDrawColorCircle(x, y, r, ctx, drk){
+  // Create a color circle:
+  // This code is a modified version of the code written by shoo found at:
+  // https://stackoverflow.com/a/29452034
+  // I appreciate shoo's work! It makes a great color circle.
+  var prcent = 100;
+  if(drk){
+    prcent = 0;
+  }
+  
+  for(var angle = 0; angle <= 360; angle += 1){
+    var startAngle = (angle - 1) * Math.PI / 180;
+    var endAngle = (angle + 1) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.arc(x, y, r, startAngle, endAngle);
+    ctx.closePath();
+    var gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
+    gradient.addColorStop(0,'hsl(' + angle + ', 10%, ' + prcent + '%)');
+    gradient.addColorStop(1,'hsl(' + angle + ', 100%, 50%)');
+    ctx.fillStyle = gradient;
+    ctx.fill();
+  }
 }
 
 function OCDMouseDown(e){ // eslint-disable-line no-unused-vars
