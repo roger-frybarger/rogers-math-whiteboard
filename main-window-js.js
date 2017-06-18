@@ -123,7 +123,15 @@ ipcRenderer.on('esc-pressed', () => {
   // temporary canvas on the drawing area.
   cancelSelect();
   if(canUseTool){
-    if(tool === 'line' || tool === 'select' || tool === 'text' || tool === 'identify' || tool === 'dot' || tool === 'PASTE'){
+    if(tool === 'line' || 
+    tool === 'select' || 
+    tool === 'text' || 
+    tool === 'identify' || 
+    tool === 'dot' || 
+    tool === 'PASTE' || 
+    tool === 'centeral-line' || 
+    tool === 'dashed-line' || 
+    tool === 'dashed-centeral-line'){
       // Paint the temporary canvas onto the the real canvas:
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       // Disable the tool:
@@ -1962,6 +1970,12 @@ function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
+// Here is the code for the otherToolDialog:
+
+function OTDCloseDialog(){ // eslint-disable-line no-unused-vars
+  document.getElementById('OTDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+}
+
 
 // Here is the code for the otherColorDialog:
 var OCDColor = 'rgba(78, 78, 255, 1.0)';
@@ -2952,6 +2966,15 @@ function updateTextOfToolBtn(){
     break;
   case 'PASTE':
     document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
+    break;
+  case 'centeral-line':
+    document.getElementById('toolBtn').innerHTML = 'Tool: CL';
+    break;
+  case 'dashed-line':
+    document.getElementById('toolBtn').innerHTML = 'Tool: DL';
+    break;
+  case 'dashed-centeral-line':
+    document.getElementById('toolBtn').innerHTML = 'Tool: DCL';
     break;
   default:
     throw new Error('Invalid tool. Cant update tool button text: ' + tool);

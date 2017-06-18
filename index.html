@@ -12,6 +12,32 @@
     needs to know what happens when x button is clicked, they can look in this file first, then follow the method
     calls as needed. In cases when this standard does not apply, a comment should indicate the exception and the reasoning
     behind the exception.-->
+    
+    <!--Also, the below comment contains the template that can be copied if another modal window is needed.-->
+    
+    <!--
+    <div id="openModalTest" class="modalDialogs">
+      <div>
+        <a id="openModalTestCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="some close button"></a>
+        <h2>Modal Box</h2>
+        <div class="modalBoxContent">
+          
+          <p>This is a sample modal box that can be created using the powers of CSS3. The content would go here.</p>
+          
+        </div>
+        <a onclick="test2();" title="" class="modalBoxOkBtns">OK</a>
+      </div>
+    </div>
+    
+    Change:
+    1. id of top div
+    2. id of close btn
+    3. alt attribute of close btn image
+    3. Title in h2 element
+    4. Content of course
+    5. Function called in onClick
+    -->
+    
     <link type="text/css" rel="stylesheet" href="stylesheet.css">
   </head>
   <body>
@@ -54,10 +80,10 @@
               <a id="eraserToolBtn" onclick="tool = 'eraser'; updateTextOfToolBtn();">Eraser</a>
               <a id="lineToolBtn" onclick="tool = 'line'; updateTextOfToolBtn();">Straight Line</a>
               <a id="selectToolBtn" onclick="tool = 'select'; updateTextOfToolBtn();">Select</a>
-              <a href ="#insertTextDialog" onclick="ITDReadyInsertTextDialog(); unregisterShortcutsOnModalDialogOpen();" id="insertTextToolBtn">Insert Text</a>
+              <a href="#insertTextDialog" onclick="ITDReadyInsertTextDialog(); unregisterShortcutsOnModalDialogOpen();" id="insertTextToolBtn">Insert Text</a>
               <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
               <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
-              <a id="otherToolBtn" onclick=" updateTextOfToolBtn();">Other</a>
+              <a href="#otherToolDialog" id="otherToolBtn" onclick="unregisterShortcutsOnModalDialogOpen();">Other</a>
             </div>
         </li>
         <li>
@@ -882,6 +908,22 @@ Public License instead of this License.
         <a class="extraBottomButtons" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
         <a class="extraBottomButtons" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
         <a onclick="ITDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
+      </div>
+    </div>
+    
+    <!--Here is the other tool dialog-->
+    
+    <div id="otherToolDialog" class="modalDialogs">
+      <div>
+        <a id="OTDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other tool dialog close button"></a>
+        <h2>Other Tools:</h2>
+        <div class="modalBoxContent">
+          
+          <a class="modalBoxKeypadBtns" onclick="tool = 'centeral-line'; updateTextOfToolBtn(); OTDCloseDialog();">Centeral line</a><br>
+          <a class="modalBoxKeypadBtns" onclick="tool = 'dashed-line'; updateTextOfToolBtn(); OTDCloseDialog();">Dashed line</a><br>
+          <a class="modalBoxKeypadBtns" onclick="tool = 'dashed-centeral-line'; updateTextOfToolBtn(); OTDCloseDialog();">Dashed Centeral line</a><br>
+          
+        </div>
       </div>
     </div>
     
