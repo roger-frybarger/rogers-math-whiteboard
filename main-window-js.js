@@ -550,6 +550,15 @@ function instrumentDown(x, y){
   case 'PASTE':
     pasteToolFunction(x, y, 'down');
     break;
+  case 'centeral-line':
+    centeralLineToolFunction(x, y, 'down');
+    break;
+  case 'dashed-line':
+    dashedLineToolFunction(x, y, 'down');
+    break;
+  case 'dashed-centeral-line':
+    dashedCenteralLineToolFunction(x, y, 'down');
+    break;
   case 'NA':
     break;
   default:
@@ -586,6 +595,15 @@ function instrumentMoved(x, y){
       break;
     case 'PASTE':
       pasteToolFunction(x, y, 'move');
+      break;
+    case 'centeral-line':
+      centeralLineToolFunction(x, y, 'move');
+      break;
+    case 'dashed-line':
+      dashedLineToolFunction(x, y, 'move');
+      break;
+    case 'dashed-centeral-line':
+      dashedCenteralLineToolFunction(x, y, 'move');
       break;
     case 'NA':
       break;
@@ -630,6 +648,18 @@ function instrumentUp(x, y){
       break;
     case 'PASTE':
       pasteToolFunction(x, y, 'up');
+      pushStateIntoUndoArray();
+      break;
+    case 'centeral-line':
+      centeralLineToolFunction(x, y, 'up');
+      pushStateIntoUndoArray();
+      break;
+    case 'dashed-line':
+      dashedLineToolFunction(x, y, 'up');
+      pushStateIntoUndoArray();
+      break;
+    case 'dashed-centeral-line':
+      dashedCenteralLineToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'NA':
@@ -1047,6 +1077,189 @@ function pasteToolFunction(x, y, phase){
     default:
       throw new Error('Invalid phase in pasteToolFunction: ' + phase);
     }
+  }
+}
+
+// Here is the centeralLineToolFunction. It handeles creating a line centered when the instrument went down:
+function centeralLineToolFunction(x, y, phase){
+  var nx;
+  var ny;
+  switch(phase){
+  case 'down':
+    
+    //      1. save current canvas into tempCanvasForInterval.
+    //      2. save x & y into both the variables that store the start point & the ones that store the current position.
+    tempCanvasForInterval = 'NA';
+    tempCanvasForInterval = new Image();
+    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+    prevX = x;
+    prevY = y;
+    tempX = x;
+    tempY = y;
+    
+    break;
+  case 'move':
+    
+    // 1. Update the current position variables with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint an opaque gray line of set size onto the canvas between the starting point & current position.
+    prevX = x;
+    prevY = y;
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    
+    context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.beginPath();
+    nx = tempX + (tempX - prevX);
+    ny = tempY + (tempY - prevY);
+    context.moveTo(nx, ny);
+    context.lineTo(prevX, prevY);
+    context.stroke();
+    
+    break;
+  case 'up':
+    
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. draw line on real canvas using instrumentColor and instrumentWidth.
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.strokeStyle = instrumentColor;
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.beginPath();
+    nx = tempX + (tempX - prevX);
+    ny = tempY + (tempY - prevY);
+    context.moveTo(nx, ny);
+    context.lineTo(prevX, prevY);
+    context.stroke();
+    
+    break;
+  default:
+    throw new Error('Invalid phase in centeralLineToolFunction: ' + phase);
+  }
+}
+
+// Here is the dashedLineToolFunction. It handeles creating a dashed line on the canvas:
+function dashedLineToolFunction(x, y, phase){
+  switch(phase){
+  case 'down':
+    
+    //      1. save current canvas into tempCanvasForInterval.
+    //      2. save x & y into both the variables that store the start point & the ones that store the current position.
+    tempCanvasForInterval = 'NA';
+    tempCanvasForInterval = new Image();
+    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+    prevX = x;
+    prevY = y;
+    tempX = x;
+    tempY = y;
+    
+    break;
+  case 'move':
+    
+    // 1. Update the current position variables with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint an opaque gray line of set size onto the canvas between the starting point & current position.
+    prevX = x;
+    prevY = y;
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    
+    context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.setLineDash([10, 3]);
+    context.beginPath();
+    context.moveTo(tempX, tempY);
+    context.lineTo(prevX, prevY);
+    context.stroke();
+    context.setLineDash([]);
+    
+    break;
+  case 'up':
+    
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. draw line on real canvas using instrumentColor and instrumentWidth.
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.strokeStyle = instrumentColor;
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.setLineDash([10, 3]);
+    context.beginPath();
+    context.moveTo(tempX, tempY);
+    context.lineTo(prevX, prevY);
+    context.stroke();
+    context.setLineDash([]);
+    
+    break;
+  default:
+    throw new Error('Invalid phase in centeralLineToolFunction: ' + phase);
+  }
+}
+
+// Here is the dashedCenteralLineToolFunction. It handeles creating a dashed line
+// centered where the instrument went down:
+function dashedCenteralLineToolFunction(x, y, phase){
+  var nx;
+  var ny;
+  switch(phase){
+  case 'down':
+    
+    //      1. save current canvas into tempCanvasForInterval.
+    //      2. save x & y into both the variables that store the start point & the ones that store the current position.
+    tempCanvasForInterval = 'NA';
+    tempCanvasForInterval = new Image();
+    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+    prevX = x;
+    prevY = y;
+    tempX = x;
+    tempY = y;
+    
+    break;
+  case 'move':
+    
+    // 1. Update the current position variables with the current values of x & y.
+    // 2. repaint the tempCanvasForInterval onto the real canvas.
+    // 3. paint an opaque gray line of set size onto the canvas between the starting point & current position.
+    prevX = x;
+    prevY = y;
+    
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    
+    context.strokeStyle = 'rgba(137, 137, 137, 0.6)';
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.setLineDash([10, 3]);
+    context.beginPath();
+    nx = tempX + (tempX - prevX);
+    ny = tempY + (tempY - prevY);
+    context.moveTo(nx, ny);
+    context.lineTo(prevX, prevY);
+    context.stroke();
+    context.setLineDash([]);
+    
+    break;
+  case 'up':
+    
+    //      1. Paint tempCanvasForInterval onto the real canvas.
+    //      2. draw line on real canvas using instrumentColor and instrumentWidth.
+    context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    context.strokeStyle = instrumentColor;
+    context.lineJoin = 'round';
+    context.lineWidth = instrumentWidth;
+    context.setLineDash([10, 3]);
+    context.beginPath();
+    nx = tempX + (tempX - prevX);
+    ny = tempY + (tempY - prevY);
+    context.moveTo(nx, ny);
+    context.lineTo(prevX, prevY);
+    context.stroke();
+    context.setLineDash([]);
+    
+    break;
+  default:
+    throw new Error('Invalid phase in centeralLineToolFunction: ' + phase);
   }
 }
 
