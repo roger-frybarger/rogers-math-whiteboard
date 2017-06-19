@@ -303,6 +303,10 @@ ipcRenderer.on('delete-pressed', () => {
   }
 });
 
+ipcRenderer.on('space-pressed', () => {
+  // Todo: This & listener for shift space
+});
+
 ipcRenderer.on('app-finished-loading', () => {
   document.documentElement.style.overflow = 'hidden';
   adjustSizeOfMenuButtonsToScreenSize();

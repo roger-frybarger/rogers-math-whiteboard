@@ -118,6 +118,8 @@ function registerShortcuts(){
               globalShortcut.register('CommandOrControl+c', function (){ win.webContents.send('ctrl-c-pressed'); }) &&
               globalShortcut.register('CommandOrControl+v', function (){ win.webContents.send('ctrl-v-pressed'); }) &&
               globalShortcut.register('Delete', function (){ win.webContents.send('delete-pressed'); }) &&
+              globalShortcut.register('Space', function (){ win.webContents.send('space-pressed'); }) &&
+              globalShortcut.register('Shift+Space', function (){ win.webContents.send('shift-space-pressed'); }) &&
               true;
               
     /* eslint-enable indent, brace-style */
