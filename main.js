@@ -120,6 +120,7 @@ function registerShortcuts(){
               globalShortcut.register('Delete', function (){ win.webContents.send('delete-pressed'); }) &&
               globalShortcut.register('Space', function (){ win.webContents.send('space-pressed'); }) &&
               globalShortcut.register('Shift+Space', function (){ win.webContents.send('shift-space-pressed'); }) &&
+              globalShortcut.register('CommandOrControl+s', function (){ win.webContents.send('ctrl-s-pressed'); }) &&
               true;
               
     /* eslint-enable indent, brace-style */

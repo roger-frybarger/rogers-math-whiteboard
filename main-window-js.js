@@ -304,7 +304,15 @@ ipcRenderer.on('delete-pressed', () => {
 });
 
 ipcRenderer.on('space-pressed', () => {
-  // Todo: This & listener for shift space
+  nextPageBtnFunction();
+});
+
+ipcRenderer.on('shift-space-pressed', () => {
+  previousPageBtnFunction();
+});
+
+ipcRenderer.on('ctrl-s-pressed', () => {
+  // Todo
 });
 
 ipcRenderer.on('app-finished-loading', () => {
