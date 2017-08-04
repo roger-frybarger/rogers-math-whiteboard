@@ -129,9 +129,9 @@ ipcRenderer.on('esc-pressed', () => {
     tool === 'identify' || 
     tool === 'dot' || 
     tool === 'PASTE' || 
-    tool === 'centeral-line' || 
+    tool === 'central-line' || 
     tool === 'dashed-line' || 
-    tool === 'dashed-centeral-line'){
+    tool === 'dashed-central-line'){
       // Paint the temporary canvas onto the the real canvas:
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       // Disable the tool:
@@ -312,7 +312,15 @@ ipcRenderer.on('shift-space-pressed', () => {
 });
 
 ipcRenderer.on('ctrl-s-pressed', () => {
-  // Todo
+  // If save path is empty, open html dialog.
+  // Otherwise, just save.
+  saveCurrentImageToArrayBeforeMoving();
+  if(SIDPath !== ''){
+    SIDActuallySaveFiles(true);
+  }
+  else{
+    document.getElementById('saveImagesBtn').click();
+  }
 });
 
 ipcRenderer.on('app-finished-loading', () => {
@@ -562,14 +570,14 @@ function instrumentDown(x, y){
   case 'PASTE':
     pasteToolFunction(x, y, 'down');
     break;
-  case 'centeral-line':
-    centeralLineToolFunction(x, y, 'down');
+  case 'central-line':
+    centralLineToolFunction(x, y, 'down');
     break;
   case 'dashed-line':
     dashedLineToolFunction(x, y, 'down');
     break;
-  case 'dashed-centeral-line':
-    dashedCenteralLineToolFunction(x, y, 'down');
+  case 'dashed-central-line':
+    dashedCentralLineToolFunction(x, y, 'down');
     break;
   case 'NA':
     break;
@@ -608,14 +616,14 @@ function instrumentMoved(x, y){
     case 'PASTE':
       pasteToolFunction(x, y, 'move');
       break;
-    case 'centeral-line':
-      centeralLineToolFunction(x, y, 'move');
+    case 'central-line':
+      centralLineToolFunction(x, y, 'move');
       break;
     case 'dashed-line':
       dashedLineToolFunction(x, y, 'move');
       break;
-    case 'dashed-centeral-line':
-      dashedCenteralLineToolFunction(x, y, 'move');
+    case 'dashed-central-line':
+      dashedCentralLineToolFunction(x, y, 'move');
       break;
     case 'NA':
       break;
@@ -662,16 +670,16 @@ function instrumentUp(x, y){
       pasteToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
-    case 'centeral-line':
-      centeralLineToolFunction(x, y, 'up');
+    case 'central-line':
+      centralLineToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'dashed-line':
       dashedLineToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
-    case 'dashed-centeral-line':
-      dashedCenteralLineToolFunction(x, y, 'up');
+    case 'dashed-central-line':
+      dashedCentralLineToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'NA':
@@ -1092,8 +1100,9 @@ function pasteToolFunction(x, y, phase){
   }
 }
 
-// Here is the centeralLineToolFunction. It handeles creating a line centered when the instrument went down:
-function centeralLineToolFunction(x, y, phase){
+// Here is the centralLineToolFunction. 
+// It handles creating a line centered when the instrument went down:
+function centralLineToolFunction(x, y, phase){
   var nx;
   var ny;
   switch(phase){
@@ -1148,11 +1157,11 @@ function centeralLineToolFunction(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in centeralLineToolFunction: ' + phase);
+    throw new Error('Invalid phase in centralLineToolFunction: ' + phase);
   }
 }
 
-// Here is the dashedLineToolFunction. It handeles creating a dashed line on the canvas:
+// Here is the dashedLineToolFunction. It handles creating a dashed line on the canvas:
 function dashedLineToolFunction(x, y, phase){
   switch(phase){
   case 'down':
@@ -1206,13 +1215,13 @@ function dashedLineToolFunction(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in centeralLineToolFunction: ' + phase);
+    throw new Error('Invalid phase in centralLineToolFunction: ' + phase);
   }
 }
 
-// Here is the dashedCenteralLineToolFunction. It handeles creating a dashed line
+// Here is the dashedCentralLineToolFunction. It handles creating a dashed line
 // centered where the instrument went down:
-function dashedCenteralLineToolFunction(x, y, phase){
+function dashedCentralLineToolFunction(x, y, phase){
   var nx;
   var ny;
   switch(phase){
@@ -1271,7 +1280,7 @@ function dashedCenteralLineToolFunction(x, y, phase){
     
     break;
   default:
-    throw new Error('Invalid phase in centeralLineToolFunction: ' + phase);
+    throw new Error('Invalid phase in centralLineToolFunction: ' + phase);
   }
 }
 
@@ -1953,7 +1962,10 @@ var SIDValidInput = true;
 var SIDValidCharsString = 'abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890';
 var SIDFilesToHandle;
 var SIDFilesHandled;
+var SIDFilesToDelete;
+var SIDFilesDeleted;
 var SIDErrorsSavingFiles = false;
+var SIDSaveViaCtrlS = false;
 
 function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
@@ -2049,7 +2061,39 @@ function SIDHandleFolderPath(){
   });
 }
 
-function SIDActuallySaveFiles(){
+function SIDActuallySaveFiles(ctl_s = false){
+  SIDSaveViaCtrlS = ctl_s;
+  fs.readdir(SIDPath, function (err, files){
+    if(err){
+      // eslint-disable-next-line max-len
+      alert('Error: An error occurred while trying to open the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+      return;
+    }
+    if(files.length > arrayOfCurrentImages.length){
+      // Here is where we need to go through and delete the extra images if they exist:
+      var numCurrentImages = arrayOfCurrentImages.length;
+      SIDFilesToDelete = files.length - numCurrentImages;
+      SIDFilesDeleted = 0;
+      for(var i = files.length; i > numCurrentImages; --i){
+        var name = SIDPath + path.sep + SIDNameForFiles + i + '.png';
+        fs.unlink(name, SIDFileDeleted);
+      }
+    }
+    else{
+      // If there are no extra images, we can just continue:
+      SIDContinueSavingFiles();
+    }
+  });
+}
+
+function SIDFileDeleted(){
+  ++SIDFilesDeleted;
+  if(SIDFilesDeleted === SIDFilesToDelete){
+    SIDContinueSavingFiles();
+  }
+}
+
+function SIDContinueSavingFiles(){
   SIDErrorsSavingFiles = false;
   SIDFilesToHandle = arrayOfCurrentImages.length;
   SIDFilesHandled = 0;
@@ -2060,7 +2104,9 @@ function SIDActuallySaveFiles(){
 }
 
 function SIDFileSaved(err){
-  document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
+  if(SIDSaveViaCtrlS === false){
+    document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
+  }
   if(err){
     SIDErrorsSavingFiles = true;
     SIDIncrementAndCheck();
@@ -2078,17 +2124,28 @@ function SIDIncrementAndCheck(){
 }
 
 function SIDFinishedSaving(){
-  document.getElementById('saveImagesDialog').style.cursor = 'default';
-  document.getElementById('SIDHeader').innerHTML = 'Save Images';
-  if(SIDErrorsSavingFiles){
-    // eslint-disable-next-line max-len
-    alert('Error: One or more files did not save correctly. Ensure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+  if(SIDSaveViaCtrlS === false){
+    document.getElementById('saveImagesDialog').style.cursor = 'default';
+    document.getElementById('SIDHeader').innerHTML = 'Save Images';
+    if(SIDErrorsSavingFiles){
+      // eslint-disable-next-line max-len
+      alert('Error: One or more files did not save correctly. Ensure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+    }
+    else{
+      // Here we can simply close the dialog, set the mouse back to normal if applicable, and
+      // set the applicable variable to true so that they can close the document without the warning.
+      safeToClose = true;
+      document.getElementById('SIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+    }
   }
   else{
-    // Here we can simply close the dialog, set the mouse back to normal if applicable, and
-    // set the applicable variable to true so that they can close the document without the warning.
-    safeToClose = true;
-    document.getElementById('SIDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+    if(SIDErrorsSavingFiles){
+      // eslint-disable-next-line max-len
+      alert('Error: One or more files did not save correctly. Ensure that the folder you choose exists, and that you are allowed to create files there', '');
+    }
+    else{
+      safeToClose = true;
+    }
   }
 }
 
@@ -3192,13 +3249,13 @@ function updateTextOfToolBtn(){
   case 'PASTE':
     document.getElementById('toolBtn').innerHTML = 'Tool: Paste';
     break;
-  case 'centeral-line':
+  case 'central-line':
     document.getElementById('toolBtn').innerHTML = 'Tool: CL';
     break;
   case 'dashed-line':
     document.getElementById('toolBtn').innerHTML = 'Tool: DL';
     break;
-  case 'dashed-centeral-line':
+  case 'dashed-central-line':
     document.getElementById('toolBtn').innerHTML = 'Tool: DCL';
     break;
   default:
