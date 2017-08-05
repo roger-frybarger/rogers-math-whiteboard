@@ -12,12 +12,16 @@ const osModule = require('os');
 var userWantsKeyboardShortcuts = false;
 var userWantsErrorMessagesMain = true;
 
+var timer;
+var incrementer;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
 // This is critical for enabling touch events:
 app.commandLine.appendSwitch('touch-events', 'enabled');
+app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
 var shouldQuit = app.makeSingleInstance(function (){
   // Someone tried to run a second instance, we should focus our window.
@@ -99,44 +103,75 @@ function createWindow(){
 
 function registerShortcuts(){
   if(userWantsKeyboardShortcuts){
-    /* eslint-disable indent, brace-style */
-    var ret = globalShortcut.register('CommandOrControl+z', function (){ win.webContents.send('ctrl-z-pressed'); }) &&
-              globalShortcut.register('CommandOrControl+y', function (){ win.webContents.send('ctrl-y-pressed'); }) &&
-              globalShortcut.register('Escape', function (){ win.webContents.send('esc-pressed'); }) &&
-              globalShortcut.register('Alt+p', function (){ win.webContents.send('alt-p-pressed'); }) &&
-              globalShortcut.register('Alt+e', function (){ win.webContents.send('alt-e-pressed'); }) &&
-              globalShortcut.register('Alt+l', function (){ win.webContents.send('alt-l-pressed'); }) &&
-              globalShortcut.register('Alt+s', function (){ win.webContents.send('alt-s-pressed'); }) &&
-              globalShortcut.register('Alt+i', function (){ win.webContents.send('alt-i-pressed'); }) &&
-              globalShortcut.register('Alt+d', function (){ win.webContents.send('alt-d-pressed'); }) &&
-              globalShortcut.register('Alt+b', function (){ win.webContents.send('alt-b-pressed'); }) &&
-              globalShortcut.register('Alt+k', function (){ win.webContents.send('alt-k-pressed'); }) &&
-              globalShortcut.register('Alt+r', function (){ win.webContents.send('alt-r-pressed'); }) &&
-              globalShortcut.register('Alt+g', function (){ win.webContents.send('alt-g-pressed'); }) &&
-              globalShortcut.register('CommandOrControl+a', function (){ win.webContents.send('ctrl-a-pressed'); }) &&
-              globalShortcut.register('CommandOrControl+Shift+a', function (){ win.webContents.send('ctrl-shift-a-pressed'); }) &&
-              globalShortcut.register('CommandOrControl+c', function (){ win.webContents.send('ctrl-c-pressed'); }) &&
-              globalShortcut.register('CommandOrControl+v', function (){ win.webContents.send('ctrl-v-pressed'); }) &&
-              globalShortcut.register('Delete', function (){ win.webContents.send('delete-pressed'); }) &&
-              globalShortcut.register('Space', function (){ win.webContents.send('space-pressed'); }) &&
-              globalShortcut.register('Shift+Space', function (){ win.webContents.send('shift-space-pressed'); }) &&
-              globalShortcut.register('CommandOrControl+s', function (){ win.webContents.send('ctrl-s-pressed'); }) &&
-              true;
-              
-    /* eslint-enable indent, brace-style */
-    if(!ret){
-      if(userWantsErrorMessagesMain){
-        dialog.showErrorBox('Unable to Register Keyboard Shortcuts',
-        'This is likely due to another program having registered some or all of the same shortcuts.');
-      }
-      else{
-        console.log('Error: Unable to Register Keyboard Shortcuts. This is likely due to another program having registered some or all of the same shortcuts.'); // eslint-disable-line max-len, no-console
-      }
-      userWantsKeyboardShortcuts = false;
-      unregisterShortcuts();
-      win.webContents.send('keyboard-shortcuts-not-registered');
+    var result = actuallyRegisterKeyboardShortcuts();
+    console.log('Tried to register ' + incrementer + ' Result: ' + result);
+    if(!result){
+      // Here is where we need to recursively set a timeout & then handle things from there.
+      incrementer = 0;
+      timer = setTimeout(onRetryRegister, 500);
     }
   }
+}
+
+function onRetryRegister(){
+  var result = actuallyRegisterKeyboardShortcuts();
+  console.log('Tried to register ' + incrementer + ' Result: ' + result);
+  if(!result){
+    ++incrementer;
+    if(incrementer > 3){
+      clearTimeout(timer);
+      console.log('Couldent do it.');
+      handleProblemRegisteringKeyboardShortcuts()
+    }
+    else{
+      timer = setTimeout(onRetryRegister, 500);
+    }
+  }
+  else{
+    clearTimeout(timer);
+  }
+}
+
+function handleProblemRegisteringKeyboardShortcuts(){
+  if(userWantsErrorMessagesMain){
+    dialog.showErrorBox('Unable to Register Keyboard Shortcuts',
+    'This is likely due to another program having registered some or all of the same shortcuts.');
+  }
+  else{
+    console.log('Error: Unable to Register Keyboard Shortcuts. This is likely due to another program having registered some or all of the same shortcuts.'); // eslint-disable-line max-len, no-console
+  }
+  userWantsKeyboardShortcuts = false;
+  unregisterShortcuts();
+  win.webContents.send('keyboard-shortcuts-not-registered');
+}
+
+function actuallyRegisterKeyboardShortcuts(){
+  /* eslint-disable indent, brace-style */
+  var ret = globalShortcut.register('CommandOrControl+z', function (){ win.webContents.send('ctrl-z-pressed'); }) &&
+            globalShortcut.register('CommandOrControl+y', function (){ win.webContents.send('ctrl-y-pressed'); }) &&
+            globalShortcut.register('Escape', function (){ win.webContents.send('esc-pressed'); }) &&
+            globalShortcut.register('Alt+p', function (){ win.webContents.send('alt-p-pressed'); }) &&
+            globalShortcut.register('Alt+e', function (){ win.webContents.send('alt-e-pressed'); }) &&
+            globalShortcut.register('Alt+l', function (){ win.webContents.send('alt-l-pressed'); }) &&
+            globalShortcut.register('Alt+s', function (){ win.webContents.send('alt-s-pressed'); }) &&
+            globalShortcut.register('Alt+i', function (){ win.webContents.send('alt-i-pressed'); }) &&
+            globalShortcut.register('Alt+d', function (){ win.webContents.send('alt-d-pressed'); }) &&
+            globalShortcut.register('Alt+b', function (){ win.webContents.send('alt-b-pressed'); }) &&
+            globalShortcut.register('Alt+k', function (){ win.webContents.send('alt-k-pressed'); }) &&
+            globalShortcut.register('Alt+r', function (){ win.webContents.send('alt-r-pressed'); }) &&
+            globalShortcut.register('Alt+g', function (){ win.webContents.send('alt-g-pressed'); }) &&
+            globalShortcut.register('CommandOrControl+a', function (){ win.webContents.send('ctrl-a-pressed'); }) &&
+            globalShortcut.register('CommandOrControl+Shift+a', function (){ win.webContents.send('ctrl-shift-a-pressed'); }) &&
+            globalShortcut.register('CommandOrControl+c', function (){ win.webContents.send('ctrl-c-pressed'); }) &&
+            globalShortcut.register('CommandOrControl+v', function (){ win.webContents.send('ctrl-v-pressed'); }) &&
+            globalShortcut.register('Delete', function (){ win.webContents.send('delete-pressed'); }) &&
+            globalShortcut.register('Space', function (){ win.webContents.send('space-pressed'); }) &&
+            globalShortcut.register('Shift+Space', function (){ win.webContents.send('shift-space-pressed'); }) &&
+            globalShortcut.register('CommandOrControl+s', function (){ win.webContents.send('ctrl-s-pressed'); }) &&
+            true;
+            
+  /* eslint-enable indent, brace-style */
+  return ret;
 }
 
 function unregisterShortcuts(){
