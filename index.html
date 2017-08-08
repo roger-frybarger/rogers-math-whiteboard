@@ -18,7 +18,7 @@
     <!--
     <div id="openModalTest" class="modalDialogs">
       <div>
-        <a id="openModalTestCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="some close button"></a>
+        <a id="openModalTestCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="some close button"></a>
         <h2>Modal Box</h2>
         <div class="modalBoxContent">
           
@@ -45,7 +45,7 @@
       <ul>
         <!--These are the entries in the top nav bar. They each have to have the transparent image as the
         source because if that is removed, a border will be shown no matter how they are styled in the css-->
-        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog(); unregisterShortcutsOnModalDialogOpen();"><img id="settingsBtn" src="images/icons/transparent.png" alt="settings button"></a></li>
+        <li><a href="#settingsDialog" onclick="SDReadySettingsDialog();"><img id="settingsBtn" src="images/icons/transparent.png" alt="settings button"></a></li>
         <li><a href="#" onclick="undoBtnFunction();"><img class="topLeftButtons" id="undoBtn" src="images/icons/transparent.png" alt="undo button"></a></li>
         <li><a href="#" onclick="redoBtnFunction();"><img class="topLeftButtons" id="redoBtn" src="images/icons/transparent.png" alt="redo button"></a></li>
         <li><a href="#" onclick="copyBtnFunction();"><img class="topLeftButtons" id="copyBtn" src="images/icons/transparent.png" alt="copy button"></a></li>
@@ -65,12 +65,12 @@
           <a class="dropbtn" onclick="fileBtnFunction();" id="fileBtn">File</a>
             <div class="dropdown-content" id="fileDropdown">
               <a id="reMaximizeBtn" onclick="ipcRenderer.send('maximize-main-win');">Re-Maximize</a>
-              <a href="#openImagesDialog" onclick="OIDReadyOpenImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="openImagesBtn">Open Images</a>
-              <a href="#saveImagesDialog" onclick="SIDReadySaveImagesDialog(); unregisterShortcutsOnModalDialogOpen();" id="saveImagesBtn">Save Images</a>
+              <a href="#openImagesDialog" onclick="OIDReadyOpenImagesDialog();" id="openImagesBtn">Open Images</a>
+              <a href="#saveImagesDialog" onclick="SIDReadySaveImagesDialog();" id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a href="#helpDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="helpBtn" >Help</a>
-              <a href="#aboutDialog" onclick="ADReadyAboutDialog(); unregisterShortcutsOnModalDialogOpen();" id="aboutBtn">About</a>
+              <a href="#aboutDialog" onclick="ADReadyAboutDialog();" id="aboutBtn">About</a>
             </div>
         </li>
         <li>
@@ -80,7 +80,7 @@
               <a id="eraserToolBtn" onclick="tool = 'eraser'; updateTextOfToolBtn();">Eraser</a>
               <a id="lineToolBtn" onclick="tool = 'line'; updateTextOfToolBtn();">Straight Line</a>
               <a id="selectToolBtn" onclick="tool = 'select'; updateTextOfToolBtn();">Select</a>
-              <a href="#insertTextDialog" onclick="ITDReadyInsertTextDialog(); unregisterShortcutsOnModalDialogOpen();" id="insertTextToolBtn">Insert Text</a>
+              <a href="#insertTextDialog" onclick="ITDReadyInsertTextDialog();" id="insertTextToolBtn">Insert Text</a>
               <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
               <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
               <a href="#otherToolDialog" id="otherToolBtn" onclick="unregisterShortcutsOnModalDialogOpen();">Other</a>
@@ -94,7 +94,7 @@
               <a id="greenBtn" onclick="instrumentColor = 'rgba(0, 109, 0, 1.0)'; updateColorOfColorBtn();">Green</a>
               <a id="blueBtn" onclick="instrumentColor = 'rgba(78, 78, 255, 1.0)'; updateColorOfColorBtn();">Blue</a>
               <a id="whiteBtn" onclick="instrumentColor = 'rgba(255, 255, 255, 1.0)'; updateColorOfColorBtn();">White</a>
-              <a href="#otherColorDialog" onclick="OCDReadyOtherColorDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherColorBtn">Other Color</a>
+              <a href="#otherColorDialog" onclick="OCDReadyOtherColorDialog();" id="otherColorBtn">Other Color</a>
             </div>
         </li>
         <li>
@@ -103,7 +103,7 @@
               <a id="smallSizeBtn" onclick="instrumentWidth = 2; updateTextOfSizeBtn();">Small</a>
               <a id="mediumSizeBtn" onclick="instrumentWidth = 5; updateTextOfSizeBtn();">Medium</a>
               <a id="largeSizeBtn" onclick="instrumentWidth = 10; updateTextOfSizeBtn();">Large</a>
-              <a href ="#otherSizeDialog" onclick="OSDReadyOtherSizeDialog(); unregisterShortcutsOnModalDialogOpen();" id="otherSizeBtn">Other Size</a>
+              <a href ="#otherSizeDialog" onclick="OSDReadyOtherSizeDialog();" id="otherSizeBtn">Other Size</a>
             </div>
         </li>
         <li>
@@ -112,7 +112,7 @@
               <a id="blankWhitePageBtn" onclick="insertTemplateAsPage('images/Blank_White_Page.png');">Blank White</a>
               <a id="graphPaperPageBtn" onclick="insertTemplateAsPage('images/Blank_Graph_Paper_Page.png');">Graph Paper</a>
               <a id="coordinatePlaneBtn" onclick="insertTemplateAsPage('images/Blank_X_Y_Graph_Paper_Page.png');">Coordinate</a>
-              <a id="screenshotBtn" href ="#insertScreenshotDialog" onclick="ISDReadyInsertScreenshotDialog(); unregisterShortcutsOnModalDialogOpen();">Screenshot</a>
+              <a id="screenshotBtn" href ="#insertScreenshotDialog" onclick="ISDReadyInsertScreenshotDialog();">Screenshot</a>
               <a href ="#otherPageDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="otherPageBtn">Other</a>
             </div>
         </li>
@@ -157,7 +157,7 @@
     
     <div id="settingsDialog" class="modalDialogs">
       <div>
-        <a id="SDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="settings dialog close button"></a>
+        <a id="SDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="settings dialog close button"></a>
         <h2>Settings:</h2>
         <div class="modalBoxContent">
           <p>Note: Since this app is designed to be portable, these settings will only remain in effect until you close the app. Unfortunately, that means you will need to re-adjust them to your liking every time you start the app. Portability comes with its costs.</p>
@@ -166,7 +166,7 @@
             <li><input id="SDRemoveMousePointerOnCanvas" type="checkbox" value="false"> Remove mouse pointer over drawing area</li>
             <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
             <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
-            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> esc --> Cancel draw/select/paste/etc, <br> alt+p --> Pen, <br> alt+e --> Eraser, <br> alt+l --> Straight Line, <br> alt+s --> Select, <br> alt+i --> Identifier, <br> alt+d --> Dot, <br> alt+b --> Blue, <br> alt+k --> Black, <br> alt+r --> Red, <br> alt+g --> Green, <br> ctrl+a --> Select all, <br> ctrl+Shift+a --> Deselect all, <br> ctrl+c --> Copy section, <br> ctrl+v --> Paste, <br> Delete --> Erase selection, <br> Space --> Next Page, <br> Shift+Space --> Previous Page, <br> ctrl+s --> save.)</li>
+            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (Some of these are case-sensitive) <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> ctrl+c --> Copy section, <br> ctrl+v --> Paste, <br> ctrl+s --> save, <br> ctrl+a --> Select all, <br> ctrl+Shift+a --> Deselect all, <br> alt+p --> Pen, <br> alt+e --> Eraser, <br> alt+l --> Straight Line, <br> alt+s --> Select, <br> alt+i --> Identifier, <br> alt+d --> Dot, <br> alt+b --> Blue, <br> alt+k --> Black, <br> alt+r --> Red, <br> alt+g --> Green, <br> alt+w --> White, <br> Space --> Next Page, <br> Shift+Space --> Previous Page, <br> esc --> Cancel draw/select/paste/etc, <br> Delete --> Erase selection.)</li>
             <li><input id="SDSilenceErrorMessages" type="checkbox" value="false"> Silence error messages. <br> (This can be useful if you are constantly being bothered by an error message while the program seems to be performing fine. However, it could also lead to further malfunctioning, which could leave the app unusable. Use with caution.)</li>
             <li>More settings coming soon!</li>
           </ul>
@@ -178,7 +178,7 @@
     
     <div id="openImagesDialog" class="modalDialogs">
       <div>
-        <a id="OIDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="open images dialog close button"></a>
+        <a id="OIDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="open images dialog close button"></a>
         <h2 id="OIDHeader">Open Images</h2>
         <div class="modalBoxContent">
           
@@ -216,7 +216,7 @@
     
     <div id="saveImagesDialog" class="modalDialogs">
       <div>
-        <a id="SIDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="save images dialog close button"></a>
+        <a id="SIDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="save images dialog close button"></a>
         <h2 id="SIDHeader">Save Images</h2>
         <div class="modalBoxContent">
           
@@ -242,7 +242,7 @@
     
     <div id="helpDialog" class="modalDialogs">
       <div>
-        <a id="HDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="help dialog close button"></a>
+        <a id="HDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="help dialog close button"></a>
         <h2>Here are some help topics:</h2>
         <div class="modalBoxContent">
           
@@ -415,7 +415,7 @@ Last updated: Aug 9, 2016.
     
     <div id="aboutDialog" class="modalDialogs">
       <div>
-        <a id="openModalTestCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="about dialog close button"></a>
+        <a id="openModalTestCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="about dialog close button"></a>
         <img id="ADMainIcon" src="images/icons/scribble-128.png" alt="Rogers Math Whiteboard Icon">
         <h2 id="ADTitle">About Roger's Math Whiteboard</h2>
         <div id="ADContentArea" class="modalBoxContent">
@@ -812,7 +812,7 @@ Public License instead of this License.
     
     <div id="insertTextDialog" class="modalDialogs">
       <div>
-        <a id="ITDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert text dialog close button"></a>
+        <a id="ITDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert text dialog close button"></a>
         <h2>Insert Text:</h2>
         <div class="modalBoxContent">
           <!--All of these are the buttons that insert various symbols into the text box when clicked:-->
@@ -915,7 +915,7 @@ Public License instead of this License.
     
     <div id="otherToolDialog" class="modalDialogs">
       <div>
-        <a id="OTDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other tool dialog close button"></a>
+        <a id="OTDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other tool dialog close button"></a>
         <h2>Other Tools:</h2>
         <div class="modalBoxContent">
           
@@ -931,7 +931,7 @@ Public License instead of this License.
     
     <div id="otherColorDialog" class="modalDialogs">
       <div>
-        <a id="OCDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other color dialog close button"></a>
+        <a id="OCDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other color dialog close button"></a>
         <h2>Pick a Color:</h2>
         <div class="modalBoxContent">
           
@@ -958,7 +958,7 @@ Public License instead of this License.
     
     <div id="otherSizeDialog" class="modalDialogs">
       <div>
-        <a id="OSDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other size dialog close button"></a>
+        <a id="OSDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="other size dialog close button"></a>
         <h2>New Size:</h2>
         <div class="modalBoxContent">
           <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
@@ -1005,7 +1005,7 @@ Public License instead of this License.
     
     <div id="otherPageDialog" class="modalDialogs">
       <div>
-        <a id="OPDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert other page dialog close button"></a>
+        <a id="OPDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert other page dialog close button"></a>
         <h2>Click/Tap on the template that you would like to insert/use:</h2>
         <div class="modalBoxContent">
           

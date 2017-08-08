@@ -71,7 +71,6 @@ var tempImageForWindowResize;
 
 var maxNumberOfPages = 250;
 var weGotKeyboardShortcuts = false;
-var temporarilyDisabledKeyboardShortcuts = false;
 
 // This is for re-sizing the drawing area:
 var tempForTimer;
@@ -99,229 +98,7 @@ ipcRenderer.on('close-button-clicked', () => {
   userWantsToClose();
 });
 
-// Here is the function that executes when the main process is unable to register the keyboard shortcuts:
-ipcRenderer.on('keyboard-shortcuts-not-registered', () => {
-  weGotKeyboardShortcuts = false;
-  temporarilyDisabledKeyboardShortcuts = false;
-});
 
-// The next several functions simply perform the applicable tasks when the respective keyboard shortcut is pressed:
-ipcRenderer.on('ctrl-z-pressed', () => {
-  if(canUseTool === false){
-    undoBtnFunction();
-  }
-});
-
-ipcRenderer.on('ctrl-y-pressed', () => {
-  if(canUseTool === false){
-    redoBtnFunction();
-  }
-});
-
-ipcRenderer.on('esc-pressed', () => {
-  // If they press escape, then we should simply cancel whatever it was that they were doing, & paint the
-  // temporary canvas on the drawing area.
-  cancelSelect();
-  if(canUseTool){
-    if(tool === 'line' || 
-    tool === 'select' || 
-    tool === 'text' || 
-    tool === 'identify' || 
-    tool === 'dot' || 
-    tool === 'PASTE' || 
-    tool === 'central-line' || 
-    tool === 'dashed-line' || 
-    tool === 'dashed-central-line'){
-      // Paint the temporary canvas onto the the real canvas:
-      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-      // Disable the tool:
-      canUseTool = false;
-      // Do some cleanup:
-      prevX = 'NA';
-      prevY = 'NA';
-      tempX = 'NA';
-      tempY = 'NA';
-      areaSelected = false;
-    }
-  }
-});
-
-ipcRenderer.on('alt-p-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'pen';
-    updateTextOfToolBtn();
-  }
-});
-
-ipcRenderer.on('alt-e-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'eraser';
-    updateTextOfToolBtn();
-  }
-});
-
-ipcRenderer.on('alt-l-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'line';
-    updateTextOfToolBtn();
-  }
-});
-
-ipcRenderer.on('alt-s-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'select';
-    updateTextOfToolBtn();
-  }
-});
-
-ipcRenderer.on('alt-i-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'identify';
-    updateTextOfToolBtn();
-  }
-});
-
-ipcRenderer.on('alt-d-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'dot';
-    updateTextOfToolBtn();
-  }
-});
-
-ipcRenderer.on('alt-b-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    instrumentColor = 'rgba(78, 78, 255, 1.0)';
-    updateColorOfColorBtn();
-  }
-});
-
-ipcRenderer.on('alt-k-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    instrumentColor = 'rgba(0, 0, 0, 1.0)';
-    updateColorOfColorBtn();
-  }
-});
-
-ipcRenderer.on('alt-r-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    instrumentColor = 'rgba(255, 0, 0, 1.0)';
-    updateColorOfColorBtn();
-  }
-});
-
-ipcRenderer.on('alt-g-pressed', () => {
-  cancelSelect();
-  if(canUseTool === false){
-    instrumentColor = 'rgba(0, 109, 0, 1.0)';
-    updateColorOfColorBtn();
-  }
-});
-
-ipcRenderer.on('ctrl-a-pressed', () => {
-  // The purpose of this function is to select the entire drawing area.
-  cancelSelect();
-  if(canUseTool === false){
-    tool = 'select';
-    updateTextOfToolBtn();
-    prevX = context.canvas.width;
-    prevY = context.canvas.height;
-    tempX = 0;
-    tempY = 0;
-    tempCanvasForInterval = 'NA';
-    tempCanvasForInterval = new Image();
-    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
-    
-    areaSelected = true;
-    context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
-    context.lineJoin = 'round';
-    context.lineWidth = 1;
-    context.beginPath();
-    // These have to be 1 back from the edges of the canvas so they will be visible.
-    context.moveTo(tempX + 1, tempY + 1);
-    context.lineTo(prevX - 1, tempY + 1);
-    context.lineTo(prevX - 1, prevY - 1);
-    context.lineTo(tempX + 1, prevY - 1);
-    context.closePath();
-    context.stroke();
-    
-    var tempWidth = Math.abs(tempX - prevX);
-    var tempHeight = Math.abs(tempY - prevY);
-    if(tempWidth === 0 || tempHeight === 0){
-      cancelSelect();
-    }
-  }
-});
-
-ipcRenderer.on('ctrl-shift-a-pressed', () => {
-  cancelSelect();
-});
-
-ipcRenderer.on('ctrl-c-pressed', () => {
-  if(canUseTool === false){
-    copyBtnFunction();
-  }
-});
-
-ipcRenderer.on('ctrl-v-pressed', () => {
-  if(canUseTool === false){
-    cancelSelect();
-    pasteBtnFunction();
-  }
-});
-
-ipcRenderer.on('delete-pressed', () => {
-  // If delete is pressed, then we will erase the entire area that is selected.
-  // Otherwise, we will do nothing.
-  if(canUseTool === false){
-    if(areaSelected === true){
-      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
-      var sx = Math.min(tempX, prevX);
-      var sy = Math.min(tempY, prevY);
-      var lx = Math.max(tempX, prevX);
-      var ly = Math.max(tempY, prevY);
-      var tempImageData = eraserContext.getImageData(sx, sy, lx - sx, ly - sy);
-      context.putImageData(tempImageData, sx, sy);
-      prevX = 'NA';
-      prevY = 'NA';
-      tempX = 'NA';
-      tempY = 'NA';
-      areaSelected = false;
-      pushStateIntoUndoArray();
-    }
-    else{
-      tellUserToSelectAnAreaFirst();
-    }
-  }
-});
-
-ipcRenderer.on('space-pressed', () => {
-  nextPageBtnFunction();
-});
-
-ipcRenderer.on('shift-space-pressed', () => {
-  previousPageBtnFunction();
-});
-
-ipcRenderer.on('ctrl-s-pressed', () => {
-  // If save path is empty, open html dialog.
-  // Otherwise, just save.
-  saveCurrentImageToArrayBeforeMoving();
-  if(SIDPath !== ''){
-    SIDActuallySaveFiles(true);
-  }
-  else{
-    document.getElementById('saveImagesBtn').click();
-  }
-});
 
 ipcRenderer.on('app-finished-loading', () => {
   document.documentElement.style.overflow = 'hidden';
@@ -337,7 +114,7 @@ function continueAfterAppFinishedLoading1(){
   setUpGUIOnStartup();
   checkForScreenSizeIssues();
   enableRightClickMenu();
-  keyboardShortcutsTryTwo();
+  document.addEventListener('keydown', passKeyboardInputOffToFunction);
   allLoaded = true;
 }
 
@@ -532,28 +309,323 @@ function enableRightClickMenu(){
   });
 }
 
-function keyboardShortcutsTryTwo(){
-  document.addEventListener("keypress", secondTryKeyboardSystem);
-  document.addEventListener("keydown", (e) => {
-    //console.log(e);
-    if(e.key === 'Escape'){
-      secondTryKeyboardSystem(e);
+
+function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statements
+  if(weGotKeyboardShortcuts && e.target.nodeName === 'BODY'){
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'z'){
+      undoKeyboardShortcutPressed();
+      return;
     }
-    if(e.ctrlKey === true && e.key === 'a'){
-      secondTryKeyboardSystem(e);
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'y'){
+      redoKeyboardShortcutPressed();
+      return;
     }
-    if(e.ctrlKey === true && e.key === 'c'){
-      secondTryKeyboardSystem(e);
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'c'){
+      copyKeyboardShortcutPressed();
+      return;
     }
-    if(e.ctrlKey === true && e.key === 'v'){
-      secondTryKeyboardSystem(e);
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'v'){
+      pasteKeyboardShortcutPressed();
+      return;
     }
-  });
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 's'){
+      saveKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'a'){
+      selectAllKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === true && e.metaKey === false && e.key === 'A'){
+      deselectAllKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'p'){
+      penKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'e'){
+      eraserKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'l'){
+      lineKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 's'){
+      selectKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'i'){
+      identifierKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'd'){
+      dotKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'b'){
+      blueKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'k'){
+      blackKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'w'){
+      whiteKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'r'){
+      redKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'g'){
+      greenKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === ' '){
+      nextPageKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === true && e.metaKey === false && e.key === ' '){
+      previousPageKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'Escape'){
+      escapeKeyboardShortcutPressed();
+      return;
+    }
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'Delete'){
+      deleteKeyboardShortcutPressed();
+      return;
+    }
+  }
 }
 
-function secondTryKeyboardSystem(e){
-  if(e.target.nodeName === 'BODY'){
-    // Here we can add our keyboard shortcuts.
+// The next several functions simply perform the applicable tasks when the respective keyboard shortcut is pressed:
+function undoKeyboardShortcutPressed(){
+  if(canUseTool === false){
+    undoBtnFunction();
+  }
+}
+
+function redoKeyboardShortcutPressed(){
+  if(canUseTool === false){
+    redoBtnFunction();
+  }
+}
+
+function copyKeyboardShortcutPressed(){
+  if(canUseTool === false){
+    copyBtnFunction();
+  }
+}
+
+function pasteKeyboardShortcutPressed(){
+  if(canUseTool === false){
+    cancelSelect();
+    pasteBtnFunction();
+  }
+}
+
+function saveKeyboardShortcutPressed(){
+  // If save path is empty, open html dialog.
+  // Otherwise, just save.
+  saveCurrentImageToArrayBeforeMoving();
+  if(SIDPath !== ''){
+    SIDActuallySaveFiles(true);
+  }
+  else{
+    document.getElementById('saveImagesBtn').click();
+  }
+}
+
+function selectAllKeyboardShortcutPressed(){
+  // The purpose of this function is to select the entire drawing area.
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'select';
+    updateTextOfToolBtn();
+    prevX = context.canvas.width;
+    prevY = context.canvas.height;
+    tempX = 0;
+    tempY = 0;
+    tempCanvasForInterval = 'NA';
+    tempCanvasForInterval = new Image();
+    tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+    
+    areaSelected = true;
+    context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    context.lineJoin = 'round';
+    context.lineWidth = 1;
+    context.beginPath();
+    // These have to be 1 back from the edges of the canvas so they will be visible.
+    context.moveTo(tempX + 1, tempY + 1);
+    context.lineTo(prevX - 1, tempY + 1);
+    context.lineTo(prevX - 1, prevY - 1);
+    context.lineTo(tempX + 1, prevY - 1);
+    context.closePath();
+    context.stroke();
+    
+    var tempWidth = Math.abs(tempX - prevX);
+    var tempHeight = Math.abs(tempY - prevY);
+    if(tempWidth === 0 || tempHeight === 0){
+      cancelSelect();
+    }
+  }
+}
+
+function deselectAllKeyboardShortcutPressed(){
+  cancelSelect();
+}
+
+function penKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'pen';
+    updateTextOfToolBtn();
+  }
+}
+
+function eraserKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'eraser';
+    updateTextOfToolBtn();
+  }
+}
+
+function lineKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'line';
+    updateTextOfToolBtn();
+  }
+}
+
+function selectKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'select';
+    updateTextOfToolBtn();
+  }
+}
+
+function identifierKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'identify';
+    updateTextOfToolBtn();
+  }
+}
+
+function dotKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    tool = 'dot';
+    updateTextOfToolBtn();
+  }
+}
+
+function blueKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    instrumentColor = 'rgba(78, 78, 255, 1.0)';
+    updateColorOfColorBtn();
+  }
+}
+
+function blackKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    instrumentColor = 'rgba(0, 0, 0, 1.0)';
+    updateColorOfColorBtn();
+  }
+}
+
+function whiteKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    instrumentColor = 'rgba(255, 255, 255, 1.0)';
+    updateColorOfColorBtn();
+  }
+}
+
+function redKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    instrumentColor = 'rgba(255, 0, 0, 1.0)';
+    updateColorOfColorBtn();
+  }
+}
+
+function greenKeyboardShortcutPressed(){
+  cancelSelect();
+  if(canUseTool === false){
+    instrumentColor = 'rgba(0, 109, 0, 1.0)';
+    updateColorOfColorBtn();
+  }
+}
+
+function nextPageKeyboardShortcutPressed(){
+  nextPageBtnFunction();
+}
+
+function previousPageKeyboardShortcutPressed(){
+  previousPageBtnFunction();
+}
+
+function escapeKeyboardShortcutPressed(){
+  // If they press escape, then we should simply cancel whatever it was that they were doing, & paint the
+  // temporary canvas on the drawing area.
+  cancelSelect();
+  if(canUseTool){
+    if(tool === 'line' || 
+    tool === 'select' || 
+    tool === 'text' || 
+    tool === 'identify' || 
+    tool === 'dot' || 
+    tool === 'PASTE' || 
+    tool === 'central-line' || 
+    tool === 'dashed-line' || 
+    tool === 'dashed-central-line'){
+      // Paint the temporary canvas onto the the real canvas:
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      // Disable the tool:
+      canUseTool = false;
+      // Do some cleanup:
+      prevX = 'NA';
+      prevY = 'NA';
+      tempX = 'NA';
+      tempY = 'NA';
+      areaSelected = false;
+    }
+  }
+}
+
+function deleteKeyboardShortcutPressed(){
+  // If delete is pressed, then we will erase the entire area that is selected.
+  // Unless they haven't selected anything, in which case we will tell them to select something.
+  if(canUseTool === false){
+    if(areaSelected === true){
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      var sx = Math.min(tempX, prevX);
+      var sy = Math.min(tempY, prevY);
+      var lx = Math.max(tempX, prevX);
+      var ly = Math.max(tempY, prevY);
+      var tempImageData = eraserContext.getImageData(sx, sy, lx - sx, ly - sy);
+      context.putImageData(tempImageData, sx, sy);
+      prevX = 'NA';
+      prevY = 'NA';
+      tempX = 'NA';
+      tempY = 'NA';
+      areaSelected = false;
+      pushStateIntoUndoArray();
+    }
+    else{
+      tellUserToSelectAnAreaFirst();
+    }
   }
 }
 
@@ -1641,18 +1713,6 @@ function deleteCurrentPage(){
 
 
 
-function unregisterShortcutsOnModalDialogOpen(){ // eslint-disable-line no-unused-vars
-  ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
-  temporarilyDisabledKeyboardShortcuts = true;
-}
-
-function registerShortcutsOnModalDialogClose(){ // eslint-disable-line no-unused-vars
-  if(temporarilyDisabledKeyboardShortcuts === true && weGotKeyboardShortcuts === true){
-    ipcRenderer.send('user-wants-keyboard-shortcuts');
-    temporarilyDisabledKeyboardShortcuts = false;
-  }
-}
-
 // ******************************************************************************
 // *********                                                           **********
 // *********   Below is the javascript related to the modal dialogs:   **********
@@ -1738,12 +1798,9 @@ function SDOkBtnFunction(){
     maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value, 10);
     
     if(document.getElementById('SDEnableKeyboardShortcuts').checked){
-      ipcRenderer.send('user-wants-keyboard-shortcuts');
       weGotKeyboardShortcuts = true;
-      temporarilyDisabledKeyboardShortcuts = false;
     }
     else{
-      ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
       weGotKeyboardShortcuts = false;
     }
     
