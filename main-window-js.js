@@ -337,6 +337,7 @@ function continueAfterAppFinishedLoading1(){
   setUpGUIOnStartup();
   checkForScreenSizeIssues();
   enableRightClickMenu();
+  keyboardShortcutsTryTwo();
   allLoaded = true;
 }
 
@@ -529,6 +530,31 @@ function enableRightClickMenu(){
       node = node.parentNode;
     }
   });
+}
+
+function keyboardShortcutsTryTwo(){
+  document.addEventListener("keypress", secondTryKeyboardSystem);
+  document.addEventListener("keydown", (e) => {
+    //console.log(e);
+    if(e.key === 'Escape'){
+      secondTryKeyboardSystem(e);
+    }
+    if(e.ctrlKey === true && e.key === 'a'){
+      secondTryKeyboardSystem(e);
+    }
+    if(e.ctrlKey === true && e.key === 'c'){
+      secondTryKeyboardSystem(e);
+    }
+    if(e.ctrlKey === true && e.key === 'v'){
+      secondTryKeyboardSystem(e);
+    }
+  });
+}
+
+function secondTryKeyboardSystem(e){
+  if(e.target.nodeName === 'BODY'){
+    // Here we can add our keyboard shortcuts.
+  }
 }
 
 // Here is the instrumentDown function. It accepts the x and y coordinates of where the tool/instrument started
