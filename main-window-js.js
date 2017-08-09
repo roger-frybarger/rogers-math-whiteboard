@@ -400,7 +400,6 @@ function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statement
       deleteKeyboardShortcutPressed();
       return;
     }
-    console.log(e);
   }
 }
 
@@ -2150,7 +2149,7 @@ function SIDActuallySaveFiles(ctl_s = false){
   fs.readdir(SIDPath, function (err, files){
     if(err){
       // eslint-disable-next-line max-len
-      alert('Error: An error occurred while trying to open the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists and that you are allowed to create files there', '');
+      alert('Error: An error occurred while trying to open the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists and that you are allowed to create files there. Use the "Save Images" option in the file menu to choose a different folder if necessary.', '');
       return;
     }
     if(files.length > arrayOfCurrentImages.length){
