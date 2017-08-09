@@ -340,47 +340,47 @@ function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statement
       deselectAllKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'p'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'p'){
       penKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'e'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'e'){
       eraserKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'l'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'l'){
       lineKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 's'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 's'){
       selectKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'i'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'i'){
       identifierKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'd'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'd'){
       dotKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'b'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'b'){
       blueKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'k'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'k'){
       blackKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'w'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'w'){
       whiteKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'r'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'r'){
       redKeyboardShortcutPressed();
       return;
     }
-    if(e.ctrlKey === false && e.altKey === true && e.shiftKey === false && e.metaKey === false && e.key === 'g'){
+    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'g'){
       greenKeyboardShortcutPressed();
       return;
     }
@@ -400,6 +400,7 @@ function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statement
       deleteKeyboardShortcutPressed();
       return;
     }
+    console.log(e);
   }
 }
 
@@ -2149,7 +2150,7 @@ function SIDActuallySaveFiles(ctl_s = false){
   fs.readdir(SIDPath, function (err, files){
     if(err){
       // eslint-disable-next-line max-len
-      alert('Error: An error occurred while trying to open the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
+      alert('Error: An error occurred while trying to open the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists and that you are allowed to create files there', '');
       return;
     }
     if(files.length > arrayOfCurrentImages.length){

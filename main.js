@@ -14,24 +14,21 @@ var userWantsErrorMessagesMain = true;
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-// This is critical for enabling touch events:
+// This is critical for enabling touch events & disabling background process throttling:
 app.commandLine.appendSwitch('touch-events', 'enabled');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
 var shouldQuit = app.makeSingleInstance(function (){
   // Someone tried to run a second instance, we should focus our window.
   if(win){
-    if(win.isMinimized()) win.restore();
     win.focus();
   }
 });
 
-if (shouldQuit){
+if(shouldQuit){
   app.quit();
   return;
 }
-
-
 
 process.on('uncaughtException', function (err){
   if(userWantsErrorMessagesMain){
@@ -130,14 +127,6 @@ ipcMain.on('focus-main-win', () => {
 
 ipcMain.on('minimize-main-win', () => {
   win.minimize();
-});
-
-ipcMain.on('launch-dev-tools', () => {
-  win.webContents.openDevTools({ mode: 'undocked' });
-});
-
-ipcMain.on('close-dev-tools', () => {
-  win.webContents.closeDevTools();
 });
 
 ipcMain.on('user-doesnt-want-error-messages', () => {
