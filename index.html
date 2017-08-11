@@ -69,7 +69,7 @@
               <a href="#saveImagesDialog" onclick="SIDReadySaveImagesDialog();" id="saveImagesBtn">Save Images</a>
               <a id="fileCloseBtn" onclick="userWantsToClose();">Close</a>
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
-              <a href="#helpDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="helpBtn" >Help</a>
+              <a href="#helpDialog" id="helpBtn" >Help</a>
               <a href="#aboutDialog" onclick="ADReadyAboutDialog();" id="aboutBtn">About</a>
             </div>
         </li>
@@ -83,7 +83,7 @@
               <a href="#insertTextDialog" onclick="ITDReadyInsertTextDialog();" id="insertTextToolBtn">Insert Text</a>
               <a id="identifierToolBtn" onclick="tool = 'identify'; updateTextOfToolBtn();">Identifier</a>
               <a id="dotToolBtn" onclick="tool = 'dot'; updateTextOfToolBtn();">Dot</a>
-              <a href="#otherToolDialog" id="otherToolBtn" onclick="unregisterShortcutsOnModalDialogOpen();">Other</a>
+              <a href="#otherToolDialog" id="otherToolBtn">Other</a>
             </div>
         </li>
         <li>
@@ -113,7 +113,7 @@
               <a id="graphPaperPageBtn" onclick="mainUIInsertTemplateAsPage('images/Blank_Graph_Paper_Page.png');">Graph Paper</a>
               <a id="coordinatePlaneBtn" onclick="mainUIInsertTemplateAsPage('images/Blank_X_Y_Graph_Paper_Page.png');">Coordinate</a>
               <a id="screenshotBtn" href ="#insertScreenshotDialog" onclick="ISDReadyInsertScreenshotDialog();">Screenshot</a>
-              <a href ="#otherPageDialog" onclick="unregisterShortcutsOnModalDialogOpen();" id="otherPageBtn">Other</a>
+              <a href ="#otherPageDialog" id="otherPageBtn">Other</a>
             </div>
         </li>
         <li>
@@ -984,7 +984,7 @@ Public License instead of this License.
     
     <div id="insertScreenshotDialog" class="modalDialogs">
       <div id="ISDMainDiv">
-        <a id="ISDCloseBtn" href="#close" onclick="registerShortcutsOnModalDialogClose(); ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert screenshot dialog close button"></a>
+        <a id="ISDCloseBtn" href="#close" onclick="ISDCleanupFunction();" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="insert screenshot dialog close button"></a>
         <h2>Insert Screenshot</h2>
         <div id="ISDMainContentDiv" class="modalBoxContent">
           <!--Here is where the content of the modal box will go. Note that this is a case where the canvas that allows
