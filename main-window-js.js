@@ -1601,6 +1601,10 @@ function loadPage(numberOfPageToLoad){
   clearUndoHistory();
 }
 
+function mainUIInsertTemplateAsPage(location){
+  insertTemplateAsPage(location);
+}
+
 function insertTemplateAsPage(locationOfTemplate){
   // Get the image from the string that was passed in, then call insertPageUsingImage() and pass in the image.
   var tempImageForInserting = new Image();
