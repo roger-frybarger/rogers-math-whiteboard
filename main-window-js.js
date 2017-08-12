@@ -99,6 +99,8 @@ var tempImageForWindowResize;
 var maxNumberOfPages = 250;
 var weGotKeyboardShortcuts = false;
 
+var useWidescreenTemplates = false;
+
 // This is for re-sizing the drawing area:
 var tempForTimer;
 
@@ -1602,7 +1604,14 @@ function loadPage(numberOfPageToLoad){
 }
 
 function mainUIInsertTemplateAsPage(location){
-  insertTemplateAsPage(location);
+  if(useWidescreenTemplates){
+    var before = location.substring(0, (location.length - 4));
+    location = before + '-wide.png';
+    insertTemplateAsPage(location);
+  }
+  else{
+    insertTemplateAsPage(location);
+  }
 }
 
 function insertTemplateAsPage(locationOfTemplate){
@@ -1781,6 +1790,13 @@ function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   else{
     document.getElementById('SDSilenceErrorMessages').checked = true;
   }
+  
+  if(useWidescreenTemplates){
+    document.getElementById('SDUseWidscreenTemplates').checked = true;
+  }
+  else{
+    document.getElementById('SDUseWidscreenTemplates').checked = false;
+  }
   SDInputValidation();
 }
 
@@ -1842,6 +1858,13 @@ function SDOkBtnFunction(){
     else{
       userWantsErrorMessages = true;
       ipcRenderer.send('user-wants-error-messages');
+    }
+    
+    if(document.getElementById('SDUseWidscreenTemplates').checked){
+      useWidescreenTemplates = true;
+    }
+    else{
+      useWidescreenTemplates = false;
     }
     document.getElementById('SDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
@@ -3227,7 +3250,14 @@ function ISDSimpleVariableCleanup(){
 
 function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
-  insertTemplateAsPage(locOfTem);
+  if(useWidescreenTemplates){
+    var before = locOfTem.substring(0, (locOfTem.length - 4));
+    locOfTem = before + '-wide.png';
+    insertTemplateAsPage(locOfTem);
+  }
+  else{
+    insertTemplateAsPage(locOfTem);
+  }
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
@@ -3238,7 +3268,12 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
     var orgHeight = context.canvas.height;
     var originalImageOnCanvas = new Image();
     originalImageOnCanvas.src = context.canvas.toDataURL('image/png');
-    context.canvas.width = 2200;
+    if(useWidescreenTemplates){
+      context.canvas.width = 2867;
+    }
+    else{
+      context.canvas.width = 2200;
+    }
     context.canvas.height = 1700;
     context.drawImage(whiteImage, 0, 0);
     context.fillStyle = instrumentColor;
