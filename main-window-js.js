@@ -1603,11 +1603,11 @@ function loadPage(numberOfPageToLoad){
   clearUndoHistory();
 }
 
-function mainUIInsertTemplateAsPage(location){
+function mainUIInsertTemplateAsPage(location){ // eslint-disable-line no-unused-vars
   if(useWidescreenTemplates){
     var before = location.substring(0, (location.length - 4));
-    location = before + '-wide.png';
-    insertTemplateAsPage(location);
+    var combined = before + '-wide.png';
+    insertTemplateAsPage(combined);
   }
   else{
     insertTemplateAsPage(location);
@@ -2835,7 +2835,7 @@ function ISDFixCanvas(){
     // We just have to remember to remove them when the window closes.
     ISDAddTouchAndClickEventHandelers();
     // eslint-disable-next-line max-len
-    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the dropdown below the image.';
+    document.getElementById('ISDContentHeader').innerHTML = 'Select the region you would like to insert, or click/tap OK to insert the entire screenshot.<br>You can also specify the location where the selected region is placed using the drop-down below the image.';
     // And add the clear selection button, insertion location dropdown, * background color dropdown:
     
     ISDAddElementsForSelectRegion();
