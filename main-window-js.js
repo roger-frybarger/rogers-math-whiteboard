@@ -101,6 +101,9 @@ var weGotKeyboardShortcuts = false;
 
 var useWidescreenTemplates = false;
 
+var dataUrlsToLoad;
+var dataUrlsLoaded;
+
 // This is for re-sizing the drawing area:
 var tempForTimer;
 
@@ -1522,26 +1525,36 @@ function loadImagesUsingArrayOfDataURLs(arrayOfURLs){
   arrayOfCurrentImages = [];
   arrayOfOriginalImagesX = [];
   arrayOfOriginalImagesY = [];
+  dataUrlsToLoad = arrayOfURLs.length;
+  dataUrlsLoaded = 0;
   for(var i = 0; i < arrayOfURLs.length; ++i){
     var justAnotherTempImage = new Image();
     justAnotherTempImage.onLoad = loadingFromDataUrlsImageLoaded;
     justAnotherTempImage.src = arrayOfURLs[i];
+    justAnotherTempImage.theLocationIndex = i;
     if(justAnotherTempImage.complete){
       justAnotherTempImage.onLoad();
     }
   }
+}
+
+function loadingFromDataUrlsImageLoaded(){
+  arrayOfOriginalImages[this.theLocationIndex] = this;
+  arrayOfCurrentImages[this.theLocationIndex] = this;
+  arrayOfOriginalImagesX[this.theLocationIndex] = this.naturalWidth;
+  arrayOfOriginalImagesY[this.theLocationIndex] = this.naturalHeight;
+  ++dataUrlsLoaded;
+  if(dataUrlsLoaded === dataUrlsToLoad){
+    finishLoadingImagesUsingArrayOfDataURLs();
+  }
+}
+
+function finishLoadingImagesUsingArrayOfDataURLs(){
   currentPg = 1;
   // eslint-disable-next-line max-len
   resizeAndLoadImagesOntoCanvases(arrayOfCurrentImages[currentPg - 1], arrayOfOriginalImages[currentPg - 1], arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
   updatePageNumsOnGui();
   clearUndoHistory();
-}
-
-function loadingFromDataUrlsImageLoaded(){
-  arrayOfOriginalImages.push(this);
-  arrayOfCurrentImages.push(this);
-  arrayOfOriginalImagesX.push(this.naturalWidth);
-  arrayOfOriginalImagesY.push(this.naturalHeight);
 }
 
 
@@ -2651,6 +2664,10 @@ var ISDScreenShotORIGINAL;
 var ISDXScale;
 var ISDYScale;
 var ISDImageToReturn;
+var ISDFirstCanvas = null;
+var ISDFirstContext = 'NA';
+var IDSVideo = null;
+var ISDStream = null;
 var ISDCanvas = null;
 var ISDTempCanvasForInterval = 'NA';
 var ISDContext = 'NA';
@@ -2733,39 +2750,46 @@ function ISDHandleError(e){
 }
 
 function ISDHandleStream(stream){
+  ISDStream = stream;
   // Create hidden video tag
-  var video = document.createElement('video');
-  video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
+  IDSVideo = document.createElement('video');
+  //IDSVideo.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
+  IDSVideo.style.cssText = 'position:absolute;top:10px;left:10px;';
   // Event connected to stream
-  video.onloadedmetadata = function (){
+  IDSVideo.onloadedmetadata = function (){
     // Set video ORIGINAL height (screenshot)
-    video.style.height = this.videoHeight + 'px'; // videoHeight
-    video.style.width = this.videoWidth + 'px'; // videoWidth
+    IDSVideo.style.height = this.videoHeight + 'px'; // videoHeight
+    IDSVideo.style.width = this.videoWidth + 'px'; // videoWidth
 
     // Create canvas
-    var canvas = document.createElement('canvas');
-    canvas.width = this.videoWidth;
-    canvas.height = this.videoHeight;
-    var ctx = canvas.getContext('2d');
-    // Draw video on canvas
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // Save screenshot to base64
-    ISDScreenShotORIGINAL = canvas.toDataURL('image/png');
-    
-    setTimeout(ISDReadyForCroping, 500);
-
-    // Remove hidden video tag
-    video.remove();
-    try {
-      // Destroy connect to stream
-      stream.getTracks()[0].stop();
-    }
-    catch (e){// Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
-    }
+    ISDFirstCanvas = document.createElement('canvas');
+    ISDFirstCanvas.width = this.videoWidth;
+    ISDFirstCanvas.height = this.videoHeight;
+    ISDFirstContext = ISDFirstCanvas.getContext('2d');
+    console.log(ISDFirstCanvas.width + ' by ' + ISDFirstCanvas.height);
+    setTimeout(IDSGetPictureFromVideoAndStopStream, 2000);
   };
-  video.src = URL.createObjectURL(stream);
-  document.body.appendChild(video);
+  IDSVideo.src = URL.createObjectURL(ISDStream);
+  document.getElementById('ISDContentDiv').appendChild(IDSVideo);
+}
+
+function IDSGetPictureFromVideoAndStopStream(){
+  // Draw video on canvas
+  ISDFirstContext.drawImage(IDSVideo, 0, 0, ISDFirstCanvas.width, ISDFirstCanvas.height);
+
+  // Save screenshot to base64
+  ISDScreenShotORIGINAL = ISDFirstCanvas.toDataURL('image/png');
+  
+  setTimeout(ISDReadyForCroping, 500);
+
+  // Remove hidden video tag
+  IDSVideo.remove();
+  try {
+    // Destroy connect to stream
+    ISDStream.getTracks()[0].stop();
+  }
+  catch (e){// Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
+  }
 }
 
 function ISDReadyForCroping(){
