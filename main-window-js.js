@@ -1529,12 +1529,9 @@ function loadImagesUsingArrayOfDataURLs(arrayOfURLs){
   dataUrlsLoaded = 0;
   for(var i = 0; i < arrayOfURLs.length; ++i){
     var justAnotherTempImage = new Image();
-    justAnotherTempImage.onLoad = loadingFromDataUrlsImageLoaded;
-    justAnotherTempImage.src = arrayOfURLs[i];
+    justAnotherTempImage.onload = loadingFromDataUrlsImageLoaded;
     justAnotherTempImage.theLocationIndex = i;
-    if(justAnotherTempImage.complete){
-      justAnotherTempImage.onLoad();
-    }
+    justAnotherTempImage.src = arrayOfURLs[i];
   }
 }
 
@@ -2664,10 +2661,6 @@ var ISDScreenShotORIGINAL;
 var ISDXScale;
 var ISDYScale;
 var ISDImageToReturn;
-var ISDFirstCanvas = null;
-var ISDFirstContext = 'NA';
-var IDSVideo = null;
-var ISDStream = null;
 var ISDCanvas = null;
 var ISDTempCanvasForInterval = 'NA';
 var ISDContext = 'NA';
@@ -2750,46 +2743,39 @@ function ISDHandleError(e){
 }
 
 function ISDHandleStream(stream){
-  ISDStream = stream;
   // Create hidden video tag
-  IDSVideo = document.createElement('video');
-  //IDSVideo.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
-  IDSVideo.style.cssText = 'position:absolute;top:10px;left:10px;';
+  var video = document.createElement('video');
+  video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
   // Event connected to stream
-  IDSVideo.onloadedmetadata = function (){
+  video.onloadedmetadata = function (){
     // Set video ORIGINAL height (screenshot)
-    IDSVideo.style.height = this.videoHeight + 'px'; // videoHeight
-    IDSVideo.style.width = this.videoWidth + 'px'; // videoWidth
+    video.style.height = this.videoHeight + 'px'; // videoHeight
+    video.style.width = this.videoWidth + 'px'; // videoWidth
 
     // Create canvas
-    ISDFirstCanvas = document.createElement('canvas');
-    ISDFirstCanvas.width = this.videoWidth;
-    ISDFirstCanvas.height = this.videoHeight;
-    ISDFirstContext = ISDFirstCanvas.getContext('2d');
-    console.log(ISDFirstCanvas.width + ' by ' + ISDFirstCanvas.height);
-    setTimeout(IDSGetPictureFromVideoAndStopStream, 2000);
+    var canvas = document.createElement('canvas');
+    canvas.width = this.videoWidth;
+    canvas.height = this.videoHeight;
+    var ctx = canvas.getContext('2d');
+    // Draw video on canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Save screenshot to base64
+    ISDScreenShotORIGINAL = canvas.toDataURL('image/png');
+    
+    setTimeout(ISDReadyForCroping, 500);
+
+    // Remove hidden video tag
+    video.remove();
+    try {
+      // Destroy connect to stream
+      stream.getTracks()[0].stop();
+    }
+    catch (e){// Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
+    }
   };
-  IDSVideo.src = URL.createObjectURL(ISDStream);
-  document.getElementById('ISDContentDiv').appendChild(IDSVideo);
-}
-
-function IDSGetPictureFromVideoAndStopStream(){
-  // Draw video on canvas
-  ISDFirstContext.drawImage(IDSVideo, 0, 0, ISDFirstCanvas.width, ISDFirstCanvas.height);
-
-  // Save screenshot to base64
-  ISDScreenShotORIGINAL = ISDFirstCanvas.toDataURL('image/png');
-  
-  setTimeout(ISDReadyForCroping, 500);
-
-  // Remove hidden video tag
-  IDSVideo.remove();
-  try {
-    // Destroy connect to stream
-    ISDStream.getTracks()[0].stop();
-  }
-  catch (e){// Nothing to do in here. We want to try to stop the stream, but if it doesn't work, its not a big deal.
-  }
+  video.src = URL.createObjectURL(stream);
+  document.body.appendChild(video);
 }
 
 function ISDReadyForCroping(){
@@ -2797,16 +2783,19 @@ function ISDReadyForCroping(){
   ipcRenderer.send('focus-main-win');
   // 4. Put screenshot in canvas of right size
   var img = new Image();
+  img.onload = function (){
+    ISDCanvas = null;
+    ISDCanvas = document.createElement('canvas');
+    ISDCanvas.width = img.naturalWidth;
+    ISDCanvas.height = img.naturalHeight;
+    document.getElementById('ISDContentDiv').appendChild(ISDCanvas);
+    ISDContext = ISDCanvas.getContext('2d');
+    ISDContext.drawImage(img, 0, 0, ISDCanvas.width, ISDCanvas.height);
+    
+    ISDFixCanvas();
+  };
   img.src = ISDScreenShotORIGINAL;
-  ISDCanvas = null;
-  ISDCanvas = document.createElement('canvas');
-  ISDCanvas.width = img.naturalWidth;
-  ISDCanvas.height = img.naturalHeight;
-  document.getElementById('ISDContentDiv').appendChild(ISDCanvas);
-  ISDContext = ISDCanvas.getContext('2d');
-  ISDContext.drawImage(img, 0, 0, ISDCanvas.width, ISDCanvas.height);
-  
-  ISDFixCanvas();
+
   
   // 5. set ISDCanInsert to true & area selected to false.
   // 6. allow cropping.
@@ -3287,29 +3276,38 @@ function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
 
 function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
   var whiteImage = new Image();
-  whiteImage.addEventListener('load', function (){
+  whiteImage.onload = function (){
     var orgWidth = context.canvas.width;
     var orgHeight = context.canvas.height;
     var originalImageOnCanvas = new Image();
+    originalImageOnCanvas.onload = function (){
+      if(useWidescreenTemplates){
+        context.canvas.width = 2867;
+      }
+      else{
+        context.canvas.width = 2200;
+      }
+      context.canvas.height = 1700;
+      context.drawImage(whiteImage, 0, 0);
+      context.fillStyle = instrumentColor;
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+      var imageToInsert = new Image();
+      imageToInsert.onload = function (){
+        insertPageUsingImage(this);
+      };
+      imageToInsert.src = context.canvas.toDataURL('image/png');
+      context.canvas.width = orgWidth;
+      context.canvas.height = orgHeight;
+      context.drawImage(originalImageOnCanvas, 0, 0);
+    };
     originalImageOnCanvas.src = context.canvas.toDataURL('image/png');
-    if(useWidescreenTemplates){
-      context.canvas.width = 2867;
-    }
-    else{
-      context.canvas.width = 2200;
-    }
-    context.canvas.height = 1700;
-    context.drawImage(whiteImage, 0, 0);
-    context.fillStyle = instrumentColor;
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-    var imageToInsert = new Image();
-    imageToInsert.src = context.canvas.toDataURL('image/png');
-    context.canvas.width = orgWidth;
-    context.canvas.height = orgHeight;
-    context.drawImage(originalImageOnCanvas, 0, 0);
-    insertPageUsingImage(imageToInsert);
-  });
-  whiteImage.src = 'images/Blank_White_Page.png';
+  };
+  if(useWidescreenTemplates){
+    whiteImage.src = 'images/Blank_White_Page-wide.png';
+  }
+  else{
+    whiteImage.src = 'images/Blank_White_Page.png';
+  }
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
