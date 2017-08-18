@@ -2684,8 +2684,11 @@ var ISDLocationDropdown = null;
 var ISDExtraTextLabel = null;
 var ISDExtraBreak = null;
 var ISDExtraBreak2 = null;
+var ISDExtraBreak3 = null; // new
 var ISDExtraTextLabel2 = null;
+var ISDExtraTextLabel3 = null; // new
 var ISDBackgroundColorDropdown = null;
+var ISDCroppingMethodDropdown = null; // new
 
 function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDCanInsert = false;
@@ -2698,7 +2701,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
     }
     // clear out the dialog:
     // eslint-disable-next-line max-len
-    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update.';
+    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update. Also, if the window/screen that you would like to insert only appears as a black page, see the FAQ section of our website for an alternate method of inserting screenshots.';
     document.getElementById('ISDContentDiv').innerHTML = '';
     // Prepare the dialog with some spaces:
     var br = document.createElement('br');
@@ -2949,7 +2952,7 @@ function ISDAddElementsForSelectRegion(){
   
   ISDBackgroundColorDropdown = document.createElement('select');
   ISDBackgroundColorDropdown.style.fontSize = '30px';
-  ISDBackgroundColorDropdown.style.margin = '0px 0px 25px 0px';
+  ISDBackgroundColorDropdown.style.margin = '0px 0px 0px 0px';
   
   // Add the entries to the background color dropdown:
   var options = ['white', 'color chosen']; // ----Visible!
@@ -2965,6 +2968,7 @@ function ISDAddElementsForSelectRegion(){
   }
   
   document.getElementById('ISDContentDiv').appendChild(ISDBackgroundColorDropdown);
+  ISDAddCroppingMethodDropdown();
 }
 
 function ISDAddLocationDropdown(){
@@ -2985,6 +2989,34 @@ function ISDAddLocationDropdown(){
   }
   
   document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
+}
+
+function ISDAddCroppingMethodDropdown(){
+  ISDExtraBreak3 = document.createElement('br');
+  document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak3);
+  
+  ISDExtraTextLabel3 = document.createElement('p');
+  ISDExtraTextLabel3.innerHTML = 'Cropping Method:';
+  document.getElementById('ISDContentDiv').appendChild(ISDExtraTextLabel3);
+  
+  ISDCroppingMethodDropdown = document.createElement('select');
+  ISDCroppingMethodDropdown.style.fontSize = '30px';
+  ISDCroppingMethodDropdown.style.margin = '0px 0px 25px 0px';
+  
+  // Add the entries to the background color dropdown:
+  var options = ['cut to selection', 'paste within window size']; // ----Visible!
+  var optionValues = ['selection', 'windowsize'];
+  
+  var opt = null;
+  
+  for(var i = 0; i < options.length; i++){
+    opt = document.createElement('option');
+    opt.setAttribute('value', optionValues[i]);
+    opt.innerHTML = options[i];
+    ISDCroppingMethodDropdown.appendChild(opt);
+  }
+  
+  document.getElementById('ISDContentDiv').appendChild(ISDCroppingMethodDropdown);
 }
 
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
@@ -3134,8 +3166,11 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       selectionLocationX = Math.round(selectionLocationX * ISDXScale);
       selectionLocationY = Math.round(selectionLocationY * ISDYScale);
       
-      var insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height,
-      selectionWidth, selectionHeight);
+      var insertionPoint = { x: 0, y: 0 };
+      if(ISDCroppingMethodDropdown.value === 'windowsize'){
+        insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height,
+        selectionWidth, selectionHeight);
+      } // RIGHT HERE 
       
       var bgColor = 'white';
       if(ISDBackgroundColorDropdown.value !== 'white'){
@@ -3210,7 +3245,7 @@ function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, 
   return toRet;
 }
 
-function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
+function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars, max-statements
   // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
   ISDSimpleVariableCleanup();
   if(ISDCanvas !== null && typeof ISDCanvas !== 'undefined'){
@@ -3250,6 +3285,21 @@ function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars
     }
     document.getElementById('ISDContentDiv').removeChild(ISDBackgroundColorDropdown);
     ISDBackgroundColorDropdown = null;
+  }
+  if(ISDExtraBreak3 !== null && typeof ISDExtraBreak3 !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraBreak3);
+    ISDExtraBreak3 = null;
+  }
+  if(ISDExtraTextLabel3 !== null && typeof ISDExtraTextLabel3 !== 'undefined'){
+    document.getElementById('ISDContentDiv').removeChild(ISDExtraTextLabel3);
+    ISDExtraTextLabel3 = null;
+  }
+  if(ISDCroppingMethodDropdown !== null && typeof ISDCroppingMethodDropdown !== 'undefined'){
+    while(ISDCroppingMethodDropdown.firstChild){
+      ISDCroppingMethodDropdown.removeChild(ISDCroppingMethodDropdown.firstChild);
+    }
+    document.getElementById('ISDContentDiv').removeChild(ISDCroppingMethodDropdown);
+    ISDCroppingMethodDropdown = null;
   }
 }
 
