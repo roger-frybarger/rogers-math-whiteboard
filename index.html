@@ -135,7 +135,7 @@
     </div>
     <!--Here is the main canvas and the eraser canvas. The eraser canvas is hidden off screen, but is necessary for the eraser.-->
     <div id="canvasDiv">
-      <canvas id="canvas1" onmousedown="MCMDown(event);" ontouchstart="MCTDown(event);" onmousemove="MCMMoved(event);" ontouchmove="MCTMoved(event);" onmouseup="MCMEnded(event);" onmouseleave="MCMEnded(event);" ontouchend="MCTEnded(event);" ontouchleave="MCTEnded(event);" ontouchcancel="MCTEnded(event);" width="2200" height="1700"></canvas>
+      <canvas id="canvas1" onmousedown="MCMDown(event);" ontouchstart="MCTDown(event);" onmousemove="MCMMoved(event);" ontouchmove="MCTMoved(event);" onmouseup="MCMEnded(event);" onmouseleave="MCMEnded(event);" ontouchend="MCTEnded(event);" ontouchleave="MCTEnded(event);" ontouchcancel="MCTEnded(event);" onkeydown="recieveKeyboardInputFromCanvas(event);" tabindex="0" width="2200" height="1700"></canvas>
     </div>
     <div id="eraserCanvasDiv">
       <canvas id="eraserCanvas" width="2200" height="1700"></canvas>

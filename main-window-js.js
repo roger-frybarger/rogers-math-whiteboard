@@ -146,7 +146,7 @@ function continueAfterAppFinishedLoading1(){
   setUpGUIOnStartup();
   checkForScreenSizeIssues();
   enableRightClickMenu();
-  document.addEventListener('keydown', passKeyboardInputOffToFunction);
+  document.addEventListener('keydown', validateKeyboardInputForDocument);
   allLoaded = true;
 }
 
@@ -341,97 +341,108 @@ function enableRightClickMenu(){
   });
 }
 
+function validateKeyboardInputForDocument(e){
+  if(weGotKeyboardShortcuts && e.target.nodeName === 'BODY'){
+    e.preventDefault();
+    passKeyboardInputOffToFunction(e);
+  }
+}
+
+function recieveKeyboardInputFromCanvas(e){ // eslint-disable-line no-unused-vars
+  if(weGotKeyboardShortcuts){
+    e.preventDefault();
+    passKeyboardInputOffToFunction(e);
+  }
+}
 
 function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statements
-  if(weGotKeyboardShortcuts && e.target.nodeName === 'BODY'){
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'z'){
-      undoKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'y'){
-      redoKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'c'){
-      copyKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'v'){
-      pasteKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 's'){
-      saveKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'a'){
-      selectAllKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === true && e.altKey === false && e.shiftKey === true && e.metaKey === false && e.key === 'A'){
-      deselectAllKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'p'){
-      penKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'e'){
-      eraserKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'l'){
-      lineKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 's'){
-      selectKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'i'){
-      identifierKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'd'){
-      dotKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'b'){
-      blueKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'k'){
-      blackKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'w'){
-      whiteKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'r'){
-      redKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'g'){
-      greenKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === ' '){
-      nextPageKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === true && e.metaKey === false && e.key === ' '){
-      previousPageKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'Escape'){
-      escapeKeyboardShortcutPressed();
-      return;
-    }
-    if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'Delete'){
-      deleteKeyboardShortcutPressed();
-      return;
-    }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'z'){
+    undoKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'y'){
+    redoKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'c'){
+    copyKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'v'){
+    pasteKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 's'){
+    saveKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'a'){
+    selectAllKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === true && e.altKey === false && e.shiftKey === true && e.metaKey === false && e.key === 'A'){
+    deselectAllKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'p'){
+    penKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'e'){
+    eraserKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'l'){
+    lineKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 's'){
+    selectKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'i'){
+    identifierKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'd'){
+    dotKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'b'){
+    blueKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'k'){
+    blackKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'w'){
+    whiteKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'r'){
+    redKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'g'){
+    greenKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === ' '){
+    nextPageKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === true && e.metaKey === false && e.key === ' '){
+    previousPageKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'Escape'){
+    escapeKeyboardShortcutPressed();
+    return;
+  }
+  if(e.ctrlKey === false && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'Delete'){
+    deleteKeyboardShortcutPressed();
+    return;
   }
 }
 
