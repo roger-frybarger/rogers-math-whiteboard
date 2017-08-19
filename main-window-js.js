@@ -2327,6 +2327,16 @@ function ADReadyAboutDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('ADVersionLine').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roger’s Math Whiteboard version ' + appVersion + ' can be best understood as a multi-page image editor designed around the specific needs of math and science teachers who want to take advantage of pen/touch/stylus input while presenting. It is designed to be used while presenting content in class, and/or while working through questions from students.';
 }
 
+// Here is the code for the fileOtherDialog:
+
+var FODPercentValid = false;
+
+function FODDuplicatePage(){
+  saveCurrentImageToArrayBeforeMoving();
+  insertPageUsingImage(arrayOfCurrentImages[currentPg - 1]);
+  document.getElementById('FODCloseBtn').click();
+}
+
 
 // Here is the code for the insertTextDialog:
 var ITDValid = true;
