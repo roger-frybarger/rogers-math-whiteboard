@@ -3004,8 +3004,8 @@ function ISDAddCroppingMethodDropdown(){
   ISDCroppingMethodDropdown.style.margin = '0px 0px 25px 0px';
   
   // Add the entries to the background color dropdown:
-  var options = ['cut to selection', 'paste within window size']; // ----Visible!
-  var optionValues = ['selection', 'windowsize'];
+  var options = ['paste within window size', 'cut to selection']; // ----Visible!
+  var optionValues = ['windowsize', 'selection'];
   
   var opt = null;
   
@@ -3170,7 +3170,7 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       if(ISDCroppingMethodDropdown.value === 'windowsize'){
         insertionPoint = ISDCalculateInsertionPoint(ISDLocationDropdown.value, ISDImageToReturn.width, ISDImageToReturn.height,
         selectionWidth, selectionHeight);
-      } // RIGHT HERE 
+      }
       
       var bgColor = 'white';
       if(ISDBackgroundColorDropdown.value !== 'white'){
@@ -3184,6 +3184,11 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       ISDContext.drawImage(ISDImageToReturn, 0, 0, ISDImageToReturn.width, ISDImageToReturn.height);
       
       var selectionData = ISDContext.getImageData(selectionLocationX, selectionLocationY, selectionWidth, selectionHeight);
+      
+      if(ISDCroppingMethodDropdown.value !== 'windowsize'){
+        ISDCanvas.width = selectionWidth;
+        ISDCanvas.height = selectionHeight;
+      }
       
       ISDContext.beginPath();
       ISDContext.fillStyle = bgColor;
