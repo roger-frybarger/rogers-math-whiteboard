@@ -71,6 +71,7 @@
               <a id="deletePageBtn" onclick="deletePageBtnFunction();">Delete Page</a>
               <a href="#helpDialog" id="helpBtn" >Help</a>
               <a href="#aboutDialog" onclick="ADReadyAboutDialog();" id="aboutBtn">About</a>
+              <a href="#fileOtherDialog" id="otherFileBtn">Other</a>
             </div>
         </li>
         <li>
@@ -804,6 +805,26 @@ Public License instead of this License.
           </textarea>
           <br>
           <a class="modalBoxKeypadBtns" onclick="copyTextareaValueToClipboard('ADLicenceTextArea');">Copy License To Clipboard</a>
+          
+        </div>
+      </div>
+    </div>
+    
+    <!--Here is the file other dialog-->
+    
+    <div id="fileOtherDialog" class="modalDialogs">
+      <div>
+        <a id="FODCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="file other dialog close button"></a>
+        <h2>Other Options/Tools:</h2>
+        <div class="modalBoxContent">
+          
+          <a class="modalBoxKeypadBtns" onclick="FODDuplicatePage();">Duplicate page</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODMakeCurrentDrawingPermanent();">Make current drawing permanent</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurfaceClockwise();">Rotate drawing surface clockwise</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODImportFromSystem();">Import image from system clipboard</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODImportFromSystemResize();">Import image from system clipboard and resize to:</a><br>
+          <input type="number" min="10" max="200" value="90" id="FODPercentInput" oninput="FODCheckPercentInput();"/>%<br>
+          <a class="modalBoxKeypadBtns" onclick="FODExportCopiedSection();">Export copied section to system clipboard</a><br>
           
         </div>
       </div>
