@@ -2330,6 +2330,10 @@ function ADReadyAboutDialog(){ // eslint-disable-line no-unused-vars
 // Here is the code for the fileOtherDialog:
 
 var FODPercentValid = false;
+var FODImagesToLoad;
+var FODImagesLoaded;
+var FODImgForInsertion1;
+var FODImgForInsertion2;
 
 function FODDuplicatePage(){
   saveCurrentImageToArrayBeforeMoving();
@@ -2344,6 +2348,54 @@ function FODMakeCurrentDrawingPermanent(){
   arrayOfOriginalImages[currentPg - 1] = arrayOfCurrentImages[currentPg - 1];
   loadPage(currentPg);
   document.getElementById('FODCloseBtn').click();
+}
+
+function FODRotateDrawingSurfaceClockwise(){
+  saveCurrentImageToArrayBeforeMoving();
+  var currentImageOnScreen = arrayOfCurrentImages[currentPg - 1];
+  var currentOriginalImage = arrayOfOriginalImages[currentPg - 1];
+  var ofscreenCanvas1 = document.createElement('canvas');
+  var ofscreenCanvas2 = document.createElement('canvas');
+  ofscreenCanvas1.width = canvas1.height;
+  ofscreenCanvas1.height = canvas1.width;
+  ofscreenCanvas2.width = canvas1.height;
+  ofscreenCanvas2.height = canvas1.width;
+  var contextR1 = ofscreenCanvas1.getContext('2d');
+  var contextR2 = ofscreenCanvas2.getContext('2d');
+  contextR1.rotate(90*Math.PI/180);
+  contextR2.rotate(90*Math.PI/180);
+  contextR1.drawImage(currentImageOnScreen, 0, -canvas1.height);
+  contextR2.drawImage(currentOriginalImage, 0, -canvas1.height);
+  var du1 = ofscreenCanvas1.toDataURL();
+  var du2 = ofscreenCanvas2.toDataURL();
+  FODImagesToLoad = 2;
+  FODImagesLoaded = 0;
+  FODImgForInsertion1 = null;
+  FODImgForInsertion1 = new Image();
+  FODImgForInsertion1.onload = FODContinueRotateDrawingSurfaceClockwise;
+  FODImgForInsertion1.src = du1;
+  FODImgForInsertion2 = null;
+  FODImgForInsertion2 = new Image();
+  FODImgForInsertion2.onload = FODContinueRotateDrawingSurfaceClockwise;
+  FODImgForInsertion2.src = du2;
+  
+}
+
+function FODContinueRotateDrawingSurfaceClockwise(){
+  console.log('uiygiugy');
+  ++FODImagesLoaded;
+  if(FODImagesLoaded === FODImagesToLoad){
+    arrayOfCurrentImages[currentPg - 1] = FODImgForInsertion1;
+    arrayOfOriginalImages[currentPg - 1] = FODImgForInsertion2;
+    arrayOfOriginalImagesX[currentPg - 1] = FODImgForInsertion1.naturalWidth;
+    arrayOfOriginalImagesY[currentPg - 1] = FODImgForInsertion1.naturalHeight;
+    console.log(FODImgForInsertion1.height);
+    console.log(FODImgForInsertion2.height);
+    resizeAndLoadImagesOntoCanvases(FODImgForInsertion1, FODImgForInsertion2, FODImgForInsertion1.naturalWidth, FODImgForInsertion1.naturalHeight);
+    updatePageNumsOnGui();
+    clearUndoHistory();
+    document.getElementById('FODCloseBtn').click();
+  }
 }
 
 
