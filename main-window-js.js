@@ -2334,6 +2334,15 @@ var FODPercentValid = false;
 function FODDuplicatePage(){
   saveCurrentImageToArrayBeforeMoving();
   insertPageUsingImage(arrayOfCurrentImages[currentPg - 1]);
+  arrayOfOriginalImages[currentPg - 1] = arrayOfOriginalImages[currentPg - 2];
+  loadPage(currentPg);
+  document.getElementById('FODCloseBtn').click();
+}
+
+function FODMakeCurrentDrawingPermanent(){
+  saveCurrentImageToArrayBeforeMoving();
+  arrayOfOriginalImages[currentPg - 1] = arrayOfCurrentImages[currentPg - 1];
+  loadPage(currentPg);
   document.getElementById('FODCloseBtn').click();
 }
 
