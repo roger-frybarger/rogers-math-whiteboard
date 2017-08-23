@@ -2352,24 +2352,43 @@ function FODMakeCurrentDrawingPermanent(){
   document.getElementById('FODCloseBtn').click();
 }
 
-function FODRotateDrawingSurfaceClockwise(){
+function FODRotateDrawingSurface(direction){ // eslint-disable-line max-statements, no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   var currentImageOnScreen = arrayOfCurrentImages[currentPg - 1];
   var currentOriginalImage = arrayOfOriginalImages[currentPg - 1];
   var ofscreenCanvas1 = document.createElement('canvas');
   var ofscreenCanvas2 = document.createElement('canvas');
-  FODOrgX = canvas1.width;
-  FODOrgY = canvas1.height;
+  FODOrgX = context.canvas.width;
+  FODOrgY = context.canvas.height;
   ofscreenCanvas1.width = FODOrgY;
   ofscreenCanvas1.height = FODOrgX;
-  ofscreenCanvas2.width = FODOrgY;
-  ofscreenCanvas2.height = FODOrgX;
+  ofscreenCanvas2.width = arrayOfOriginalImagesY[currentPg - 1];
+  ofscreenCanvas2.height = arrayOfOriginalImagesX[currentPg - 1];
   var contextR1 = ofscreenCanvas1.getContext('2d');
   var contextR2 = ofscreenCanvas2.getContext('2d');
-  contextR1.rotate(90*Math.PI/180);
-  contextR2.rotate(90*Math.PI/180);
-  contextR1.drawImage(currentImageOnScreen, 0, -FODOrgY);
-  contextR2.drawImage(currentOriginalImage, 0, -FODOrgY);
+  var xcord1;
+  var ycord1;
+  var xcord2;
+  var ycord2;
+  if(direction === 'clockwise'){
+    contextR1.rotate(90 * Math.PI / 180);
+    contextR2.rotate(90 * Math.PI / 180);
+    xcord1 = 0;
+    xcord2 = 0;
+    ycord1 = -FODOrgY;
+    ycord2 = -arrayOfOriginalImagesY[currentPg - 1];
+  }
+  else{
+    contextR1.rotate(-90 * Math.PI / 180);
+    contextR2.rotate(-90 * Math.PI / 180);
+    xcord1 = -FODOrgX;
+    xcord2 = -arrayOfOriginalImagesX[currentPg - 1];
+    ycord1 = 0;
+    ycord2 = 0;
+  }
+  contextR1.drawImage(currentImageOnScreen, xcord1, ycord1, FODOrgX, FODOrgY);
+  contextR2.drawImage(currentOriginalImage, xcord2, ycord2,
+  arrayOfOriginalImagesX[currentPg - 1], arrayOfOriginalImagesY[currentPg - 1]);
   var du1 = ofscreenCanvas1.toDataURL();
   var du2 = ofscreenCanvas2.toDataURL();
   FODImagesToLoad = 2;
@@ -2382,20 +2401,18 @@ function FODRotateDrawingSurfaceClockwise(){
   FODImgForInsertion2 = new Image();
   FODImgForInsertion2.onload = FODContinueRotateDrawingSurfaceClockwise;
   FODImgForInsertion2.src = du2;
-  
 }
 
 function FODContinueRotateDrawingSurfaceClockwise(){
-  console.log('uiygiugy');
   ++FODImagesLoaded;
   if(FODImagesLoaded === FODImagesToLoad){
     arrayOfCurrentImages[currentPg - 1] = FODImgForInsertion1;
     arrayOfOriginalImages[currentPg - 1] = FODImgForInsertion2;
-    arrayOfOriginalImagesX[currentPg - 1] = FODOrgY;
-    arrayOfOriginalImagesY[currentPg - 1] = FODOrgX;
-    console.log(FODImgForInsertion1.naturalWidth);
-    console.log( FODImgForInsertion1.naturalHeight);
-    resizeAndLoadImagesOntoCanvases(FODImgForInsertion1, FODImgForInsertion2, FODOrgY, FODOrgX);
+    var tmpx = arrayOfOriginalImagesX[currentPg - 1];
+    var tmpy = arrayOfOriginalImagesY[currentPg - 1];
+    arrayOfOriginalImagesX[currentPg - 1] = tmpy;
+    arrayOfOriginalImagesY[currentPg - 1] = tmpx;
+    resizeAndLoadImagesOntoCanvases(FODImgForInsertion1, FODImgForInsertion2, tmpy, tmpx);
     updatePageNumsOnGui();
     clearUndoHistory();
     document.getElementById('FODCloseBtn').click();
