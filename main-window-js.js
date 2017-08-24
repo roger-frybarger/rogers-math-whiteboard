@@ -2337,7 +2337,7 @@ var FODImgForInsertion2;
 var FODOrgX;
 var FODOrgY;
 
-function FODDuplicatePage(){
+function FODDuplicatePage(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   insertPageUsingImage(arrayOfCurrentImages[currentPg - 1]);
   arrayOfOriginalImages[currentPg - 1] = arrayOfOriginalImages[currentPg - 2];
@@ -2345,7 +2345,7 @@ function FODDuplicatePage(){
   document.getElementById('FODCloseBtn').click();
 }
 
-function FODMakeCurrentDrawingPermanent(){
+function FODMakeCurrentDrawingPermanent(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   arrayOfOriginalImages[currentPg - 1] = arrayOfCurrentImages[currentPg - 1];
   loadPage(currentPg);
@@ -2417,6 +2417,12 @@ function FODContinueRotateDrawingSurfaceClockwise(){
     clearUndoHistory();
     document.getElementById('FODCloseBtn').click();
   }
+}
+
+function FODImportFromSystem(){ // eslint-disable-line no-unused-vars
+  var imageIn = clipboard.readImage();
+  console.log(imageIn.toDataURL());
+  document.getElementById('FODCloseBtn').click();
 }
 
 
