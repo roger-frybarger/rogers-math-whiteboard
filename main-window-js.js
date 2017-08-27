@@ -356,6 +356,9 @@ function recieveKeyboardInputFromCanvas(e){ // eslint-disable-line no-unused-var
 }
 
 function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statements
+  if(typeof e === 'undefined'){
+    return;
+  }
   if(e.ctrlKey === true && e.altKey === false && e.shiftKey === false && e.metaKey === false && e.key === 'z'){
     undoKeyboardShortcutPressed();
     return;
@@ -2329,7 +2332,7 @@ function ADReadyAboutDialog(){ // eslint-disable-line no-unused-vars
 
 // Here is the code for the fileOtherDialog:
 
-var FODPercentValid = false;
+var FODPercentValid = true;
 var FODImagesToLoad;
 var FODImagesLoaded;
 var FODImgForInsertion1;
@@ -2419,7 +2422,7 @@ function FODContinueRotateDrawingSurfaceClockwise(){
   }
 }
 
-function FODImportFromSystem(){ // eslint-disable-line no-unused-vars
+function FODImportFromSystem(scle){ // eslint-disable-line no-unused-vars
   var imageIn = clipboard.readImage();
   var dataUrl = imageIn.toDataURL();
   if(dataUrl === 'data:image/png;base64,'){
@@ -2427,18 +2430,50 @@ function FODImportFromSystem(){ // eslint-disable-line no-unused-vars
     return;
   }
   var tempImage = new Image();
+  tempImage.theScaleFactor = parseInt(scle, 10);
   tempImage.onload = function (){
+    if(isNaN(this.theScaleFactor)){
+      alert('Error: You did not enter a valid percent. Reverting to 100%.', ' ');
+      this.theScaleFactor = 100;
+    }
+    var finalX = this.naturalWidth * (this.theScaleFactor / 100);
+    var finalY = this.naturalHeight * (this.theScaleFactor / 100);
+    finalX = parseInt(finalX, 10);
+    finalY = parseInt(finalY, 10);
     var canvas = document.createElement('canvas');
     var tempContext = canvas.getContext('2d');
-    canvas.width = this.naturalWidth;
-    canvas.height = this.naturalHeight;
-    tempContext.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight);
-    copiedSectionOfCanvas = tempContext.getImageData(0, 0, this.naturalWidth, this.naturalHeight);
+    canvas.width = finalX;
+    canvas.height = finalY;
+    tempContext.drawImage(this, 0, 0, finalX, finalY);
+    copiedSectionOfCanvas = tempContext.getImageData(0, 0, finalX, finalY);
     tool = 'PASTE';
     updateTextOfToolBtn();
   };
   tempImage.src = dataUrl;
   document.getElementById('FODCloseBtn').click();
+}
+
+function FODImportFromSystemResize(){ // eslint-disable-line no-unused-vars
+  if(FODPercentValid){
+    FODImportFromSystem(document.getElementById('FODPercentInput').value);
+  }
+  else{
+    alert('Error: Please enter a valid percent.', ' ');
+  }
+}
+
+function FODCheckPercentInput(){ // eslint-disable-line no-unused-vars
+  var elm = document.getElementById('FODPercentInput');
+  var incomming = elm.value;
+  incomming = parseInt(incomming, 10);
+  if(isNaN(incomming) || incomming > 200 || incomming < 10){
+    elm.style.backgroundColor = 'red';
+    FODPercentValid = false;
+  }
+  else{
+    elm.style.backgroundColor = 'white';
+    FODPercentValid = true;
+  }
 }
 
 
