@@ -2421,7 +2421,13 @@ function FODContinueRotateDrawingSurfaceClockwise(){
 
 function FODImportFromSystem(){ // eslint-disable-line no-unused-vars
   var imageIn = clipboard.readImage();
-  console.log(imageIn.toDataURL());
+  
+  var tempImage = new Image();
+  tempImage.onload = function (){
+    var canvas = document.createElement('canvas');
+    console.log(this.naturalWidth + ' ' + this.naturalHeight);
+  };
+  tempImage.src = imageIn.toDataURL();
   document.getElementById('FODCloseBtn').click();
 }
 
