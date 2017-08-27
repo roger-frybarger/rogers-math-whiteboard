@@ -2421,13 +2421,23 @@ function FODContinueRotateDrawingSurfaceClockwise(){
 
 function FODImportFromSystem(){ // eslint-disable-line no-unused-vars
   var imageIn = clipboard.readImage();
-  
+  var dataUrl = imageIn.toDataURL();
+  if(dataUrl === 'data:image/png;base64,'){
+    alert('Error: It appears there is no image on your clipboard.', ' ');
+    return;
+  }
   var tempImage = new Image();
   tempImage.onload = function (){
     var canvas = document.createElement('canvas');
-    console.log(this.naturalWidth + ' ' + this.naturalHeight);
+    var tempContext = canvas.getContext('2d');
+    canvas.width = this.naturalWidth;
+    canvas.height = this.naturalHeight;
+    tempContext.drawImage(this, 0, 0, this.naturalWidth, this.naturalHeight);
+    copiedSectionOfCanvas = tempContext.getImageData(0, 0, this.naturalWidth, this.naturalHeight);
+    tool = 'PASTE';
+    updateTextOfToolBtn();
   };
-  tempImage.src = imageIn.toDataURL();
+  tempImage.src = dataUrl;
   document.getElementById('FODCloseBtn').click();
 }
 
