@@ -11,6 +11,7 @@ const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
 const path = require('path');
 var fs = require('fs');
+const nativeImage = require('electron').remote.nativeImage;
 
 // This enables the right-click menu over the text boxes.
 // It is a simplified/modified version of the code written
@@ -2473,6 +2474,22 @@ function FODCheckPercentInput(){ // eslint-disable-line no-unused-vars
   else{
     elm.style.backgroundColor = 'white';
     FODPercentValid = true;
+  }
+}
+
+function FODExportCopiedSection(){
+  if(copiedSectionOfCanvas != 'NA'){
+    var canvas = document.createElement('canvas');
+    var tempContext = canvas.getContext('2d');
+    canvas.width = copiedSectionOfCanvas.width;
+    canvas.height = copiedSectionOfCanvas.height;
+    tempContext.putImageData(copiedSectionOfCanvas, 0, 0);
+    var dataUrl = canvas.toDataURL();
+    var natImg = nativeImage.createFromDataURL(dataUrl);
+    clipboard.writeImage(natImg);
+  }
+  else{
+    alert('Error: There is nothing on the clipboard, and thus nothing to export.', ' ');
   }
 }
 
