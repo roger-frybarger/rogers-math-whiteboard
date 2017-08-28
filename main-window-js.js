@@ -1801,7 +1801,7 @@ function pasteAndResizeToolFunction(){ // eslint-disable-line no-unused-vars
     someImage.theScaleFactor = incomming;
     someImage.onload = function(){
       var tempCanvas2 = document.createElement('canvas');
-      var tempContext2 = tempCanvas1.getContext('2d');
+      var tempContext2 = tempCanvas2.getContext('2d');
       var finalX = this.naturalWidth * (this.theScaleFactor / 100);
       var finalY = this.naturalHeight * (this.theScaleFactor / 100);
       finalX = parseInt(finalX, 10);
