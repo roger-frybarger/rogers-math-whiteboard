@@ -87,6 +87,7 @@ var instrumentWidth = 5;
 var instrumentColor = 'rgba(78, 78, 255, 1.0)';
 var tempCanvasForInterval = 'NA';
 var copiedSectionOfCanvas = 'NA';
+var copiedSectionOfCanvasForScale = 'NA';
 var areaSelected = false;
 var textToInsert = '';
 var maxUndoHistory = 31;  // This needs to be 1 higher than the actual number of operations desired.
@@ -634,6 +635,7 @@ function escapeKeyboardShortcutPressed(){
     tool === 'identify' || 
     tool === 'dot' || 
     tool === 'PASTE' || 
+    tool === 'PASTE-S' ||
     tool === 'central-line' || 
     tool === 'dashed-line' || 
     tool === 'dashed-central-line'){
@@ -724,6 +726,9 @@ function instrumentDown(x, y){
   case 'dashed-central-line':
     dashedCentralLineToolFunction(x, y, 'down');
     break;
+  case 'PASTE-S':
+    scaledPasteToolFunction(x, y, 'down');
+    break;
   case 'NA':
     break;
   default:
@@ -769,6 +774,9 @@ function instrumentMoved(x, y){
       break;
     case 'dashed-central-line':
       dashedCentralLineToolFunction(x, y, 'move');
+      break;
+    case 'PASTE-S':
+      scaledPasteToolFunction(x, y, 'move');
       break;
     case 'NA':
       break;
@@ -825,6 +833,10 @@ function instrumentUp(x, y){
       break;
     case 'dashed-central-line':
       dashedCentralLineToolFunction(x, y, 'up');
+      pushStateIntoUndoArray();
+      break;
+    case 'PASTE-S':
+      scaledPasteToolFunction(x, y, 'up');
       pushStateIntoUndoArray();
       break;
     case 'NA':
@@ -1429,6 +1441,51 @@ function dashedCentralLineToolFunction(x, y, phase){
   }
 }
 
+// Here is the scaledPasteToolFunction. It handles pasting scaled images onto the canvas:
+function scaledPasteToolFunction(x, y, phase){
+  if(copiedSectionOfCanvasForScale !== 'NA'){
+    switch(phase){
+    case 'down':
+      
+      //      1. save current canvas into tempCanvasForInterval.
+      //      2. save x & y into prevX & prevY.
+      //      3. Put the copied section on the canvas where the mouse went down.
+      
+      tempCanvasForInterval = 'NA';
+      tempCanvasForInterval = new Image();
+      tempCanvasForInterval.src = context.canvas.toDataURL('image/png');
+      prevX = x;
+      prevY = y;
+      tempX = x;
+      tempY = y;
+      context.putImageData(copiedSectionOfCanvasForScale, prevX, (prevY - copiedSectionOfCanvasForScale.height));
+      
+      break;
+    case 'move':
+      
+      // 1. Update prevX & prevY with the current values of x & y.
+      // 2. repaint the tempCanvasForInterval onto the real canvas.
+      // 3. paint the image in copiedSectionOfCanvas onto the canvas at prevX, prevY.
+      prevX = x;
+      prevY = y;
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      context.putImageData(copiedSectionOfCanvasForScale, prevX, (prevY - copiedSectionOfCanvasForScale.height));
+      
+      break;
+    case 'up':
+      
+      //      1. Paint tempCanvasForInterval onto the real canvas.
+      //      2. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
+      context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+      context.putImageData(copiedSectionOfCanvasForScale, prevX, (prevY - copiedSectionOfCanvasForScale.height));
+      
+      break;
+    default:
+      throw new Error('Invalid phase in scaledPasteToolFunction: ' + phase);
+    }
+  }
+}
+
 // Here is the function that executes when the user wants to close the program.
 // It essentially checks to see if it is safe to close the app, and warns the user if it isn't.
 function userWantsToClose(){
@@ -1775,46 +1832,41 @@ function deleteCurrentPage(){
 }
 
 function pasteAndResizeToolFunction(){ // eslint-disable-line no-unused-vars
-  // 1. Check for valid percent
-  // 2. parse it
-  // 3. make canvas
-  // 4. putimagedata on canvas @ its scale
-  // 5. make image from canvas, & in onload....
-  // 6. calculate scale
-  // 7. resize canvas to new dimmentions
-  // 8. drawImage with scale to draw image on canvas
-  // 9. getImageData to grab resized canvas & put in copiedSectionOfCanvas
-  // 10 set up for paste tool.
   var incomming = document.getElementById('OTDPercentInput').value;
   incomming = parseInt(incomming, 10);
   if(isNaN(incomming) || incomming > 400 || incomming < 10){
     alert('Error: Please enter a valid percent.', ' ');
   }
   else{
-    var tempCanvas1 = document.createElement('canvas');
-    var tempContext1 = tempCanvas1.getContext('2d');
-    tempCanvas1.width = copiedSectionOfCanvas.width;
-    tempCanvas1.height = copiedSectionOfCanvas.height;
-    tempContext1.putImageData(copiedSectionOfCanvas, 0, 0);
-    var dataUrl = tempCanvas1.toDataURL();
-    var someImage = new Image();
-    someImage.theScaleFactor = incomming;
-    someImage.onload = function(){
-      var tempCanvas2 = document.createElement('canvas');
-      var tempContext2 = tempCanvas2.getContext('2d');
-      var finalX = this.naturalWidth * (this.theScaleFactor / 100);
-      var finalY = this.naturalHeight * (this.theScaleFactor / 100);
-      finalX = parseInt(finalX, 10);
-      finalY = parseInt(finalY, 10);
-      tempCanvas2.width = finalX;
-      tempCanvas2.height = finalY;
-      tempContext2.drawImage(this, 0, 0, finalX, finalY);
-      copiedSectionOfCanvas = tempContext2.getImageData(0, 0, finalX, finalY);
-      tool = 'PASTE';
-      updateTextOfToolBtn();
-      OTDCloseDialog();
+    if(copiedSectionOfCanvas !== 'NA'){
+      var tempCanvas1 = document.createElement('canvas');
+      var tempContext1 = tempCanvas1.getContext('2d');
+      tempCanvas1.width = copiedSectionOfCanvas.width;
+      tempCanvas1.height = copiedSectionOfCanvas.height;
+      tempContext1.putImageData(copiedSectionOfCanvas, 0, 0);
+      var dataUrl = tempCanvas1.toDataURL();
+      var someImage = new Image();
+      someImage.theScaleFactor = incomming;
+      someImage.onload = function (){
+        var tempCanvas2 = document.createElement('canvas');
+        var tempContext2 = tempCanvas2.getContext('2d');
+        var finalX = this.naturalWidth * (this.theScaleFactor / 100);
+        var finalY = this.naturalHeight * (this.theScaleFactor / 100);
+        finalX = parseInt(finalX, 10);
+        finalY = parseInt(finalY, 10);
+        tempCanvas2.width = finalX;
+        tempCanvas2.height = finalY;
+        tempContext2.drawImage(this, 0, 0, finalX, finalY);
+        copiedSectionOfCanvasForScale = tempContext2.getImageData(0, 0, finalX, finalY);
+        tool = 'PASTE-S';
+        updateTextOfToolBtn();
+        OTDCloseDialog();
+      };
+      someImage.src = dataUrl;
     }
-    someImage.src = dataUrl;
+    else{
+      tellUserToCopySomethingFirst();
+    }
   }
 }
 
@@ -2533,8 +2585,8 @@ function FODCheckPercentInput(){ // eslint-disable-line no-unused-vars
   }
 }
 
-function FODExportCopiedSection(){
-  if(copiedSectionOfCanvas != 'NA'){
+function FODExportCopiedSection(){ // eslint-disable-line no-unused-vars
+  if(copiedSectionOfCanvas !== 'NA'){
     var canvas = document.createElement('canvas');
     var tempContext = canvas.getContext('2d');
     canvas.width = copiedSectionOfCanvas.width;
@@ -2546,7 +2598,7 @@ function FODExportCopiedSection(){
     document.getElementById('FODCloseBtn').click();
   }
   else{
-    alert('Error: There is nothing on the clipboard, and thus nothing to export.', ' ');
+    alert('Error: You have not yet copied a region of the whiteboard, thus nothing to export yet.', ' ');
   }
 }
 
@@ -3718,6 +3770,9 @@ function updateTextOfToolBtn(){
   case 'dashed-central-line':
     document.getElementById('toolBtn').innerHTML = 'Tool: DCL';
     break;
+  case 'PASTE-S':
+    document.getElementById('toolBtn').innerHTML = 'Tool: Paste-S';
+    break;
   default:
     throw new Error('Invalid tool. Cant update tool button text: ' + tool);
   }
@@ -3778,6 +3833,9 @@ function pasteBtnFunction(){
   if(copiedSectionOfCanvas !== 'NA'){
     tool = 'PASTE';
     updateTextOfToolBtn();
+  }
+  else{
+    tellUserToCopySomethingFirst();
   }
 }
 
@@ -3959,6 +4017,9 @@ function tellUserToSelectAnAreaFirst(){
   alert('Please use the Select tool to select a region first.', '');
 }
 
+function tellUserToCopySomethingFirst(){
+  alert('Error: You have not yet copied a region of the whiteboard, thus nothing to paste yet.', ' ');
+}
 
 
 
