@@ -1774,6 +1774,62 @@ function deleteCurrentPage(){
   clearUndoHistory();
 }
 
+function pasteAndResizeToolFunction(){ // eslint-disable-line no-unused-vars
+  // 1. Check for valid percent
+  // 2. parse it
+  // 3. make canvas
+  // 4. putimagedata on canvas @ its scale
+  // 5. make image from canvas, & in onload....
+  // 6. calculate scale
+  // 7. resize canvas to new dimmentions
+  // 8. drawImage with scale to draw image on canvas
+  // 9. getImageData to grab resized canvas & put in copiedSectionOfCanvas
+  // 10 set up for paste tool.
+  var incomming = document.getElementById('OTDPercentInput').value;
+  incomming = parseInt(incomming, 10);
+  if(isNaN(incomming) || incomming > 400 || incomming < 10){
+    alert('Error: Please enter a valid percent.', ' ');
+  }
+  else{
+    var tempCanvas1 = document.createElement('canvas');
+    var tempContext1 = tempCanvas1.getContext('2d');
+    tempCanvas1.width = copiedSectionOfCanvas.width;
+    tempCanvas1.height = copiedSectionOfCanvas.height;
+    tempContext1.putImageData(copiedSectionOfCanvas, 0, 0);
+    var dataUrl = tempCanvas1.toDataURL();
+    var someImage = new Image();
+    someImage.theScaleFactor = incomming;
+    someImage.onload = function(){
+      var tempCanvas2 = document.createElement('canvas');
+      var tempContext2 = tempCanvas1.getContext('2d');
+      var finalX = this.naturalWidth * (this.theScaleFactor / 100);
+      var finalY = this.naturalHeight * (this.theScaleFactor / 100);
+      finalX = parseInt(finalX, 10);
+      finalY = parseInt(finalY, 10);
+      tempCanvas2.width = finalX;
+      tempCanvas2.height = finalY;
+      tempContext2.drawImage(this, 0, 0, finalX, finalY);
+      copiedSectionOfCanvas = tempContext2.getImageData(0, 0, finalX, finalY);
+      tool = 'PASTE';
+      updateTextOfToolBtn();
+      OTDCloseDialog();
+    }
+    someImage.src = dataUrl;
+  }
+}
+
+function OTDCheckPercentInput(){ // eslint-disable-line no-unused-vars
+  var elm = document.getElementById('OTDPercentInput');
+  var incomming = elm.value;
+  incomming = parseInt(incomming, 10);
+  if(isNaN(incomming) || incomming > 400 || incomming < 10){
+    elm.style.backgroundColor = 'red';
+  }
+  else{
+    elm.style.backgroundColor = 'white';
+  }
+}
+
 
 
 
@@ -2467,7 +2523,7 @@ function FODCheckPercentInput(){ // eslint-disable-line no-unused-vars
   var elm = document.getElementById('FODPercentInput');
   var incomming = elm.value;
   incomming = parseInt(incomming, 10);
-  if(isNaN(incomming) || incomming > 200 || incomming < 10){
+  if(isNaN(incomming) || incomming > 400 || incomming < 10){
     elm.style.backgroundColor = 'red';
     FODPercentValid = false;
   }
@@ -2487,6 +2543,7 @@ function FODExportCopiedSection(){
     var dataUrl = canvas.toDataURL();
     var natImg = nativeImage.createFromDataURL(dataUrl);
     clipboard.writeImage(natImg);
+    document.getElementById('FODCloseBtn').click();
   }
   else{
     alert('Error: There is nothing on the clipboard, and thus nothing to export.', ' ');

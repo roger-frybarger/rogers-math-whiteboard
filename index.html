@@ -824,7 +824,7 @@ Public License instead of this License.
           <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurface('counterclockwise');">Rotate drawing surface counterclockwise</a><br>
           <a class="modalBoxKeypadBtns" onclick="FODImportFromSystem('100');">Import image from system clipboard</a><br>
           <a class="modalBoxKeypadBtns" onclick="FODImportFromSystemResize();">Import image from system clipboard and resize to:</a><br>
-          <input type="number" min="10" max="200" value="90" id="FODPercentInput" oninput="FODCheckPercentInput();"/>%<br>
+          <input type="number" min="10" max="400" value="90" id="FODPercentInput" oninput="FODCheckPercentInput();"/>%<br>
           <a class="modalBoxKeypadBtns" onclick="FODExportCopiedSection();">Export copied section to system clipboard</a><br>
           
         </div>
@@ -945,6 +945,9 @@ Public License instead of this License.
           <a class="modalBoxKeypadBtns" onclick="tool = 'central-line'; updateTextOfToolBtn(); OTDCloseDialog();">Central line</a><br>
           <a class="modalBoxKeypadBtns" onclick="tool = 'dashed-line'; updateTextOfToolBtn(); OTDCloseDialog();">Dashed line</a><br>
           <a class="modalBoxKeypadBtns" onclick="tool = 'dashed-central-line'; updateTextOfToolBtn(); OTDCloseDialog();">Dashed Central line</a><br>
+          <a class="modalBoxKeypadBtns" onclick="pasteAndResizeToolFunction();">Paste and resize to:</a><br>
+          <input type="number" min="10" max="400" value="90" id="OTDPercentInput" oninput="OTDCheckPercentInput();"/>%<br>
+          <p> </p>
           
         </div>
       </div>
