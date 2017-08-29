@@ -7,6 +7,8 @@ const shell = require('electron').shell;
 
 const appVersion = app.getVersion();
 const osModule = require('os');
+const nativeImage = require('electron').nativeImage;
+const { clipboard } = require('electron');
 
 var userWantsErrorMessagesMain = true;
 
@@ -154,6 +156,11 @@ ipcMain.on('minimize-main-win', () => {
 
 ipcMain.on('user-doesnt-want-error-messages', () => {
   userWantsErrorMessagesMain = false;
+});
+
+ipcMain.on('export-to-clipboard', function (e, du){
+  var natImg = nativeImage.createFromDataURL(du);
+  clipboard.writeImage(natImg);
 });
 
 function open(url){

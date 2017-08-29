@@ -11,7 +11,6 @@ const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
 const path = require('path');
 var fs = require('fs');
-const nativeImage = require('electron').remote.nativeImage;
 
 // This enables the right-click menu over the text boxes.
 // It is a simplified/modified version of the code written
@@ -37,7 +36,8 @@ process.on('uncaughtException', function (err){
     if(err !== null && typeof err !== 'undefined'){
       stk = err.stack;
     }
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause unpredictable behavior. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err); // eslint-disable-line max-len
+    // eslint-disable-next-line max-len
+    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause unpredictable behavior. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
     // Now we need to 1. push time stamp into array, 2. check if more than
     // 3 errors have occurred within the last 30 seconds. If this is the
     // case, then we will disable error messages and send an appropriate
@@ -56,7 +56,8 @@ process.on('uncaughtException', function (err){
           // Nothing to do in here. We want to try to tell the main process what is going on, but
           // even if that isn't possible, we need to go on with the dialog.
         }
-        dialog.showErrorBox('Multiple Errors Have Occurred. SAVE YOUR WORK NOW!', 'Because at least 3 errors have occurred within the last 30 seconds, error messages have been disabled. This likely means that this program is in an unstable state. YOU SHOULD IMMEDIATELY SAVE YOUR WORK AND RE-START THIS PROGRAM! Also, if you are using the latest stable version of this program, **please** email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so is vital to the problem diagnosis process and will hopefully lead to a resolution in the future. We are sorry for any inconvenience this has caused you. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err + '\nPotentially Recursive.'); // eslint-disable-line max-len
+        // eslint-disable-next-line max-len
+        dialog.showErrorBox('Multiple Errors Have Occurred. SAVE YOUR WORK NOW!', 'Because at least 3 errors have occurred within the last 30 seconds, error messages have been disabled. This likely means that this program is in an unstable state. YOU SHOULD IMMEDIATELY SAVE YOUR WORK AND RE-START THIS PROGRAM! Also, if you are using the latest stable version of this program, **please** email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so is vital to the problem diagnosis process and will hopefully lead to a resolution in the future. We are sorry for any inconvenience this has caused you. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err + '\nPotentially Recursive.');
       }
     }
   }
@@ -316,11 +317,13 @@ function checkForScreenSizeIssues(){
   var screenX = screen.width;
   var screenY = screen.height;
   if(screenX < 800 || screenY < 600){
-    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error'); // eslint-disable-line max-len
+    // eslint-disable-next-line max-len
+    alert('Your screen resolution is too low to allow this program to display properly. A minimum screen resolution of 800 by 600 is required.', 'Error');
     ipcRenderer.send('terminate-this-app');
   }
   if(screenX > 1920 || screenY > 1080){
-    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning'); // eslint-disable-line max-len
+    // eslint-disable-next-line max-len
+    alert('You are using a very high screen resolution. While this is good in most situations, it could potentially cause the following problems in the context of this program:\n\n1. The buttons/menus may be difficult to use with a touchscreen, because they appear smaller.\n\n2. If you broadcast this screen to a remote location, a higher resolution may use more bandwidth, and thus; could result in connection issues.\n\n3. If you record this screen for later viewing, a higher resolution could result in a larger file size, and may require more computing power to create/copy/move/upload, etc.\n\nIf you encounter any of these issues, consider lowering your screen resolution to something below 1920 by 1080.', 'Warning');
   }
 }
 
@@ -2593,8 +2596,7 @@ function FODExportCopiedSection(){ // eslint-disable-line no-unused-vars
     canvas.height = copiedSectionOfCanvas.height;
     tempContext.putImageData(copiedSectionOfCanvas, 0, 0);
     var dataUrl = canvas.toDataURL();
-    var natImg = nativeImage.createFromDataURL(dataUrl);
-    clipboard.writeImage(natImg);
+    ipcRenderer.send('export-to-clipboard', dataUrl);
     document.getElementById('FODCloseBtn').click();
   }
   else{
