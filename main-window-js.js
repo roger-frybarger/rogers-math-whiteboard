@@ -1978,6 +1978,7 @@ function SDOkBtnFunction(){
     }
     
     maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value, 10) + 1;
+    SDActuallySetUndoLength();
     maxNumberOfPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value, 10);
     
     if(document.getElementById('SDEnableKeyboardShortcuts').checked){
@@ -2003,6 +2004,24 @@ function SDOkBtnFunction(){
       useWidescreenTemplates = false;
     }
     document.getElementById('SDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
+  }
+}
+
+function SDActuallySetUndoLength(){
+  var distanceFromEnd = (imageArrayForUndo.length - 1) - currentPlaceInUndoArray;
+  if(maxUndoHistory > imageArrayForUndo.length){
+    var tempArray = [];
+    tempArray.length = maxUndoHistory - imageArrayForUndo.length;
+    tempArray.fill(null);
+    imageArrayForUndo = tempArray.concat(imageArrayForUndo);
+  }
+  if(maxUndoHistory < imageArrayForUndo.length){
+    var tempArray = imageArrayForUndo.splice((imageArrayForUndo.length - 1) - maxUndoHistory, maxUndoHistory);
+    imageArrayForUndo = tempArray;
+  }
+  currentPlaceInUndoArray = (imageArrayForUndo.length - 1) - distanceFromEnd;
+  if(currentPlaceInUndoArray < 0){
+    clearUndoHistory();
   }
 }
 
