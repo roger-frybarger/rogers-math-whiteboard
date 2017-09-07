@@ -2009,14 +2009,14 @@ function SDOkBtnFunction(){
 
 function SDActuallySetUndoLength(){
   var distanceFromEnd = (imageArrayForUndo.length - 1) - currentPlaceInUndoArray;
+  var tempArray = [];
   if(maxUndoHistory > imageArrayForUndo.length){
-    var tempArray = [];
     tempArray.length = maxUndoHistory - imageArrayForUndo.length;
     tempArray.fill(null);
     imageArrayForUndo = tempArray.concat(imageArrayForUndo);
   }
   if(maxUndoHistory < imageArrayForUndo.length){
-    var tempArray = imageArrayForUndo.splice((imageArrayForUndo.length - 1) - maxUndoHistory, maxUndoHistory);
+    tempArray = imageArrayForUndo.splice((imageArrayForUndo.length - 1) - maxUndoHistory, maxUndoHistory);
     imageArrayForUndo = tempArray;
   }
   currentPlaceInUndoArray = (imageArrayForUndo.length - 1) - distanceFromEnd;
@@ -3444,7 +3444,7 @@ function ISDCancelSelect(){
   }
 }
 
-function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
+function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statements
   if(ISDCanInsert){
     if(ISDAreaSelected){
       // Now we have to determine where the user wants the selected region, what background color they want,
@@ -3478,6 +3478,27 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars
       ISDCanvas.width = ISDImageToReturn.width;
       ISDCanvas.height = ISDImageToReturn.height;
       ISDContext.drawImage(ISDImageToReturn, 0, 0, ISDImageToReturn.width, ISDImageToReturn.height);
+      
+      // Here is where we can make sure the selection is within the borders of the image:
+      var difference = 0;
+      if(selectionLocationX < 0){
+        difference = Math.abs(0 - selectionLocationX);
+        selectionLocationX = 0;
+        selectionWidth = selectionWidth - difference;
+      }
+      if(selectionLocationY < 0){
+        difference = Math.abs(0 - selectionLocationY);
+        selectionLocationY = 0;
+        selectionHeight = selectionHeight - difference;
+      }
+      if((selectionLocationX + selectionWidth) > ISDImageToReturn.width){
+        difference = Math.abs((selectionLocationX + selectionWidth) - ISDImageToReturn.width);
+        selectionWidth = selectionWidth - difference;
+      }
+      if((selectionLocationY + selectionHeight) > ISDImageToReturn.height){
+        difference = Math.abs((selectionLocationY + selectionHeight) - ISDImageToReturn.height);
+        selectionHeight = selectionHeight - difference;
+      }
       
       var selectionData = ISDContext.getImageData(selectionLocationX, selectionLocationY, selectionWidth, selectionHeight);
       
