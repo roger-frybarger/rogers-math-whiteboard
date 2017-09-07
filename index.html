@@ -204,7 +204,7 @@
             <li>Also remember that Image files can be quite large. Thus; depending on the size and quantity of files you try to open, and the speed of your computer, this process may take several minutes.</li>
             <li>Since each image that you select will be opened as a page, you will need to be aware of the order in which they are selected. If they are not in the correct order when you import them, the pages will probably be out of order. Look for "Order by" or "Sort by" on the "Open Files" window to correct this sorting order. Also note that you can import individual images if needed. To do this use the "Insert Page" menu, choose "Other", and then choose "From Image."</li>
             <li>Remember that only valid PNG files smaller than 25MB in size will be imported into this program. All other files, including images that are not in PNG format, will be ignored even if you select them.</li>
-            <li>For reference, the keyboard shortcut to select all files is: ctrl+a  This means while holding down the ctrl key, press the letter "A." Once you see all the files selected, you can release both keys. Replace ctrl with Command if you are on a Mac.<br><br><br></li>
+            <li>For reference, the keyboard shortcut to select all files is: ctrl+a  This means while holding down the ctrl key, press the letter "A." Once you see all the files selected, you can release both keys. If you are using a Mac, you may need to select the first file in the list with your mouse and then, while holding down the Shift key, use the down arrow key to select all of the files. Once all of the files are selected, you can release both keys.<br><br><br></li>
           </ol>
           
         </div>
@@ -824,7 +824,7 @@ Public License instead of this License.
           <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurface('counterclockwise');">Rotate page counterclockwise</a><br>
           <a class="modalBoxKeypadBtns" onclick="FODImportFromSystem('100');">Import image from system clipboard</a><br>
           <a class="modalBoxKeypadBtns" onclick="FODImportFromSystemResize();">Import image from system clipboard and resize to:</a><br>
-          <input type="number" min="10" max="400" value="90" id="FODPercentInput" oninput="FODCheckPercentInput();"/>%<br>
+          <input type="number" min="10" max="400" value="90" id="FODPercentInput" oninput="FODCheckPercentInput();"/>%  (Min: 10%  Max: 400%)<br>
           <a class="modalBoxKeypadBtns" onclick="FODExportCopiedSection();">Export copied section to system clipboard</a><br>
           <p> </p>
           
@@ -947,7 +947,7 @@ Public License instead of this License.
           <a class="modalBoxKeypadBtns" onclick="tool = 'dashed-line'; updateTextOfToolBtn(); OTDCloseDialog();">Dashed line</a><br>
           <a class="modalBoxKeypadBtns" onclick="tool = 'dashed-central-line'; updateTextOfToolBtn(); OTDCloseDialog();">Dashed Central line</a><br>
           <a class="modalBoxKeypadBtns" onclick="pasteAndResizeToolFunction();">Paste and resize to:</a><br>
-          <input type="number" min="10" max="400" value="90" id="OTDPercentInput" oninput="OTDCheckPercentInput();"/>%<br>
+          <input type="number" min="10" max="400" value="90" id="OTDPercentInput" oninput="OTDCheckPercentInput();"/>%  (Min: 10%  Max: 400%)<br>
           <p> </p>
           
         </div>
