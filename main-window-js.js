@@ -3856,6 +3856,25 @@ function copyBtnFunction(){
     var drawingY = Math.min(tempY, prevY);
     var drawingWidth = Math.abs(tempX - prevX);
     var drawingHeight = Math.abs(tempY - prevY);
+    var difference = 0;
+    if(drawingX < 0){
+      difference = Math.abs(drawingX - 0);
+      drawingX = 0;
+      drawingWidth = drawingWidth - difference;
+    }
+    if(drawingY < 0){
+      difference = Math.abs(drawingY - 0);
+      drawingY = 0;
+      drawingHeight = drawingHeight - difference;
+    }
+    if((drawingX + drawingWidth) > context.canvas.width){
+      difference = Math.abs((drawingX + drawingWidth) - context.canvas.width);
+      drawingWidth = drawingWidth - difference;
+    }
+    if((drawingY + drawingHeight) > context.canvas.height){
+      difference = Math.abs((drawingY + drawingHeight) - context.canvas.height);
+      drawingHeight = drawingHeight - difference;
+    }
     copiedSectionOfCanvas = 'NA';
     copiedSectionOfCanvas = new Image();
     copiedSectionOfCanvas = context.getImageData(drawingX, drawingY, drawingWidth, drawingHeight);
