@@ -26,52 +26,52 @@ const InputMenu = Menu.buildFromTemplate([{
 
 window.addEventListener('resize', onWindowResize);
 
-var userWantsErrorMessages = true;
-
-var errorTimestampArray = [];
+var displayErrorMessages = true;
+var errorStack = [];
 
 process.on('uncaughtException', function (err){
-  if(userWantsErrorMessages){
-    var stk = 'Empty :('; // ----Visible!
-    if(err !== null && typeof err !== 'undefined'){
-      stk = err.stack;
-    }
-    // eslint-disable-next-line max-len
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Alternatively, if the app still seems to function normally despite this error, you can disable error messages in the settings for this program. However, be aware that this may cause unpredictable behavior. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err);
-    // Now we need to 1. push time stamp into array, 2. check if more than
-    // 3 errors have occurred within the last 30 seconds. If this is the
-    // case, then we will disable error messages and send an appropriate
-    // warning to the user.
-    var d = new Date();
-    var n = d.getTime();
-    errorTimestampArray.unshift(n);
-    if(errorTimestampArray.length >= 3){
-      var dif = errorTimestampArray[0] - errorTimestampArray[2];
-      if(dif <= 30000){
-        userWantsErrorMessages = false;
-        try{
-          ipcRenderer.send('user-doesnt-want-error-messages');
-        }
-        catch (e){
-          // Nothing to do in here. We want to try to tell the main process what is going on, but
-          // even if that isn't possible, we need to go on with the dialog.
-        }
-        // eslint-disable-next-line max-len
-        dialog.showErrorBox('Multiple Errors Have Occurred. SAVE YOUR WORK NOW!', 'Because at least 3 errors have occurred within the last 30 seconds, error messages have been disabled. This likely means that this program is in an unstable state. YOU SHOULD IMMEDIATELY SAVE YOUR WORK AND RE-START THIS PROGRAM! Also, if you are using the latest stable version of this program, **please** email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so is vital to the problem diagnosis process and will hopefully lead to a resolution in the future. We are sorry for any inconvenience this has caused you. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Render\nStack trace:\n' + stk + '\nError:\n' + err + '\nPotentially Recursive.');
-      }
-    }
+  var tmpObj = {};
+  var d = new Date();
+  var n = d.getTime();
+  tmpObj.timeOfErr = n;
+  tmpObj.processFrom = 'Render'; // ----Visible!
+  tmpObj.stackTrace = 'Empty :('; // ----Visible!
+  tmpObj.messageTxt = 'Empty :('; // ----Visible!
+  if(err.stack !== null && typeof err.stack !== 'undefined'){
+    tmpObj.stackTrace = err.stack;
   }
-  else{
-    throw err;
+  if(err.message !== null && typeof err.message !== 'undefined'){
+    tmpObj.messageTxt = err.message;
   }
+  unexpectedErrorOccured(tmpObj);
 });
 
-ipcRenderer.on('recursive-problem-in-main' , () => {
-  userWantsErrorMessages = false;
+ipcRenderer.on('unexpected-error-in-main', function (event, data){
+  unexpectedErrorOccured(data);
 });
+
+
+function unexpectedErrorOccured(objToLog){
+  try{
+    errorStack.unshift(objToLog);
+    errorStack = errorStack.slice(0, 500);
+    errorStack.sort(function(a, b){
+      return a.timeOfErr - b.timeOfErr;
+    });
+    
+  }
+  catch(e){
+    // If something goes wrong while we are trying to log the error,
+    // there probably isn't much we can do about that, so nothing to
+    // do here.
+  }
+}
+
+
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
+
 
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
 var context; // This is the context used for drawing the image on the canvas
@@ -1920,7 +1920,7 @@ function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
     document.getElementById('SDEnableKeyboardShortcuts').checked = false;
   }
   
-  if(userWantsErrorMessages){
+  if(displayErrorMessages){
     document.getElementById('SDSilenceErrorMessages').checked = false;
   }
   else{
@@ -1989,12 +1989,10 @@ function SDOkBtnFunction(){
     }
     
     if(document.getElementById('SDSilenceErrorMessages').checked){
-      userWantsErrorMessages = false;
-      ipcRenderer.send('user-doesnt-want-error-messages');
+      displayErrorMessages = false;
     }
     else{
-      userWantsErrorMessages = true;
-      ipcRenderer.send('user-wants-error-messages');
+      displayErrorMessages = true;
     }
     
     if(document.getElementById('SDUseWidscreenTemplates').checked){

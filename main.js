@@ -10,14 +10,11 @@ const osModule = require('os');
 const nativeImage = require('electron').nativeImage;
 const { clipboard } = require('electron');
 
-var userWantsErrorMessagesMain = true;
-
-var errorTimestampArray = [];
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
+var windowLoaded = false;
 // This is critical for enabling touch events & disabling background process throttling:
 app.commandLine.appendSwitch('touch-events', 'enabled');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
@@ -35,33 +32,21 @@ if(shouldQuit){
 }
 
 process.on('uncaughtException', function (err){
-  if(userWantsErrorMessagesMain){
-    var stk = 'Empty :('; // ----Visible!
-    if(err !== null && typeof err !== 'undefined'){
-      stk = err.stack;
-    }
-    dialog.showErrorBox('An Error has Occurred.', 'If you continue to receive this error, first check rogersmathwhiteboard.com to see if you are using the latest version of this program. If not, please try out the latest version and see if that resolves the issue. If that does not resolve the issue, please email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so will help solve the issue. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Main\nStack trace:\n' + stk + '\nError:\n' + err); // eslint-disable-line max-len
-    // Now we need to 1. push time stamp into array, 2. check if more than
-    // 3 errors have occurred within the last 30 seconds. If this is the
-    // case, then we will disable error messages and send an appropriate
-    // warning to the user.
+  if(windowLoaded){
+    var tmpObj = {};
     var d = new Date();
     var n = d.getTime();
-    errorTimestampArray.unshift(n);
-    if(errorTimestampArray.length >= 3){
-      var dif = errorTimestampArray[0] - errorTimestampArray[2];
-      if(dif <= 30000){
-        userWantsErrorMessagesMain = false;
-        try{
-          win.webContents.send('recursive-problem-in-main');
-        }
-        catch (e){
-          // Nothing to do in here. We want to try to tell the render process what is going on, but
-          // even if that isn't possible, we need to go on with the dialog.
-        }
-        dialog.showErrorBox('Multiple Errors Have Occurred. SAVE YOUR WORK NOW!', 'Because at least 3 errors have occurred within the last 30 seconds, error messages have been disabled. This likely means that this program is in an unstable state. YOU SHOULD IMMEDIATELY SAVE YOUR WORK AND RE-START THIS PROGRAM! Also, if you are using the latest stable version of this program, **please** email the following message, along with a description of the problem to rogersmathwhiteboard@gmail.com Doing so is vital to the problem diagnosis process and will hopefully lead to a resolution in the future. We are sorry for any inconvenience this has caused you. Here is the error message to send:\n\nThis is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch() + '\nProcess: Main\nStack trace:\n' + stk + '\nError:\n' + err + '\nPotentially Recursive.'); // eslint-disable-line max-len
-      }
+    tmpObj.timeOfErr = n;
+    tmpObj.processFrom = 'Main'; // ----Visible!
+    tmpObj.stackTrace = 'Empty :('; // ----Visible!
+    tmpObj.messageTxt = 'Empty :('; // ----Visible!
+    if(err.stack !== null && typeof err.stack !== 'undefined'){
+      tmpObj.stackTrace = err.stack;
     }
+    if(err.message !== null && typeof err.message !== 'undefined'){
+      tmpObj.messageTxt = err.message;
+    }
+    win.webContents.send('unexpected-error-in-main', tmpObj);
   }
   else{
     throw err;
@@ -98,6 +83,7 @@ function createWindow(){
   win.webContents.on('did-finish-load', function (){
     setTimeout(function (){
       win.webContents.send('app-finished-loading');
+      windowLoaded = true;
       var dir;
       try{
         dir = app.getPath('home');
@@ -152,10 +138,6 @@ ipcMain.on('focus-main-win', () => {
 
 ipcMain.on('minimize-main-win', () => {
   win.minimize();
-});
-
-ipcMain.on('user-doesnt-want-error-messages', () => {
-  userWantsErrorMessagesMain = false;
 });
 
 ipcMain.on('export-to-clipboard', function (e, du){
