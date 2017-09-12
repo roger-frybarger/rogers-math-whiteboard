@@ -28,13 +28,15 @@ window.addEventListener('resize', onWindowResize);
 
 var displayErrorMessages = true;
 var errorStack = [];
+const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n';
+const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch();
 
 process.on('uncaughtException', function (err){
   var tmpObj = {};
   var d = new Date();
   var n = d.getTime();
   tmpObj.timeOfErr = n;
-  tmpObj.processFrom = 'Render'; // ----Visible!
+  tmpObj.processFrom = 'Renderer'; // ----Visible!
   tmpObj.stackTrace = 'Empty :('; // ----Visible!
   tmpObj.messageTxt = 'Empty :('; // ----Visible!
   if(err.stack !== null && typeof err.stack !== 'undefined'){
@@ -52,18 +54,32 @@ ipcRenderer.on('unexpected-error-in-main', function (event, data){
 
 
 function unexpectedErrorOccured(objToLog){
+  //console.log(objToLog);
   try{
-    errorStack.unshift(objToLog);
-    errorStack = errorStack.slice(0, 500);
-    errorStack.sort(function(a, b){
-      return a.timeOfErr - b.timeOfErr;
-    });
-    // Todo: log stack, handle timestamps, if appropriate, pop up error messages.
+    var theBox = document.getElementById('SDErrorLogTextArea');
+    var tmpStr = theBox.value;
+    theBox.style.color = 'red';
+    if(tmpStr === 'Empty'){
+      tmpStr = platformAndVersionString;
+    }
+    tmpStr += errorDelimiter + 'Timestamp: ' + objToLog.timeOfErr;
+    tmpStr += '\nProcess: ' + objToLog.processFrom;
+    tmpStr += '\nMessage: ' + objToLog.messageTxt;
+    tmpStr += '\nStack: ' + objToLog.stackTrace;
+    // Todo: cut to reasonable length?
+    theBox.value = tmpStr;
+    // Todo, pop out error message when appropriate.
   }
   catch(e){
-    // If something goes wrong while we are trying to log the error,
-    // there probably isn't much we can do about that, so nothing to
-    // do here.
+    console.log(objToLog);
+    // This means that the error occured before the textarea was ready to accept text.
+    try{
+      ipcRenderer.send('problem-before-logging-possible', objToLog);
+    }
+    catch(e2){
+      // Well, this means that things are really messed up, and probably not worth
+      // trying to recover from.
+    }
   }
 }
 
@@ -71,7 +87,7 @@ function unexpectedErrorOccured(objToLog){
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
-
+ctcytrc
 
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
 var context; // This is the context used for drawing the image on the canvas
@@ -348,22 +364,12 @@ function enableRightClickMenu(){
 }
 
 function setUpErrorLog(){
-  var tmpStr = generatePlatformAndVersionString();
-  tmpStr += '\nNo errors yet.\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~';
   var tmpElement = document.getElementById('SDErrorLogTextArea');
   if(tmpElement.value === 'Empty'){
-    tmpElement.value = tmpStr;
+    tmpElement.value = platformAndVersionString;
   }
 }
 
-function generatePlatformAndVersionString(){
-  var tmpStr = 'This is Roger\'s Math Whiteboard version ';
-  tmpStr += appVersion;
-  tmpStr += '\nPlatform: ';
-  tmpStr += osModule.platform() + ' ';
-  tmpStr += osModule.arch();
-  return tmpStr;
-}
 
 function validateKeyboardInputForDocument(e){
   if(weGotKeyboardShortcuts && e.target.nodeName === 'BODY'){

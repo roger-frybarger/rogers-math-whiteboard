@@ -14,6 +14,10 @@ const { clipboard } = require('electron');
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
+
+const errorDelimiter = '-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~';
+const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch();
+
 var windowLoaded = false;
 // This is critical for enabling touch events & disabling background process throttling:
 app.commandLine.appendSwitch('touch-events', 'enabled');
@@ -83,7 +87,7 @@ function createWindow(){
   win.webContents.on('did-finish-load', function (){
     setTimeout(function (){
       win.webContents.send('app-finished-loading');
-      windowLoaded = true;
+      windowLoaded = true; fuitfyf
       var dir;
       try{
         dir = app.getPath('home');
@@ -143,6 +147,15 @@ ipcMain.on('minimize-main-win', () => {
 ipcMain.on('export-to-clipboard', function (e, du){
   var natImg = nativeImage.createFromDataURL(du);
   clipboard.writeImage(natImg);
+});
+
+ipcMain.on('problem-before-logging-possible', function (e, obj){
+  console.log(errorDelimiter);
+  console.log(platformAndVersionString);
+  console.log('Timestamp: ' + obj.timeOfErr);
+  console.log('Process: ' + obj.processFrom);
+  console.log('Message: ' + obj.messageTxt);
+  console.log('Stack: ' + obj.stackTrace);
 });
 
 function open(url){

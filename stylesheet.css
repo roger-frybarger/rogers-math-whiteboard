@@ -472,6 +472,10 @@ input[type='checkbox']:checked {
   padding: 15px 0 15px 0;
 }
 
+#SDErrorLogTextArea {
+  white-space: pre;
+}
+
 /*
  * Below is the css that is speciffic to the openImagesDialog:
 */
