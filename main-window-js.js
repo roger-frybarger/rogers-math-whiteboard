@@ -58,7 +58,7 @@ function unexpectedErrorOccured(objToLog){
     errorStack.sort(function(a, b){
       return a.timeOfErr - b.timeOfErr;
     });
-    
+    // Todo: log stack, handle timestamps, if appropriate, pop up error messages.
   }
   catch(e){
     // If something goes wrong while we are trying to log the error,
@@ -151,6 +151,7 @@ function continueAfterAppFinishedLoading1(){
   enableRightClickMenu();
   document.addEventListener('keydown', validateKeyboardInputForDocument);
   allLoaded = true;
+  setUpErrorLog();
 }
 
 ipcRenderer.on('users-home-folder' , function (event , data){
@@ -344,6 +345,24 @@ function enableRightClickMenu(){
       node = node.parentNode;
     }
   });
+}
+
+function setUpErrorLog(){
+  var tmpStr = generatePlatformAndVersionString();
+  tmpStr += '\nNo errors yet.\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~';
+  var tmpElement = document.getElementById('SDErrorLogTextArea');
+  if(tmpElement.value === 'Empty'){
+    tmpElement.value = tmpStr;
+  }
+}
+
+function generatePlatformAndVersionString(){
+  var tmpStr = 'This is Roger\'s Math Whiteboard version ';
+  tmpStr += appVersion;
+  tmpStr += '\nPlatform: ';
+  tmpStr += osModule.platform() + ' ';
+  tmpStr += osModule.arch();
+  return tmpStr;
 }
 
 function validateKeyboardInputForDocument(e){
@@ -2027,6 +2046,28 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
     SDOkBtnFunction();
+  }
+}
+
+function SDCopyEmailAdressErrorLog(){
+  try{
+    copyStrToClipboard('rogersmathwhiteboard@gmail.com');
+  }
+  catch(e){
+    // Here again since this is part of error handling, if we can't copy
+    // stuff to the clipboard, there probably isn't much hope of recovering,
+    // so nothing to do here.
+  }
+}
+
+function SDCopyLogInfoErrorLog(){
+  try{
+    copyStrToClipboard(document.getElementById('SDErrorLogTextArea').value);
+  }
+  catch(e){
+    // Here again since this is part of error handling, if we can't copy
+    // stuff to the clipboard, there probably isn't much hope of recovering,
+    // so nothing to do here.
   }
 }
 
