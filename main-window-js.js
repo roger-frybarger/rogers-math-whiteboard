@@ -27,8 +27,8 @@ const InputMenu = Menu.buildFromTemplate([{
 window.addEventListener('resize', onWindowResize);
 
 var displayErrorMessages = true;
-var errorStack = [];
-const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n';
+var errorTimestamps = [];
+const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
 const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch();
 
 process.on('uncaughtException', function (err){
@@ -73,10 +73,27 @@ function unexpectedErrorOccured(objToLog){
       tmpStr = platformAndVersionString + errorDelimiter + tmpStr;
     }
     theBox.value = tmpStr;
-    // Todo, pop out error message when appropriate.
+    // Here is where we care about informing the user of what is happening:
+    errorTimestamps.unshift(objToLog.timeOfErr);
+    if(displayErrorMessages){
+      var threeErrorsWithin30Sec = false;
+      if(errorTimestamps.length > 3){
+        var difference = errorTimestamps[0] - errorTimestamps[2];
+        if(difference < 30000){
+          threeErrorsWithin30Sec = true;
+        }
+      }
+      if(threeErrorsWithin30Sec){
+        // eslint-disable-next-line max-len
+        dialog.showErrorBox('Multiple Unexpected Errors have Occurred. Save Your Work!', 'Unfortunately at least 3 unexpected errors have occurred within the past 30 seconds. Because of this, it is highly recommended that you save your work and re-start this program as soon as possible!. We are sorry for any inconvenience this may cause. Also, after you save your work, please try to see the bottom of the settings dialog for details on how you can help us fix these errors.');
+      }
+      else{
+        // eslint-disable-next-line max-len
+        dialog.showErrorBox('An Unexpected Error has Occurred.', 'Unfortunately, an unexpected error has occurred. We are sorry for any inconvenience this may cause. Please, if possible, see the bottom of the settings dialog for details on how you can help us fix this error.');
+      }
+    }
   }
   catch(e){
-    console.log(objToLog);
     // This means that the error occured before the textarea was ready to accept text.
     try{
       ipcRenderer.send('problem-before-logging-possible', objToLog);
