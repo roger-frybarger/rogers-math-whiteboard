@@ -87,7 +87,7 @@ function createWindow(){
   win.webContents.on('did-finish-load', function (){
     setTimeout(function (){
       win.webContents.send('app-finished-loading');
-      windowLoaded = true; fuitfyf
+      windowLoaded = true;
       var dir;
       try{
         dir = app.getPath('home');

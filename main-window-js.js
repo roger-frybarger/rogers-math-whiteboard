@@ -66,7 +66,12 @@ function unexpectedErrorOccured(objToLog){
     tmpStr += '\nProcess: ' + objToLog.processFrom;
     tmpStr += '\nMessage: ' + objToLog.messageTxt;
     tmpStr += '\nStack: ' + objToLog.stackTrace;
-    // Todo: cut to reasonable length?
+    console.log(tmpStr.length);
+    if(tmpStr.length > 99999){
+      var difference = Math.abs(99999 - tmpStr.length);
+      tmpStr = tmpStr.substring(difference, tmpStr.length);
+      tmpStr = platformAndVersionString + errorDelimiter + tmpStr;
+    }
     theBox.value = tmpStr;
     // Todo, pop out error message when appropriate.
   }
@@ -87,7 +92,7 @@ function unexpectedErrorOccured(objToLog){
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
-ctcytrc
+
 
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
 var context; // This is the context used for drawing the image on the canvas
@@ -809,7 +814,12 @@ function instrumentMoved(x, y){
     case 'NA':
       break;
     default:
-      throw new Error('Invalid tool in instrumentMoved function: ' + tool);
+      if(typeof tool !== 'undefined'){ 
+        // This validation should help to reduce unnecessary error logs & help debugging.
+        // That way, if/when things go south, we are more likely to find the root of the
+        // problem instead of being overloaded by an error message for every mouse move.
+        throw new Error('Invalid tool in instrumentMoved function: ' + tool);
+      }
     }
   }
 }
