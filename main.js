@@ -2,7 +2,6 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const ipcMain = require('electron').ipcMain;
-const dialog = require('electron').dialog;
 const shell = require('electron').shell;
 
 const appVersion = app.getVersion();
@@ -15,7 +14,7 @@ const { clipboard } = require('electron');
 let win;
 
 
-const errorDelimiter = '-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~';
+const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
 const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch();
 
 var windowLoaded = false;
@@ -150,12 +149,13 @@ ipcMain.on('export-to-clipboard', function (e, du){
 });
 
 ipcMain.on('problem-before-logging-possible', function (e, obj){
-  console.log(errorDelimiter);
-  console.log(platformAndVersionString);
-  console.log('Timestamp: ' + obj.timeOfErr);
-  console.log('Process: ' + obj.processFrom);
-  console.log('Message: ' + obj.messageTxt);
-  console.log('Stack: ' + obj.stackTrace);
+  var textToLog = errorDelimiter;
+  textToLog += platformAndVersionString;
+  textToLog += '\nTimestamp: ' + obj.timeOfErr;
+  textToLog += '\nProcess: ' + obj.processFrom;
+  textToLog += '\nMessage: ' + obj.messageTxt;
+  textToLog += '\nStack: ' + obj.stackTrace;
+  console.log(textToLog); // eslint-disable-line no-console
 });
 
 function open(url){

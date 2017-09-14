@@ -54,7 +54,6 @@ ipcRenderer.on('unexpected-error-in-main', function (event, data){
 
 
 function unexpectedErrorOccured(objToLog){
-  //console.log(objToLog);
   try{
     var theBox = document.getElementById('SDErrorLogTextArea');
     var tmpStr = theBox.value;
@@ -66,9 +65,9 @@ function unexpectedErrorOccured(objToLog){
     tmpStr += '\nProcess: ' + objToLog.processFrom;
     tmpStr += '\nMessage: ' + objToLog.messageTxt;
     tmpStr += '\nStack: ' + objToLog.stackTrace;
-    console.log(tmpStr.length);
+    var difference = 0;
     if(tmpStr.length > 99999){
-      var difference = Math.abs(99999 - tmpStr.length);
+      difference = Math.abs(99999 - tmpStr.length);
       tmpStr = tmpStr.substring(difference, tmpStr.length);
       tmpStr = platformAndVersionString + errorDelimiter + tmpStr;
     }
@@ -78,14 +77,15 @@ function unexpectedErrorOccured(objToLog){
     if(displayErrorMessages){
       var threeErrorsWithin30Sec = false;
       if(errorTimestamps.length > 3){
-        var difference = errorTimestamps[0] - errorTimestamps[2];
+        difference = errorTimestamps[0] - errorTimestamps[2];
         if(difference < 30000){
           threeErrorsWithin30Sec = true;
         }
       }
       if(threeErrorsWithin30Sec){
         // eslint-disable-next-line max-len
-        dialog.showErrorBox('Multiple Unexpected Errors have Occurred. Save Your Work!', 'Unfortunately at least 3 unexpected errors have occurred within the past 30 seconds. Because of this, it is highly recommended that you save your work and re-start this program as soon as possible!. We are sorry for any inconvenience this may cause. Also, after you save your work, please try to see the bottom of the settings dialog for details on how you can help us fix these errors.');
+        dialog.showErrorBox('Multiple Unexpected Errors have Occurred. Save Your Work!', 'Unfortunately at least 3 unexpected errors have occurred within the past 30 seconds. Because of this, future error messages have been silenced. **It is highly recommended that you save your work and re-start this program as soon as possible!**. We are very sorry for any inconvenience these errors may cause. Also, after you save your work, please try to see the bottom of the settings dialog for details on how you can help us fix these errors.');
+        displayErrorMessages = false;
       }
       else{
         // eslint-disable-next-line max-len
@@ -94,7 +94,7 @@ function unexpectedErrorOccured(objToLog){
     }
   }
   catch(e){
-    // This means that the error occured before the textarea was ready to accept text.
+    // This means that the error occurred before the text area was ready to accept text.
     try{
       ipcRenderer.send('problem-before-logging-possible', objToLog);
     }
@@ -2082,7 +2082,7 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
-function SDCopyEmailAdressErrorLog(){
+function SDCopyEmailAdressErrorLog(){ // eslint-disable-line no-unused-vars
   try{
     copyStrToClipboard('rogersmathwhiteboard@gmail.com');
   }
@@ -2093,7 +2093,7 @@ function SDCopyEmailAdressErrorLog(){
   }
 }
 
-function SDCopyLogInfoErrorLog(){
+function SDCopyLogInfoErrorLog(){ // eslint-disable-line no-unused-vars
   try{
     copyStrToClipboard(document.getElementById('SDErrorLogTextArea').value);
   }
@@ -3372,7 +3372,7 @@ function ISDAddCroppingMethodDropdown(){
   ISDCroppingMethodDropdown.style.margin = '0px 0px 25px 0px';
   
   // Add the entries to the background color dropdown:
-  var options = ['paste within window size', 'cut to selection']; // ----Visible!
+  var options = ['paste within displayed size', 'cut to selection']; // ----Visible!
   var optionValues = ['windowsize', 'selection'];
   
   var opt = null;
