@@ -3572,6 +3572,9 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statemen
         selectionHeight = selectionHeight - difference;
       }
       
+      console.log('x: ' + selectionLocationX + ' y: ' + selectionLocationY + ' w: ' + selectionWidth + ' h: ' + selectionHeight);
+      console.log('sx: ' + ISDTempX + ' sy: ' + ISDTempY + ' ex: ' + ISDPrevX + ' ey: ' + ISDPrevY);
+      
       var selectionData = ISDContext.getImageData(selectionLocationX, selectionLocationY, selectionWidth, selectionHeight);
       
       if(ISDCroppingMethodDropdown.value !== 'windowsize'){
