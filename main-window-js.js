@@ -29,7 +29,7 @@ window.addEventListener('resize', onWindowResize);
 var displayErrorMessages = true;
 var errorTimestamps = [];
 const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
-const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch();
+const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.release() + ' ' + osModule.arch() + '\nTotal RAM: ' + osModule.totalmem() + ' bytes.';
 
 process.on('uncaughtException', function (err){
   var tmpObj = {};
@@ -3069,7 +3069,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
     }
     // clear out the dialog:
     // eslint-disable-next-line max-len
-    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update. Also, if the window/screen that you would like to insert only appears as a black page, see the FAQ section of our website for an alternate method of inserting screenshots.';
+    document.getElementById('ISDContentHeader').innerHTML = 'Click/tap on the screen or window that you would like to capture:<br>Note that this list does not automatically update. Also, if the window/screen that you would like to insert only appears as a black page, see the help dialog, (File → Help), for an alternate method of inserting screenshots.';
     document.getElementById('ISDContentDiv').innerHTML = '';
     // Prepare the dialog with some spaces:
     var br = document.createElement('br');
@@ -3571,9 +3571,6 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statemen
         difference = Math.abs((selectionLocationY + selectionHeight) - ISDImageToReturn.height);
         selectionHeight = selectionHeight - difference;
       }
-      
-      console.log('x: ' + selectionLocationX + ' y: ' + selectionLocationY + ' w: ' + selectionWidth + ' h: ' + selectionHeight);
-      console.log('sx: ' + ISDTempX + ' sy: ' + ISDTempY + ' ex: ' + ISDPrevX + ' ey: ' + ISDPrevY);
       
       var selectionData = ISDContext.getImageData(selectionLocationX, selectionLocationY, selectionWidth, selectionHeight);
       

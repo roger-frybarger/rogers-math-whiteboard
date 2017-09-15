@@ -15,7 +15,7 @@ let win;
 
 
 const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
-const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.arch();
+const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.release() + ' ' + osModule.arch() + '\nTotal RAM: ' + osModule.totalmem() + ' bytes.';
 
 var windowLoaded = false;
 // This is critical for enabling touch events & disabling background process throttling:
@@ -49,7 +49,14 @@ process.on('uncaughtException', function (err){
     if(err.message !== null && typeof err.message !== 'undefined'){
       tmpObj.messageTxt = err.message;
     }
-    win.webContents.send('unexpected-error-in-main', tmpObj);
+    try{
+      win.webContents.send('unexpected-error-in-main', tmpObj);
+    }
+    catch(e){
+      // If something breaks while trying to send the error message, well, there
+      // probably isn't much we can do about that.
+      throw err;
+    }
   }
   else{
     throw err;
