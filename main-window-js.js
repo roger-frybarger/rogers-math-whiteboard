@@ -3496,7 +3496,7 @@ function ISDSelectFunction(x, y, phase){
     var tempWidth = Math.abs(ISDTempX - ISDPrevX);
     var tempHeight = Math.abs(ISDTempY - ISDPrevY);
     if(tempWidth === 0 || tempHeight === 0){
-      cancelSelect();
+      ISDCancelSelect();
     }
     
     break;
