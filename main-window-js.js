@@ -2094,23 +2094,12 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
-function SDCopyEmailAdressErrorLog(){ // eslint-disable-line no-unused-vars
-  try{
-    copyStrToClipboard('rogersmathwhiteboard@gmail.com');
-  }
-  catch(e){
-    // Here again since this is part of error handling, if we can't copy
-    // stuff to the clipboard, there probably isn't much hope of recovering,
-    // so nothing to do here.
-  }
-}
-
 function SDCopyLogInfoErrorLog(){ // eslint-disable-line no-unused-vars
   try{
     copyStrToClipboard(document.getElementById('SDErrorLogTextArea').value);
   }
   catch(e){
-    // Here again since this is part of error handling, if we can't copy
+    // Since this is part of error handling, if we can't copy
     // stuff to the clipboard, there probably isn't much hope of recovering,
     // so nothing to do here.
   }
