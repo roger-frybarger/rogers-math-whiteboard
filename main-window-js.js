@@ -7,6 +7,7 @@ const remote = require('electron').remote;
 const Menu = remote.Menu;
 var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a reference to the main window so we can use
 // it for dialog boxes.
+var dateTimeOfThisRelease = remote.getGlobal('dateTimeOfThisRelease');
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
 const path = require('path');
@@ -190,6 +191,7 @@ function continueAfterAppFinishedLoading1(){
   document.addEventListener('keydown', validateKeyboardInputForDocument);
   allLoaded = true;
   setUpErrorLog();
+  checkAgeOfRelease();
 }
 
 ipcRenderer.on('users-home-folder' , function (event , data){
@@ -392,6 +394,18 @@ function setUpErrorLog(){
   }
 }
 
+function checkAgeOfRelease(){
+  var d = new Date();
+  var now = d.getTime();
+  var difference = now - dateTimeOfThisRelease;
+  if(difference > 18408222000){
+    // eslint-disable-next-line max-len
+    var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'info', message: 'Sorry to bother you, but it seems that this copy of Roger\'s Math Whiteboard is over 7 months old! Consider checking the downloads section of our website to see if there is a more recent version. \n\nFor reference this is Roger\'s Math Whiteboard version ' + appVersion, buttons: ['Use This Copy For Now', 'Open Website'], defaultId: 0, noLink: true });
+    if(ret === 1){
+      document.getElementById('ADMainSiteLink').click();
+    }
+  }
+}
 
 function validateKeyboardInputForDocument(e){
   if(weGotKeyboardShortcuts && e.target.nodeName === 'BODY'){
@@ -1550,14 +1564,12 @@ function userWantsToClose(){
     var ret = dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Warning: If you proceed, any\nchanges made to this set of\nimages will be lost.', buttons: ['Lose Changes', 'Cancel'], defaultId: 1, noLink: true });
       
     if(ret === 0){
-      ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
       weGotKeyboardShortcuts = false;
       ipcRenderer.send('terminate-this-app');
     }
     // If the user chooses to cancel, we will do nothing and let them save the file(s) on their own.
   }
   else{
-    ipcRenderer.send('user-doesnt-want-keyboard-shortcuts');
     weGotKeyboardShortcuts = false;
     ipcRenderer.send('terminate-this-app');
   }

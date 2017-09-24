@@ -81,6 +81,10 @@ function createWindow(){
 
   // Open the Development Tools.  -- ***************COMMENT OUT BEFORE RELEASE***************
   win.webContents.openDevTools();
+  
+  // Here is the release date.    -- ***********PUT IN CURRENT TIME BEFORE RELEASE***********
+  // To update it get num from: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_gettime
+  global.dateTimeOfThisRelease = 1506267641292;
 
   win.on('close', function (e){
     // Once the user tries to click the close button, first prevent the default action of closing the app:
