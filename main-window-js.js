@@ -112,6 +112,7 @@ var safeToClose = true; // Starting off as true and will be changed once changes
 var allLoaded = false;
 
 var autosaveInterval;
+var pathOfFolderToSaveInto = '';
 
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
 var context; // This is the context used for drawing the image on the canvas
@@ -546,7 +547,7 @@ function saveKeyboardShortcutPressed(){
   // If save path is empty, open html dialog.
   // Otherwise, just save.
   saveCurrentImageToArrayBeforeMoving();
-  if(SIDPath !== ''){
+  if(pathOfFolderToSaveInto !== ''){
     SIDActuallySaveFiles(true);
   }
   else{
@@ -2092,10 +2093,8 @@ function SDActuallySetUndoLength(){
 
 function SDSetUpAutoSave(vlue){
   if(vlue !== 'never'){
-    if(autosaveInterval !== null){
-      clearInterval(autosaveInterval);
-    }
     var num = parseInt(vlue, 10) * 60 * 1000;
+    clearInterval(autosaveInterval);
     autosaveInterval = setInterval(SDCalledToSaveAutomatically, num);
   }
   else{
@@ -2104,7 +2103,9 @@ function SDSetUpAutoSave(vlue){
 }
 
 function SDCalledToSaveAutomatically(){
-  console.log('saving');
+  if(pathOfFolderToSaveInto !== ''){
+    SIDActuallySaveFiles(true);
+  }
 }
 
 function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
@@ -2341,7 +2342,6 @@ function OIDInformIfNecessary(){
 
 // Here is the code for the saveImagesDialog:
 
-var SIDPath = '';
 var SIDNameForFiles = '';
 var SIDValidInput = true;
 var SIDValidCharsString = 'abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890';
@@ -2355,7 +2355,7 @@ var SIDSaveViaCtrlS = false;
 function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   document.getElementById('SIDHeader').innerHTML = 'Save Images';
-  SIDPath = '';
+  pathOfFolderToSaveInto = '';
   SIDNameForFiles = '';
 }
 
@@ -2411,7 +2411,7 @@ function SIDLaunchOpenFolderWindow(){
       if (typeof paths === 'undefined' || paths === null){
         return;
       }
-      SIDPath = paths[0];
+      pathOfFolderToSaveInto = paths[0];
       SIDHandleFolderPath();
     });
 }
@@ -2419,7 +2419,7 @@ function SIDLaunchOpenFolderWindow(){
 function SIDHandleFolderPath(){
   document.getElementById('SIDHeader').innerHTML = 'Processing...';
   document.getElementById('saveImagesDialog').style.cursor = 'wait';
-  fs.readdir(SIDPath, function (err, files){
+  fs.readdir(pathOfFolderToSaveInto, function (err, files){
     if (err){
       // eslint-disable-next-line max-len
       alert('Error: An error occurred while trying to inspect the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists, is empty, and that you are allowed to create files there', '');
@@ -2448,7 +2448,7 @@ function SIDHandleFolderPath(){
 
 function SIDActuallySaveFiles(ctl_s = false){
   SIDSaveViaCtrlS = ctl_s;
-  fs.readdir(SIDPath, function (err, files){
+  fs.readdir(pathOfFolderToSaveInto, function (err, files){
     if(err){
       // eslint-disable-next-line max-len
       alert('Error: An error occurred while trying to open the folder you selected. Here is the error: ' + err + '\n\nEnsure that the folder you choose exists and that you are allowed to create files there. Use the "Save Images" option in the file menu to choose a different folder if necessary.', '');
@@ -2460,7 +2460,7 @@ function SIDActuallySaveFiles(ctl_s = false){
       SIDFilesToDelete = files.length - numCurrentImages;
       SIDFilesDeleted = 0;
       for(var i = files.length; i > numCurrentImages; --i){
-        var name = SIDPath + path.sep + SIDNameForFiles + i + '.png';
+        var name = pathOfFolderToSaveInto + path.sep + SIDNameForFiles + i + '.png';
         fs.unlink(name, SIDFileDeleted);
       }
     }
@@ -2483,7 +2483,7 @@ function SIDContinueSavingFiles(){
   SIDFilesToHandle = arrayOfCurrentImages.length;
   SIDFilesHandled = 0;
   for(var i = 0; i < SIDFilesToHandle; ++i){
-    var name = SIDPath + path.sep + SIDNameForFiles + (i + 1) + '.png';
+    var name = pathOfFolderToSaveInto + path.sep + SIDNameForFiles + (i + 1) + '.png';
     fs.writeFile(name, SIDDecodeBase64Image(arrayOfCurrentImages[i].src), SIDFileSaved);
   }
 }
