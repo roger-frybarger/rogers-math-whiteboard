@@ -1063,6 +1063,7 @@ function lineToolFunction(x, y, phase){
     context.moveTo(tempX, tempY);
     context.lineTo(prevX, prevY);
     context.stroke();
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1133,6 +1134,7 @@ function selectToolFunction(x, y, phase){
       cancelSelect();
     }
     
+    
     break;
   default:
     throw new Error('Invalid phase in selectToolFunction: ' + phase);
@@ -1179,6 +1181,7 @@ function textToolFunction(x, y, phase){
     context.font = (instrumentWidth + 8) + 'px sans-serif';
     context.fillStyle = instrumentColor;
     context.fillText(textToInsert, prevX, prevY);
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1225,6 +1228,7 @@ function identifyToolFunction(x, y, phase){
     //      Paint tempCanvasForInterval onto the real canvas.
     
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1276,6 +1280,7 @@ function dotToolFunction(x, y, phase){
     context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
     context.fillStyle = instrumentColor;
     context.fill();
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1320,6 +1325,7 @@ function pasteToolFunction(x, y, phase){
       //      2. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       context.putImageData(copiedSectionOfCanvas, prevX, (prevY - copiedSectionOfCanvas.height));
+      tempCanvasForInterval = 'NA';
       
       break;
     default:
@@ -1382,6 +1388,7 @@ function centralLineToolFunction(x, y, phase){
     context.moveTo(nx, ny);
     context.lineTo(prevX, prevY);
     context.stroke();
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1440,6 +1447,7 @@ function dashedLineToolFunction(x, y, phase){
     context.lineTo(prevX, prevY);
     context.stroke();
     context.setLineDash([]);
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1505,6 +1513,7 @@ function dashedCentralLineToolFunction(x, y, phase){
     context.lineTo(prevX, prevY);
     context.stroke();
     context.setLineDash([]);
+    tempCanvasForInterval = 'NA';
     
     break;
   default:
@@ -1549,6 +1558,7 @@ function scaledPasteToolFunction(x, y, phase){
       //      2. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       context.putImageData(copiedSectionOfCanvasForScale, prevX, (prevY - copiedSectionOfCanvasForScale.height));
+      tempCanvasForInterval = 'NA';
       
       break;
     default:
@@ -2104,6 +2114,9 @@ function SDSetUpAutoSave(vlue){
 
 function SDCalledToSaveAutomatically(){
   if(pathOfFolderToSaveInto !== ''){
+    if(tempCanvasForInterval === 'NA' && areaSelected === false){
+      saveCurrentImageToArrayBeforeMoving();
+    }
     SIDActuallySaveFiles(true);
   }
 }
@@ -4014,6 +4027,7 @@ function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
     tempY = 'NA';
     areaSelected = false;
     pushStateIntoUndoArray();
+    tempCanvasForInterval = 'NA';
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -4036,6 +4050,7 @@ function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
     tempY = 'NA';
     areaSelected = false;
     pushStateIntoUndoArray();
+    tempCanvasForInterval = 'NA';
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -4085,6 +4100,7 @@ function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
     tempY = 'NA';
     areaSelected = false;
     pushStateIntoUndoArray();
+    tempCanvasForInterval = 'NA';
   }
   else{
     tellUserToSelectAnAreaFirst();
@@ -4109,6 +4125,7 @@ function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
     tempY = 'NA';
     areaSelected = false;
     pushStateIntoUndoArray();
+    tempCanvasForInterval = 'NA';
   }
   else{
     tellUserToSelectAnAreaFirst();
