@@ -169,6 +169,18 @@
             <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
             <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (Some of these are case-sensitive) <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> ctrl+c --> Copy section, <br> ctrl+v --> Paste, <br> ctrl+s --> save, <br> ctrl+a --> Select all, <br> ctrl+Shift+a --> Deselect all, <br> p --> Pen, <br> e --> Eraser, <br> l --> Straight Line, <br> s --> Select, <br> i --> Identifier, <br> d --> Dot, <br> b --> Blue, <br> k --> Black, <br> r --> Red, <br> g --> Green, <br> w --> White, <br> Space --> Next Page, <br> Shift+Space --> Previous Page, <br> esc --> Cancel draw/select/paste/etc, <br> Delete --> Erase selection.)</li>
             <li><input id="SDUseWidscreenTemplates" type="checkbox" value="false"> Optimize for wide-screen use where possible.</li>
+            <li>
+              After I have chosen where to save the images, continue to automatically save them:
+              <select id="SDAutosaveDropdown">
+                <option value="never">never</option>
+                <option value="1">every minute</option>
+                <option value="2">every 2 minutes</option>
+                <option value="3">every 3 minutes</option>
+                <option value="5">every 5 minutes</option>
+                <option value="10">every 10 minutes</option>
+                <option value="15">every 15 minutes</option>
+              </select>
+            </li>
             <li><input id="SDSilenceErrorMessages" type="checkbox" value="false"> Silence error messages. <br> (This can be useful if you are constantly being bothered by an error message while the program seems to be performing fine. However, it could also lead to further malfunctioning, which could leave the app unusable. Use with caution.)</li>
             
             <li>More settings coming soon!</li>

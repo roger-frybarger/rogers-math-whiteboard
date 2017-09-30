@@ -317,6 +317,10 @@ input[type="number"] {
   background-image: url('images/icons/scrollbar_btn_left.png');
 }
 
+select {
+  font-size: 30px;
+}
+
 input[type='checkbox'] {
     -webkit-appearance:none;
     width: 60px;

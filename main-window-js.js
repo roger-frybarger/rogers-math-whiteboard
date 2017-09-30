@@ -111,6 +111,7 @@ function unexpectedErrorOccured(objToLog){
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
 
+var autosaveInterval;
 
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
 var context; // This is the context used for drawing the image on the canvas
@@ -2065,6 +2066,8 @@ function SDOkBtnFunction(){
     else{
       useWidescreenTemplates = false;
     }
+    var e = document.getElementById('SDAutosaveDropdown');
+    SDSetUpAutoSave(e.options[e.selectedIndex].value);
     document.getElementById('SDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
 }
@@ -2085,6 +2088,23 @@ function SDActuallySetUndoLength(){
   if(currentPlaceInUndoArray < 0){
     clearUndoHistory();
   }
+}
+
+function SDSetUpAutoSave(vlue){
+  if(vlue !== 'never'){
+    if(autosaveInterval !== null){
+      clearInterval(autosaveInterval);
+    }
+    var num = parseInt(vlue, 10) * 60 * 1000;
+    autosaveInterval = setInterval(SDCalledToSaveAutomatically, num);
+  }
+  else{
+    clearInterval(autosaveInterval);
+  }
+}
+
+function SDCalledToSaveAutomatically(){
+  console.log('saving');
 }
 
 function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
