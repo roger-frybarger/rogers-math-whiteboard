@@ -111,6 +111,7 @@ function unexpectedErrorOccured(objToLog){
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
 var allLoaded = false;
 
+// Some stuff for auto-save and regular save:
 var autosaveInterval;
 var pathOfFolderToSaveInto = '';
 
@@ -2116,8 +2117,11 @@ function SDCalledToSaveAutomatically(){
   if(pathOfFolderToSaveInto !== ''){
     if(tempCanvasForInterval === 'NA' && areaSelected === false){
       saveCurrentImageToArrayBeforeMoving();
+      SIDActuallySaveFiles(true);
     }
-    SIDActuallySaveFiles(true);
+    else{
+      setTimeout(SDCalledToSaveAutomatically, 1000);
+    }
   }
 }
 
@@ -4057,7 +4061,7 @@ function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
-function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
+function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars, max-statements
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     
