@@ -2136,7 +2136,7 @@ function SDCalledToSaveAutomatically(){
 function SDSetCursor(vle){
   currentCursorValue = vle;
   if(vle.substring(0, 1) === 'u'){
-    var indx = parseInt(vle.substring(1));
+    var indx = parseInt(vle.substring(1), 10);
     document.getElementById('canvas1').style.cursor = 'url(\'' + cursorImages[indx] + '\'), auto';
   }
   else{
