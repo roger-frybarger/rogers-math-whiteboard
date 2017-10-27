@@ -1980,13 +1980,6 @@ function OTDCheckPercentInput(){ // eslint-disable-line no-unused-vars
 var SDValid = true;
 
 function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
-  if(document.getElementById('canvas1').style.cursor === 'none'){
-    document.getElementById('SDRemoveMousePointerOnCanvas').checked = true;
-  }
-  else{
-    document.getElementById('SDRemoveMousePointerOnCanvas').checked = false;
-  }
-  
   document.getElementById('SDUndoHistoryBox').value = maxUndoHistory - 1;
   document.getElementById('SDMaxPagesAllowedBox').value = maxNumberOfPages;
   
@@ -2047,12 +2040,8 @@ function SDInputValidation(){
 
 function SDOkBtnFunction(){
   if(SDValid){
-    if(document.getElementById('SDRemoveMousePointerOnCanvas').checked){
-      document.getElementById('canvas1').style.cursor = 'none';
-    }
-    else{
-      document.getElementById('canvas1').style.cursor = 'default';
-    }
+    var e = document.getElementById('SDCursorDropdown');
+    SDSetCursor(e.options[e.selectedIndex].value);
     
     maxUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value, 10) + 1;
     SDActuallySetUndoLength();
@@ -2078,7 +2067,7 @@ function SDOkBtnFunction(){
     else{
       useWidescreenTemplates = false;
     }
-    var e = document.getElementById('SDAutosaveDropdown');
+    e = document.getElementById('SDAutosaveDropdown');
     SDSetUpAutoSave(e.options[e.selectedIndex].value);
     document.getElementById('SDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
   }
@@ -2122,6 +2111,18 @@ function SDCalledToSaveAutomatically(){
     else{
       setTimeout(SDCalledToSaveAutomatically, 1000);
     }
+  }
+}
+
+function SDSetCursor(vle){
+  if(vle.substring(0, 1) === 'u'){
+    var path = 'file:///images/icons/' + vle.substring(1);
+    var t = 'url(\'' + path + '\'), default;';
+    console.log(t);
+    document.getElementById('canvas1').style.cursor = 'url("file:///images/icons/massive-cursor-red.png"), auto';
+  }
+  else{
+    
   }
 }
 

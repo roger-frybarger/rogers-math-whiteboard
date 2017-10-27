@@ -164,7 +164,20 @@
           <p>Note: Since this app is designed to be portable, these settings will only remain in effect until you close the app. Unfortunately, that means you will need to re-adjust them to your liking every time you start the app. Portability comes with its costs.</p>
           
           <ul id="SDUnorderedList">
-            <li><input id="SDRemoveMousePointerOnCanvas" type="checkbox" value="false"> Remove mouse pointer over drawing area</li>
+            <li>
+              Cursor to use over drawing area:
+              <select id="SDCursorDropdown">
+                <option value="default">default</option>
+                <option value="crosshair">crosshair</option>
+                <option value="ularge-cursor.png">large white</option>
+                <option value="uvery-large-cursor.png">very large white</option>
+                <option value="umassive-cursor.png">massive white</option>
+                <option value="ularge-cursor-red.png">large red</option>
+                <option value="uvery-large-cursor-red.png">very large red</option>
+                <option value="umassive-cursor-red.png">massive red</option>
+                <option value="none">none</option>
+              </select>
+            </li>
             <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
             <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
             <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (Some of these are case-sensitive) <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> ctrl+c --> Copy section, <br> ctrl+v --> Paste, <br> ctrl+s --> save, <br> ctrl+a --> Select all, <br> ctrl+Shift+a --> Deselect all, <br> p --> Pen, <br> e --> Eraser, <br> l --> Straight Line, <br> s --> Select, <br> i --> Identifier, <br> d --> Dot, <br> b --> Blue, <br> k --> Black, <br> r --> Red, <br> g --> Green, <br> w --> White, <br> Space --> Next Page, <br> Shift+Space --> Previous Page, <br> esc --> Cancel draw/select/paste/etc, <br> Delete --> Erase selection.)</li>
