@@ -178,10 +178,11 @@
                 <option value="none">none</option>
               </select>
             </li>
-            <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> Min: 10, Max: 100<br></li>
+            <li>Undo History: <input type="number" id="SDUndoHistoryBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="30" min="10" max="100"> items. Min: 10, Max: 100<br></li>
             <li>Max Pages Allowed: <input type="number" id="SDMaxPagesAllowedBox" oninput="SDInputValidation();" onkeydown="SDCheckForEnter(event);" value="250" min="200" max="999"> Min: 200, Max: 999<br></li>
-            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable keyboard shortcuts. (Some of these are case-sensitive) <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> ctrl+c --> Copy section, <br> ctrl+v --> Paste, <br> ctrl+s --> save, <br> ctrl+a --> Select all, <br> ctrl+Shift+a --> Deselect all, <br> p --> Pen, <br> e --> Eraser, <br> l --> Straight Line, <br> s --> Select, <br> i --> Identifier, <br> d --> Dot, <br> b --> Blue, <br> k --> Black, <br> r --> Red, <br> g --> Green, <br> w --> White, <br> Space --> Next Page, <br> Shift+Space --> Previous Page, <br> esc --> Cancel draw/select/paste/etc, <br> Delete --> Erase selection.)</li>
+            <li><input id="SDEnableKeyboardShortcuts" type="checkbox" value="false"> Enable the keyboard shortcuts shown below. (Some of these are case-sensitive) <br> (ctrl+z --> Undo, <br> ctrl+y --> Redo, <br> ctrl+c --> Copy section, <br> ctrl+v --> Paste, <br> ctrl+s --> save, <br> ctrl+a --> Select all, <br> ctrl+Shift+a --> Deselect all, <br> p --> Pen, <br> e --> Eraser, <br> l --> Straight Line, <br> s --> Select, <br> i --> Identifier, <br> d --> Dot, <br> b --> Blue, <br> k --> Black, <br> r --> Red, <br> g --> Green, <br> w --> White, <br> Space --> Next Page, <br> Shift+Space --> Previous Page, <br> esc --> Cancel draw/select/paste/etc, <br> Delete --> Erase selection.)</li>
             <li><input id="SDUseWidscreenTemplates" type="checkbox" value="false"> Optimize for wide-screen use where possible.</li>
+            <li><input id="SDUseColorInvertedTemplates" type="checkbox" value="false"> Use color inverted templates where possible. (This is useful if you prefer a black background.)</li>
             <li>
               After I have chosen where to save the images, continue to save them there automatically:
               <select id="SDAutosaveDropdown">

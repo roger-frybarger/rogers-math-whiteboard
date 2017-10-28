@@ -161,6 +161,7 @@ var maxNumberOfPages = 250;
 var weGotKeyboardShortcuts = false;
 
 var useWidescreenTemplates = false;
+var useColorInvertedTemplates = false;
 
 var dataUrlsToLoad;
 var dataUrlsLoaded;
@@ -1782,14 +1783,15 @@ function loadPage(numberOfPageToLoad){
 }
 
 function mainUIInsertTemplateAsPage(location){ // eslint-disable-line no-unused-vars
+  var before = location.substring(0, (location.length - 4));
   if(useWidescreenTemplates){
-    var before = location.substring(0, (location.length - 4));
-    var combined = before + '-wide.png';
-    insertTemplateAsPage(combined);
+    before += '-wide';
   }
-  else{
-    insertTemplateAsPage(location);
+  if(useColorInvertedTemplates){
+    before += '-b';
   }
+  before += '.png';
+  insertTemplateAsPage(before);
 }
 
 function insertTemplateAsPage(locationOfTemplate){
@@ -2021,6 +2023,12 @@ function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   else{
     document.getElementById('SDUseWidscreenTemplates').checked = false;
   }
+  if(useColorInvertedTemplates){
+    document.getElementById('SDUseColorInvertedTemplates').checked = true;
+  }
+  else{
+    document.getElementById('SDUseColorInvertedTemplates').checked = false;
+  }
   SDInputValidation();
 }
 
@@ -2084,6 +2092,12 @@ function SDOkBtnFunction(){
     }
     else{
       useWidescreenTemplates = false;
+    }
+    if(document.getElementById('SDUseColorInvertedTemplates').checked){
+      useColorInvertedTemplates = true;
+    }
+    else{
+      useColorInvertedTemplates = false;
     }
     e = document.getElementById('SDAutosaveDropdown');
     SDSetUpAutoSave(e.options[e.selectedIndex].value);
@@ -3598,6 +3612,9 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statemen
       }
       
       var bgColor = 'white';
+      if(useColorInvertedTemplates){
+        bgColor = 'black';
+      }
       if(ISDBackgroundColorDropdown.value !== 'white'){
         bgColor = instrumentColor;
       }
@@ -3775,14 +3792,15 @@ function ISDSimpleVariableCleanup(){
 
 function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
+  var before = locOfTem.substring(0, (locOfTem.length - 4));
   if(useWidescreenTemplates){
-    var before = locOfTem.substring(0, (locOfTem.length - 4));
-    locOfTem = before + '-wide.png';
-    insertTemplateAsPage(locOfTem);
+    before += '-wide';
   }
-  else{
-    insertTemplateAsPage(locOfTem);
+  if(useColorInvertedTemplates){
+    before += '-b';
   }
+  before += '.png';
+  insertTemplateAsPage(before);
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
