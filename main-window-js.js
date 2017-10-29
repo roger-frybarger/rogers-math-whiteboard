@@ -1116,6 +1116,9 @@ function selectToolFunction(x, y, phase){
     prevY = y;
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    if(useColorInvertedTemplates){
+      context.strokeStyle = 'rgba(255, 255, 255, 1.0)';
+    }
     context.lineJoin = 'round';
     context.lineWidth = 1;
     context.beginPath();
@@ -1136,6 +1139,9 @@ function selectToolFunction(x, y, phase){
     areaSelected = true;
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
     context.strokeStyle = 'rgba(0, 0, 0, 1.0)';
+    if(useColorInvertedTemplates){
+      context.strokeStyle = 'rgba(255, 255, 255, 1.0)';
+    }
     context.lineJoin = 'round';
     context.lineWidth = 1;
     context.beginPath();
@@ -1224,6 +1230,9 @@ function identifyToolFunction(x, y, phase){
     context.beginPath();
     context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
     context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    if(useColorInvertedTemplates){
+      context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    }
     context.fill();
     
     break;
@@ -1238,6 +1247,9 @@ function identifyToolFunction(x, y, phase){
     context.beginPath();
     context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
     context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    if(useColorInvertedTemplates){
+      context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    }
     context.fill();
     
     break;
@@ -1271,6 +1283,9 @@ function dotToolFunction(x, y, phase){
     context.beginPath();
     context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
     context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    if(useColorInvertedTemplates){
+      context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    }
     context.fill();
     
     break;
@@ -1285,6 +1300,9 @@ function dotToolFunction(x, y, phase){
     context.beginPath();
     context.arc(prevX, prevY, (instrumentWidth + 8) / 2, 0, 2 * Math.PI, false);
     context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    if(useColorInvertedTemplates){
+      context.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    }
     context.fill();
     
     break;
