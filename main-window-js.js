@@ -160,7 +160,7 @@ var tempImageForWindowResize;
 var maxNumberOfPages = 250;
 var weGotKeyboardShortcuts = false;
 
-var useWidescreenTemplates = false;
+var useWidescreenTemplates = true;
 var useColorInvertedTemplates = false;
 
 var dataUrlsToLoad;
@@ -327,7 +327,7 @@ function initializeCanvas(){
     clearUndoHistory();
     continueAfterAppFinishedLoading1();
   });
-  image.src = 'images/Blank_White_Page.png';
+  image.src = 'images/Blank_White_Page-wide.png';
 }
 
 // Main canvas mouse down function:
