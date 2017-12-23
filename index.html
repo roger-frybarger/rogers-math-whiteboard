@@ -2,9 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <!--Here is the title for the program:-->
     <title>Roger's Math Whiteboard</title>
+    <!--Here we are connecting the main javascript file to the web page:-->
     <script type="text/javascript" src="main-window-js.js"></script>
-    <!--Note that all of the "onclick" attributes in this file seem to be executing in the same context as the above file.
+    <!--Note that all of the "onclick" attributes in this file seem to be executing in the same scope as the above file.
     Also, I am aware that putting javascript into the HTML is not considered a good practice. However, I am largely ok
     with doing so in this file in cases where only linkages are made to other functions, and in cases where the code
     that needs to be executed is very small and can fit easily into the line of text. Furthermore, the standard practice
@@ -29,7 +31,7 @@
       </div>
     </div>
     
-    Change:
+    Things to change if you need to use the above template code:
     1. id of top div
     2. id of close btn
     3. alt attribute of close btn image
@@ -38,9 +40,10 @@
     5. Function called in onClick
     -->
     
+    <!--Here we are connecting the stylesheet to the web page:-->
     <link type="text/css" rel="stylesheet" href="stylesheet.css">
   </head>
-  <body>
+  <body> <!--***START OF BODY SECTION***-->
     <div id="TOP_NAV_BAR">
       <ul>
         <!--These are the entries in the top nav bar. They each have to have the transparent image as the
@@ -117,6 +120,7 @@
               <a href ="#otherPageDialog" id="otherPageBtn">Other</a>
             </div>
         </li>
+        <!--Here are the two page navigation buttons. these do not move depending on the screen size:-->
         <li>
           <a class="btn" id="previousPageBtn" onclick="previousPageBtnFunction();">Previous Page</a>
         </li>
@@ -125,6 +129,7 @@
         </li>
       </ul>
     </div>
+    <!--Here are a few more page navigation items:-->
     <div id="pageTextBoxDivID">
       Page: <input type="number" name="pageTextBox" id="pageTextBoxID" oninput="pageInputBoxValidator()" onkeydown="pageInputBoxCheckForEnter(event)" value="1" min="1" max="1"><br>
     </div>
@@ -210,6 +215,8 @@
       </div>
     </div>
     
+    <!--Here is the open images dialog-->
+    
     <div id="openImagesDialog" class="modalDialogs">
       <div>
         <a id="OIDCloseBtn" href="#close" title="Close" class="modalDialogsCloseBtns"><img src="images/icons/transparent.png" alt="open images dialog close button"></a>
@@ -226,7 +233,6 @@
               <li>If you are using PowerPoint, save the file into the temporary folder using the PNG format and specify that you wish to export all the slides if it asks you. <br>If you are using LibreOffice/OpenOffice Impress, Export the document into the temporary folder using the HTML format, and specifying PNG images with the largest resolution available. (The HTML Design name does not matter.)</li>
               <li>Open Roger's Math Whiteboard, (This program), and import all the images in the temporary folder, or a sub-folder if applicable, using this window.</li>
               <li>Once you have successfully imported all the images, the temporary folder, and its contents, can be deleted.</li>
-              <!--TODO: Fill in the hrefs below with the correct urls of new youtube videos.-->
               <li>Need more detail? Check out the "Features" section of our website, (<a class="webLikeLinks" href="http://www.rogersmathwhiteboard.com" target="_blank" >rogersmathwhiteboard.com</a>). The first two slideshows/animations illustrate this process in detail.</li>
             </ol>
             <!--Note that the inner html of the line below is assigned as needed via javascript.
@@ -470,6 +476,7 @@ Last updated: Aug 9, 2016.
 2. The Github & Electron teams for creating and maintaining the Electron framework on which this program is built.
 3. Mohave Community College, EJ Media on YouTube, w3schools.com, Stackoverflow.com and codecademy.com for helping me hone my programming skills.
 4. Timothy Mayo, Laurel Clifford, and Chris Reed for keeping me motivated to build this app.
+5. Austin Covington for helping me create the animations for the features list.
 
 	Thank you for using Roger’s Math Whiteboard! I hope you enjoy it!
   
@@ -1016,6 +1023,7 @@ Public License instead of this License.
         <div class="modalBoxContent">
           <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
           <p>Min: 2, Max: 2000. Medium = 5</p>
+          <!--These are just the buttons on the dialog. I put these here so that they don't need to use their keyboard.-->
           <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">1</a>
           <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">2</a>
           <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">3</a>
@@ -1156,5 +1164,5 @@ Public License instead of this License.
       </div>
     </div>
     
-  </body>
+  </body> <!--***END OF BODY SECTION***-->
 </html>

@@ -1,3 +1,12 @@
+
+/* Note that the code in this file runs in a seperate process from the code in the main-window-js.js file. 
+ * The code in this file is generally closer to the underlying OS and is responsible for creating a window
+ * and telling that window where to load its HTML from. This file/process also handles things that require
+ * deeper interaction with the underlying OS. As such, it is extra important to be careful that the code
+ * in this file works properly since it is more difficult to debug.
+ * */
+
+// Here are the global constants that allow us to use various electron features:
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
@@ -9,19 +18,22 @@ const osModule = require('os');
 const nativeImage = require('electron').nativeImage;
 const { clipboard } = require('electron');
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+// Here is a global reference to the window object. It is necessary to keep this global reference
+// so that the window is not closed when the object is garbage collected.
 let win;
 
-
+// This string is used to seperate error messages if any errors occur:
 const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
 const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.release() + ' ' + osModule.arch() + '\nTotal RAM: ' + osModule.totalmem() + ' bytes.';
 
+// This is needed to determine where to print error messages should they occur:
 var windowLoaded = false;
 // This is critical for enabling touch events & disabling background process throttling:
 app.commandLine.appendSwitch('touch-events', 'enabled');
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
+// This makes the app a single instance app. This means that the user cannot start two instances of the program at the same time.
+// For more details see https://github.com/electron/electron/blob/master/docs/api/app.md#appmakesingleinstancecallback
 var shouldQuit = app.makeSingleInstance(function (){
   // Someone tried to run a second instance, we should focus our window.
   if(win){
@@ -29,13 +41,17 @@ var shouldQuit = app.makeSingleInstance(function (){
   }
 });
 
+// This forces all second instances of this app to quit after focusing the main window:
 if(shouldQuit){
   app.quit();
   return;
 }
 
+// Here is the event handler for uncaught exceptions.
 process.on('uncaughtException', function (err){
   if(windowLoaded){
+    // If the window is loaded, we will make an error message and try to send it to the main interface
+    // so that it can be displayed in the error message textarea.
     var tmpObj = {};
     var d = new Date();
     var n = d.getTime();
@@ -59,6 +75,7 @@ process.on('uncaughtException', function (err){
     }
   }
   else{
+    // If the window is not yet loaded, we will just throw the error so that it gets printed out on the terminal:
     throw err;
   }
 });
