@@ -3,7 +3,8 @@
  * The code in this file is generally closer to the underlying OS and is responsible for creating a window
  * and telling that window where to load its HTML from. This file/process also handles things that require
  * deeper interaction with the underlying OS. As such, it is extra important to be careful that the code
- * in this file works properly since it is more difficult to debug.
+ * in this file works properly since it is more difficult to debug. In short: don't change this stuff unless
+ * you have a very good reason to!
  * */
 
 // Here are the global constants that allow us to use various electron features:
@@ -48,6 +49,10 @@ if(shouldQuit){
 }
 
 // Here is the event handler for uncaught exceptions.
+// This is probably the most critical piece of code in
+// the entire program from an exception handeling
+// perspective. It is best not to touch it unless
+// you have a very very very good reason to.
 process.on('uncaughtException', function (err){
   if(windowLoaded){
     // If the window is loaded, we will make an error message and try to send it to the main interface
@@ -80,6 +85,7 @@ process.on('uncaughtException', function (err){
   }
 });
 
+// Here is the function that creates the main window.
 function createWindow(){
   // Create the browser window. Note that it is created without a frame. This way we can customize the entire interface.
   win = new BrowserWindow({ width: 800, height: 600, minWidth: 730, minHeight: 550,
@@ -92,9 +98,11 @@ function createWindow(){
     slashes: true
   }));
   
+  // We want it to start maximized.
   win.maximize();
   
-  global.theMainWindow = win; // This allows us to get a reference to the main window in the render process.
+  // This allows us to get a reference to the main window in the render process.
+  global.theMainWindow = win;
 
   // Open the Development Tools.  -- ***************COMMENT OUT BEFORE RELEASE***************
   win.webContents.openDevTools();
@@ -103,6 +111,8 @@ function createWindow(){
   // To update it get num from: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_gettime
   global.dateTimeOfThisRelease = 1506267641292;
 
+  // This may look unnecessary since we are making our own close button. However, the user can still right-click
+  // over the entry in the taskbar and choose close there. Thus, this is still needed.
   win.on('close', function (e){
     // Once the user tries to click the close button, first prevent the default action of closing the app:
     e.preventDefault();
@@ -111,6 +121,10 @@ function createWindow(){
     // The applicable function in that file can then determine if it is safe to close the app, and warn the user if it isn't.
   });
   
+  // Once the app has finished loading, we will wait 1/2 a second and then...
+  // 1. send the render process a signal,
+  // 2. set winLoaded to true so we know we can output error messages in the GUI,
+  // 3. and the path to the user's home folder to the render process:
   win.webContents.on('did-finish-load', function (){
     setTimeout(function (){
       win.webContents.send('app-finished-loading');
@@ -126,6 +140,7 @@ function createWindow(){
     },500);
   });
   
+  // This enables web adressess to be opened by the user's default browser:
   win.webContents.on('new-window', function (event, url){
     event.preventDefault();
     open(url);
@@ -154,28 +169,35 @@ app.on('activate', () => {
   }
 });
 
+// This ts the event handeler that is called when the render process sends the signal to terminate the app.
 ipcMain.on('terminate-this-app', () => {
   win.destroy(); // necessary to bypass the repeat-quit-check in the render process.
   app.quit();
 });
 
+// This maximizes the main window if the render process sends the applicable signal.
 ipcMain.on('maximize-main-win', () => {
   win.maximize();
 });
 
+// This focuses the main window if the render process sends the applicable signal.
 ipcMain.on('focus-main-win', () => {
   win.focus();
 });
 
+// This minimizes the main window if the render process sends the applicable signal.
 ipcMain.on('minimize-main-win', () => {
   win.minimize();
 });
 
+// This takes a data url from the render process, creates a native image from it and copies it to the user's clipboard.
 ipcMain.on('export-to-clipboard', function (e, du){
   var natImg = nativeImage.createFromDataURL(du);
   clipboard.writeImage(natImg);
 });
 
+// If the render process encounters an error before the error can be logged, it passes it here so that it can be output
+// on the terminal.
 ipcMain.on('problem-before-logging-possible', function (e, obj){
   var textToLog = errorDelimiter;
   textToLog += platformAndVersionString;
@@ -186,6 +208,7 @@ ipcMain.on('problem-before-logging-possible', function (e, obj){
   console.log(textToLog); // eslint-disable-line no-console
 });
 
+// This is the function that actually opens the url in the user's default browser.
 function open(url){
   shell.openExternal(url);
 }
