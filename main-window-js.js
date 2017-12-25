@@ -1,12 +1,14 @@
 
+
+// These are global constants that allow us to access various functions within electron.
 const { ipcRenderer } = require('electron');
 const { dialog } = require('electron').remote;
 const { desktopCapturer } = require('electron');
 const { clipboard } = require('electron');
 const remote = require('electron').remote;
 const Menu = remote.Menu;
-var theMainWindow = remote.getGlobal('theMainWindow'); // Here we are getting a reference to the main window so we can use
-// it for dialog boxes.
+// Here we are getting a reference to the main window so we can use it for dialog boxes.
+var theMainWindow = remote.getGlobal('theMainWindow');
 var dateTimeOfThisRelease = remote.getGlobal('dateTimeOfThisRelease');
 const appVersion = require('electron').remote.app.getVersion();
 const osModule = require('os');
@@ -25,13 +27,18 @@ const InputMenu = Menu.buildFromTemplate([{
   { label: 'Select all', role: 'selectall', },
 ]);
 
+// When the window gets resized call the resize function:
 window.addEventListener('resize', onWindowResize);
 
+// Some global variables & constants related to errors:
 var displayErrorMessages = true;
 var errorTimestamps = [];
 const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
 const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.release() + ' ' + osModule.arch() + '\nTotal RAM: ' + osModule.totalmem() + ' bytes.';
 
+// Here is the event handler for uncaught errors:
+// it basically tries to gather as much info as possible & put it into a log of sorts:
+// From there it passes the error log off to the unexpectedErrorOccured function.
 process.on('uncaughtException', function (err){
   var tmpObj = {};
   var d = new Date();
@@ -53,12 +60,14 @@ ipcRenderer.on('unexpected-error-in-main', function (event, data){
   unexpectedErrorOccured(data);
 });
 
-
+// Here is the error logging function. It takes care of logging the error if possible:
 function unexpectedErrorOccured(objToLog){
   try{
     var theBox = document.getElementById('SDErrorLogTextArea');
     var tmpStr = theBox.value;
     theBox.style.color = 'red';
+    // If there isn't yet anything in there yet, we will put in the platform and version string
+    // so at least we know what kind of system we are on.
     if(tmpStr === 'Empty'){
       tmpStr = platformAndVersionString;
     }
@@ -67,6 +76,7 @@ function unexpectedErrorOccured(objToLog){
     tmpStr += '\nMessage: ' + objToLog.messageTxt;
     tmpStr += '\nStack: ' + objToLog.stackTrace;
     var difference = 0;
+    // We do have to stop logging errors somewhere or else the program could get really slow.
     if(tmpStr.length > 99999){
       difference = Math.abs(99999 - tmpStr.length);
       tmpStr = tmpStr.substring(difference, tmpStr.length);
@@ -74,6 +84,8 @@ function unexpectedErrorOccured(objToLog){
     }
     theBox.value = tmpStr;
     // Here is where we care about informing the user of what is happening:
+    // If there have been 3 or more errors within 30 seconds, we will silence the popups.
+    // Otherwise, we will just give them one popup per error.
     errorTimestamps.unshift(objToLog.timeOfErr);
     if(displayErrorMessages){
       var threeErrorsWithin30Sec = false;
@@ -106,7 +118,8 @@ function unexpectedErrorOccured(objToLog){
   }
 }
 
-
+// These are the data urls for the cursor images
+// I tried just using png images, but this was the only way I found to make it work:
 const cursorImages = []; // eslint-disable-next-line max-len
 cursorImages[0] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAtCAYAAAC53tuhAAADAFBMVEUAAAD/AAAA/wD//wAAAP//AP8A///////b29u2traSkpJtbW1JSUkkJCTbAAC2AACSAABtAABJAAAkAAAA2wAAtgAAkgAAbQAASQAAJADb2wC2tgCSkgBtbQBJSQAkJAAAANsAALYAAJIAAG0AAEkAACTbANu2ALaSAJJtAG1JAEkkACQA29sAtrYAkpIAbW0ASUkAJCT/29vbtra2kpKSbW1tSUlJJCT/trbbkpK2bW2SSUltJCT/kpLbbW22SUmSJCT/bW3bSUm2JCT/SUnbJCT/JCTb/9u227aStpJtkm1JbUkkSSS2/7aS25Jttm1JkkkkbSSS/5Jt221JtkkkkiRt/21J20kktiRJ/0kk2yQk/yTb2/+2ttuSkrZtbZJJSW0kJEm2tv+SktttbbZJSZIkJG2Skv9tbdtJSbYkJJJtbf9JSdskJLZJSf8kJNskJP///9vb27a2tpKSkm1tbUlJSST//7bb25K2tm2SkkltbST//5Lb2222tkmSkiT//23b20m2tiT//0nb2yT//yT/2//bttu2kraSbZJtSW1JJEn/tv/bktu2bbaSSZJtJG3/kv/bbdu2SbaSJJL/bf/bSdu2JLb/Sf/bJNv/JP/b//+229uStrZtkpJJbW0kSUm2//+S29tttrZJkpIkbW2S//9t29tJtrYkkpJt//9J29sktrZJ//8k29sk////27bbtpK2km2SbUltSSRJJAD/tpLbkm22bUmSSSRtJAD/ttvbkra2bZKSSW1tJElJACT/krbbbZK2SW2SJEltACTbtv+2ktuSbbZtSZJJJG0kAEm2kv+SbdttSbZJJJIkAG222/+SttttkrZJbZIkSW0AJEmStv9tkttJbbYkSZIAJG22/9uS27ZttpJJkm0kbUkASSSS/7Zt25JJtm0kkkkAbSTb/7a225KStm1tkklJbSQkSQC2/5KS221ttklJkiQkbQD/tgDbkgC2bQCSSQD/ALbbAJK2AG2SAEkAtv8AktsAbbYASZIAAAAAAADPKgIEAAADPElEQVRYw8XYz0s8dRzH8ed7ZsfADA+SFxEXE7q5FJ1EJE8rhAc9GFhXN+L7D1T243urTl6SQBFPXbqY64+DJR285cFEAsG+RYugtAp9V8hN3Hl12Vlmv9/5qrPujgN72fl8Po/P6z2fmQ8zAI95oEPAFw8FPwguQGYmM0sUl5kFqeU4TmK4MpmMlpaWEsfV39+vUqmkra2tMP55y+G+vj6dn59LkjY3N8P4Zy2F0+l0DU4Sfw5OCo+Ek8BfCEvSxsZGy/Ab4Qj808TgVuF3giPw2cRgSVpfX28aHgtuJh4bbhbeECxJa2trYfyTxOD74veCI/CPE4MbxZsCN4I3DY6LNxWWpHw+H8Y/SgyWpNXV1VvxlsDPPtvNrA5PNfLEuby8pFwuY2Y3thsZGWFhYYFcLgfwZXUSXzcMHx8fMzw8TFdX14sXjoTrurS3t2NmSAL4CnCqk4hf6kqlopmZmaCMZeAfoAQ8veV3AfwHfHBjYkmYGYVCgf39fcbHx5GE4zhMT0+zuLiI53l/ShoDrgGLGqNSqYT/sqDSkYl935cknZ6eanR0VAMDAyqVSrXzFxcXGhoaEiDXdd9uyu4UoCcnJ8pms7WVub29XXd+eXnZB9TW1vZ9KE1jcDhpNpsNBn4KKJfLqVKp1CZYKBSCSf1rZq/dO3EY9TzvF+ANMzsFdHh4WHdJZmdng3aP46ZWOp3W2dlZFLoHdAN4nvctoLm5OT9cmd3d3eA6PwHaYyXu7e1VqVRSsVjU2NhYGH01aOQ4zlvBm2UwSUkql8uamJgQoFQq9W6c1MpkMjo4ONDk5GQUWhvE87yfAeXz+brUKysrQb+fYiXu7u7W4OCgX511rbwh1ABSqdR7gKampvyrq6ta6mKxqJ6eHgG+4zhvxvkG4ld3kSg0fLziuu5fgPb29urugvn5+SD1N3cpt1OFzcz2fd/PAn9XO+mZtgZcOI7zHUB128PMuL6+pqOjAwDf998HeiL6Ryb+9ZakhBbZ60C5s7NTR0dH2tnZqa2N6kecP4DMXUr9213RWnSzH6or3A9t9r8Dj+LcUnHQoM07IfBJKpV6BLzcyPPaYrZ/CfjRzD50XddrZJz/AVAsT4UNpwycAAAAAElFTkSuQmCC';
 // eslint-disable-next-line max-len
@@ -120,11 +133,12 @@ cursorImages[4] = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAA8CAYAAAA
 // eslint-disable-next-line max-len
 cursorImages[5] = 'data:image/png;base64,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';
 
+// A global var to keep track of the cursor image/value:
 var currentCursorValue = 'default';
 
 
 var safeToClose = true; // Starting off as true and will be changed once changes are made to the board.
-var allLoaded = false;
+var allLoaded = false; // This is used to know if the app has finished loading.
 
 // Some stuff for auto-save and regular save:
 var currentAutosaveValue = 'never';
@@ -134,7 +148,7 @@ var pathOfFolderToSaveInto = '';
 // *****Here are some global variables that are directly related to drawing & working with the canvas:*****
 var context; // This is the context used for drawing the image on the canvas
 var eraserContext; // This is the context for the canvas used for the original images,
-// which is where the eraser get's its data from.
+// which is where the eraser gets its data from.
 var canUseTool; // This is used to determine when the tool/instrument can be used. For example, once the mouse is down,
 // then the tool/instrument can be used. However, once the mouse is up, the tool/instrument cannot be used any more.
 var tool = 'pen';
@@ -163,6 +177,10 @@ var weGotKeyboardShortcuts = false;
 var useWidescreenTemplates = true;
 var useColorInvertedTemplates = false;
 
+// These are used to load a set of data urls into the array of images.
+// I wish there was a better way to do things like this but the images 
+// must load asyncncrously so having a bunch of global variables to
+// keep track of things seems like the only way to me.
 var dataUrlsToLoad;
 var dataUrlsLoaded;
 
@@ -193,7 +211,8 @@ ipcRenderer.on('close-button-clicked', () => {
 });
 
 
-
+// Here is the function that runs about 1/2 second after the main.js process has finished doing its thing.
+// it basically sets up a bunch of GUI stuff & initializes some global variables.
 ipcRenderer.on('app-finished-loading', () => {
   document.documentElement.style.overflow = 'hidden';
   adjustSizeOfMenuButtonsToScreenSize();
@@ -214,6 +233,8 @@ function continueAfterAppFinishedLoading1(){
   checkAgeOfRelease();
 }
 
+// This just recieves the path to the user's home folder and assigns it to the global variable.
+// Note: this also happens about 1/2 second after main.js finishes doing its thing.
 ipcRenderer.on('users-home-folder' , function (event , data){
   hf = data.hf;
 });
@@ -330,6 +351,8 @@ function initializeCanvas(){
   image.src = 'images/Blank_White_Page-wide.png';
 }
 
+// *****The section below is a great place to see a basic summary of how the drawing process works*****
+
 // Main canvas mouse down function:
 function MCMDown(e){ // eslint-disable-line no-unused-vars
   instrumentDown(e.pageX - SideToolbarWidth, e.pageY - topToolbarWidth);
@@ -368,12 +391,20 @@ function MCTEnded(e){ // eslint-disable-line no-unused-vars
   instrumentUp(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
 }
 
+// *****As the 6 functions above show, all touch/mouse/pen input from the canvas ultimetly get dumped into one of 3 functions:
+//      1. instrumentDown()
+//      2. instrumentMoved()  or
+//      3. instrumentUp().
+//      From there, the input gets passed out to the appropriate tool function depending on what tool is in use*****
+
 function setUpGUIOnStartup(){
   updateColorOfColorBtn();
   document.getElementById('toolBtn').innerHTML = 'Tool: P';
   document.getElementById('sizeBtn').innerHTML = 'Size: M';
 }
 
+// This function runs about 1/2 second after main.js finishes doing its thing and just checks to see if the user's screen size
+// is within the reasonable limits for this program.
 function checkForScreenSizeIssues(){
   var screenX = screen.width;
   var screenY = screen.height;
@@ -414,6 +445,11 @@ function setUpErrorLog(){
   }
 }
 
+// This just checks to see if this version is more than 7 months old & tells the user to update it if it is.
+// Remember that the intended audience is schools and they are often pretty out of date anyhow.
+// Thus, the best that we can realistically hope for is to have them update it twice per year between
+// the semesters. Other than that we need to assume that the program will run essentially offline and
+// be ebmeded into the school's seazonaly updated disk image twice a year.
 function checkAgeOfRelease(){
   var d = new Date();
   var now = d.getTime();
@@ -427,6 +463,7 @@ function checkAgeOfRelease(){
   }
 }
 
+// Here is the stuff that accepts keyboard input when the document has focus:
 function validateKeyboardInputForDocument(e){
   if(weGotKeyboardShortcuts && e.target.nodeName === 'BODY'){
     e.preventDefault();
@@ -434,6 +471,7 @@ function validateKeyboardInputForDocument(e){
   }
 }
 
+// Here is the stuff that accepts keyboard input when the canvas has focus:
 function recieveKeyboardInputFromCanvas(e){ // eslint-disable-line no-unused-vars
   if(weGotKeyboardShortcuts){
     e.preventDefault();
@@ -441,6 +479,7 @@ function recieveKeyboardInputFromCanvas(e){ // eslint-disable-line no-unused-var
   }
 }
 
+// Here is the function that actually determines what to do depending on what keyboard shortcut was pressed:
 function passKeyboardInputOffToFunction(e){ // eslint-disable-line max-statements
   if(typeof e === 'undefined'){
     return;
@@ -701,11 +740,17 @@ function greenKeyboardShortcutPressed(){
 }
 
 function nextPageKeyboardShortcutPressed(){
-  nextPageBtnFunction();
+  cancelSelect();
+  if(canUseTool === false){
+    nextPageBtnFunction();
+  }
 }
 
 function previousPageKeyboardShortcutPressed(){
-  previousPageBtnFunction();
+  cancelSelect();
+  if(canUseTool === false){
+    previousPageBtnFunction();
+  }
 }
 
 function escapeKeyboardShortcutPressed(){
@@ -736,6 +781,7 @@ function escapeKeyboardShortcutPressed(){
     }
   }
 }
+
 
 function deleteKeyboardShortcutPressed(){
   // If delete is pressed, then we will erase the entire area that is selected.
@@ -947,6 +993,9 @@ function instrumentUp(x, y){
 
 
 // Here is the penToolFunction. It handles drawing on the canvas:
+// Note that if the color is not transparent we will connect the dots.
+// However if the color is transparent, we will not connect them to
+// reduce the transparency overlap.
 function penToolFunction(x, y, phase){
   var temp1 = instrumentColor.split(',');
   var temp2 = temp1[3].substring(1, (temp1[3].length - 1));
@@ -1452,7 +1501,7 @@ function dashedLineToolFunction(x, y, phase){
     
     // 1. Update the current position variables with the current values of x & y.
     // 2. repaint the tempCanvasForInterval onto the real canvas.
-    // 3. paint an opaque gray line of set size onto the canvas between the starting point & current position.
+    // 3. paint an opaque gray line onto the canvas between the starting point & current position.
     prevX = x;
     prevY = y;
     
@@ -1581,7 +1630,7 @@ function scaledPasteToolFunction(x, y, phase){
       
       // 1. Update prevX & prevY with the current values of x & y.
       // 2. repaint the tempCanvasForInterval onto the real canvas.
-      // 3. paint the image in copiedSectionOfCanvas onto the canvas at prevX, prevY.
+      // 3. paint the image in copiedSectionOfCanvasForScale onto the canvas at prevX, prevY.
       prevX = x;
       prevY = y;
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -1591,7 +1640,7 @@ function scaledPasteToolFunction(x, y, phase){
     case 'up':
       
       //      1. Paint tempCanvasForInterval onto the real canvas.
-      //      2. paint the image in tempCanvasForPasting onto the canvas at prevX, prevY.
+      //      2. paint the image in copiedSectionOfCanvasForScale onto the canvas at prevX, prevY.
       context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
       context.putImageData(copiedSectionOfCanvasForScale, prevX, (prevY - copiedSectionOfCanvasForScale.height));
       tempCanvasForInterval = 'NA';
@@ -1656,11 +1705,14 @@ window.onclick = function (e){
     closeDropdowns();
   }
   
+  // And if they don't click on one of a few select buttons, we should cancel select.
   var id = e.target.id;
   if(id !== 'canvas1' && id !== 'copyBtn' && id !== 'drawRectangleBtn' && id !== 'fillRectangleBtn' &&
   id !== 'drawEllipseBtn' && id !== 'fillEllipseBtn' && id !== 'topRightMinimizeBtn'){
     cancelSelect();
   }
+  
+  // And if they haven't clicked on the page text box or the go button, let's update the page number.
   if(id !== 'pageTextBoxID' && id !== 'goBtnID'){
     updatePageNumsOnGui();
   }
@@ -1707,6 +1759,7 @@ function insertPageBtnFunction(){ // eslint-disable-line no-unused-vars
 }
 
 
+// Here is the set of functions that handle asynchronously loading a set of dataURLs:
 function loadImagesUsingArrayOfDataURLs(arrayOfURLs){
   arrayOfOriginalImages = [];  // Clear out the arrays that store page data.
   arrayOfCurrentImages = [];
@@ -1733,6 +1786,7 @@ function loadingFromDataUrlsImageLoaded(){
   }
 }
 
+// When all of the dataURLs have finished loading, this function is called to load the first image onto the canvas:
 function finishLoadingImagesUsingArrayOfDataURLs(){
   currentPg = 1;
   // eslint-disable-next-line max-len
@@ -1752,9 +1806,10 @@ function resizeAndLoadImagesOntoCanvases(img, orgImg, incommingWidth, incommingH
   
   eraserContext.canvas.style.position = 'absolute';
   eraserContext.canvas.style.left = SideToolbarWidth + 'px';
-  eraserContext.canvas.style.top =  (screen.height + topToolbarWidth) + 'px';
+  eraserContext.canvas.style.top = (screen.height + topToolbarWidth) + 'px';
 
-  // Maybe there is a better way to do this than fixed positioning in the CSS:
+  // Maybe there is a better way to do this than fixed positioning in the CSS.
+  // However, for now, we will do it this way:
   var avalibleWidth = window.innerWidth - SideToolbarWidth;
   var avalibleHeight = window.innerHeight - topToolbarWidth;
   var canvasHeight;
@@ -1800,6 +1855,9 @@ function loadPage(numberOfPageToLoad){
   clearUndoHistory();
 }
 
+// Here is the function that executes when the user wants to insert a template from one of the 
+// ones on the main dropdown. Take note of the naming convention used to differentiate
+// between normal templates and widescreen, & inverted color templates.
 function mainUIInsertTemplateAsPage(location){ // eslint-disable-line no-unused-vars
   var before = location.substring(0, (location.length - 4));
   if(useWidescreenTemplates){
@@ -1812,15 +1870,18 @@ function mainUIInsertTemplateAsPage(location){ // eslint-disable-line no-unused-
   insertTemplateAsPage(before);
 }
 
+// This function simply loads a template in from an image and then passes the image off to the function that inserts
+// pages using images:
 function insertTemplateAsPage(locationOfTemplate){
   // Get the image from the string that was passed in, then call insertPageUsingImage() and pass in the image.
   var tempImageForInserting = new Image();
-  tempImageForInserting.src = locationOfTemplate;
   tempImageForInserting.addEventListener('load', function (){
     insertPageUsingImage(tempImageForInserting);
   });
+  tempImageForInserting.src = locationOfTemplate;
 }
 
+// This function inserts a page using an image unless the user has exceded the pages maximum.
 function insertPageUsingImage(img){
   // load the image onto the screen, then into the pages arrays.
   if(arrayOfCurrentImages.length < maxNumberOfPages){
@@ -1847,6 +1908,7 @@ function insertPageUsingImage(img){
   }
 }
 
+// This function simply updates the entry in the pages array with the latest image on the canvas
 function saveCurrentImageToArrayBeforeMoving(){
   var tempImageForInserting = new Image();
   tempImageForInserting.src = context.canvas.toDataURL('image/png');
@@ -1859,6 +1921,7 @@ function tellUserTheyHaveExcededMaxPages(){
   dialog.showMessageBox(theMainWindow, { title: ' ', type: 'warning', message: 'Sorry, The document can only have up to ' +  maxNumberOfPages + ' pages.\nThis leaves you with essentially two options:\n\n1. Save this set of pages and then open another set.\n2. Adjust the "Max Pages Allowed" value in the settings to allow more pages to be inserted.\n\nRegardless of which option you choose, please remember that few audiences can absorb ' + maxNumberOfPages + ' slides in a single sitting. Thus, consider giving them a short break between sets if possible.', buttons: ['OK'], defaultId: 0, noLink: true });
 }
 
+// Updates the page numbers on the main user interface:
 function updatePageNumsOnGui(){
   var box = document.getElementById('pageTextBoxID');
   box.value = currentPg;
@@ -1867,6 +1930,7 @@ function updatePageNumsOnGui(){
   document.getElementById('totalPagesDivID').innerHTML = 'Total Pages: ' + arrayOfCurrentImages.length;
 }
 
+// Sanitizing the input from the page textbox and changing the color of the box as appropriate:
 function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
   var input = document.getElementById('pageTextBoxID').value;
   var tempNum = parseInt(input, 10);
@@ -1883,6 +1947,8 @@ function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// If they hit enter in the page textbox the page should probably change to the number
+// they entered:
 function pageInputBoxCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -1890,18 +1956,21 @@ function pageInputBoxCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
+// This is the function that goes back one page:
 function previousPageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(currentPg > 1){
     loadPage(currentPg - 1);
   }
 }
 
+// This is the function that goes forward one page:
 function nextPageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(currentPg < arrayOfCurrentImages.length){
     loadPage(currentPg + 1);
   }
 }
 
+// This is the function that runs when the GO button is clicked/tapped:
 function goBtnFunction(){
   var input = document.getElementById('pageTextBoxID').value;
   var tempNum = parseInt(input, 10);
@@ -1914,7 +1983,7 @@ function goBtnFunction(){
   }
 }
 
-
+// Here is the function that handles testing to see if we can delete a page:
 function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   if(arrayOfCurrentImages.length > 1){
     // Here we question them if they want to delete the page, and delete it if they say yes.
@@ -1933,6 +2002,7 @@ function deletePageBtnFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// Here is the function that handles actually deleting a page:
 function deleteCurrentPage(){
   arrayOfCurrentImages.splice(currentPg - 1, 1);
   arrayOfOriginalImages.splice(currentPg - 1, 1);
@@ -1947,6 +2017,7 @@ function deleteCurrentPage(){
   clearUndoHistory();
 }
 
+// This is the function that gets called when the user wants to paste something wile re-sizing it:
 function pasteAndResizeToolFunction(){ // eslint-disable-line no-unused-vars
   var incomming = document.getElementById('OTDPercentInput').value;
   incomming = parseInt(incomming, 10);
@@ -1986,6 +2057,8 @@ function pasteAndResizeToolFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// This function sanitizes the input from the percentage textbox on the Tool -> Other dialog
+// and changes its color appropriately: 
 function OTDCheckPercentInput(){ // eslint-disable-line no-unused-vars
   var elm = document.getElementById('OTDPercentInput');
   var incomming = elm.value;
@@ -2015,9 +2088,11 @@ function OTDCheckPercentInput(){ // eslint-disable-line no-unused-vars
 // Here is the code for the settingsDialog:
 var SDValid = true;
 
+// This is the function that initializes the settings dialog when they choose the gear icon/button.
 function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('SDCursorDropdown').value = currentCursorValue;
   document.getElementById('SDAutosaveDropdown').value = currentAutosaveValue;
+  // Remember the global variable is always 1 more than the number of entries actually stored:
   document.getElementById('SDUndoHistoryBox').value = maxUndoHistory - 1;
   document.getElementById('SDMaxPagesAllowedBox').value = maxNumberOfPages;
   
@@ -2050,6 +2125,7 @@ function SDReadySettingsDialog(){ // eslint-disable-line no-unused-vars
   SDInputValidation();
 }
 
+// This function sanitizes the input for the settings dialog:
 function SDInputValidation(){
   var rawUndoHistory = parseInt(document.getElementById('SDUndoHistoryBox').value, 10);
   var rawMaxPages = parseInt(document.getElementById('SDMaxPagesAllowedBox').value, 10);
@@ -2082,6 +2158,9 @@ function SDInputValidation(){
   }
 }
 
+// This function first tests to see if the user has entered valid data. If that check passes, it takes 
+// the settings that the user specified and updates the applicable global variables or calls other
+// functions that do the actual updating.
 function SDOkBtnFunction(){
   if(SDValid){
     var e = document.getElementById('SDCursorDropdown');
@@ -2123,6 +2202,7 @@ function SDOkBtnFunction(){
   }
 }
 
+// Here is a function that just sets the length of the undo array:
 function SDActuallySetUndoLength(){
   var distanceFromEnd = (imageArrayForUndo.length - 1) - currentPlaceInUndoArray;
   var tempArray = [];
@@ -2141,6 +2221,7 @@ function SDActuallySetUndoLength(){
   }
 }
 
+// Here is a function that starts the autosave process:
 function SDSetUpAutoSave(vlue){
   currentAutosaveValue = vlue;
   if(vlue !== 'never'){
@@ -2153,10 +2234,12 @@ function SDSetUpAutoSave(vlue){
   }
 }
 
+// When the autosave interval is up, this function gets called to save the files:
 function SDCalledToSaveAutomatically(){
   if(pathOfFolderToSaveInto !== ''){
     if(tempCanvasForInterval === 'NA' && areaSelected === false){
       saveCurrentImageToArrayBeforeMoving();
+      // If it is determined that we can actually save the images, the function in the saveImagesDialog section is called:
       SIDActuallySaveFiles(true);
     }
     else{
@@ -2165,6 +2248,9 @@ function SDCalledToSaveAutomatically(){
   }
 }
 
+// This function sets the cursor that is displayed over the main canvas:
+// See the values in the HTML for a better understanding of how & why
+// this is set up how it is:
 function SDSetCursor(vle){
   currentCursorValue = vle;
   if(vle.substring(0, 1) === 'u'){
@@ -2176,6 +2262,8 @@ function SDSetCursor(vle){
   }
 }
 
+// If the user hits enter in one of the textboxes in the settings dialog, it should probably try to
+// save the settings if it can:
 function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -2183,6 +2271,7 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
+// Here is the function that is called if the user tries to copy the error log to their clipboard:
 function SDCopyLogInfoErrorLog(){ // eslint-disable-line no-unused-vars
   try{
     copyStrToClipboard(document.getElementById('SDErrorLogTextArea').value);
@@ -2196,7 +2285,7 @@ function SDCopyLogInfoErrorLog(){ // eslint-disable-line no-unused-vars
 
 
 
-// Here is the code for the Open Images Dialog:
+// ********Here is the code for the Open Images Dialog:********
 var OIDHalfMaxPages;
 var OIDFilesArray = null;
 var OIDTempFilesArray = null;
@@ -2204,6 +2293,7 @@ var OIDFilesHandled;
 var OIDFilesToHandle;
 var OIDSomeSkipped = false;
 
+// This just gets the dialog ready:
 function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OIDHeader').innerHTML = 'Open Images';
   OIDHalfMaxPages = Math.round(maxNumberOfPages / 2);
@@ -2218,6 +2308,7 @@ function OIDReadyOpenImagesDialog(){ // eslint-disable-line no-unused-vars
   OIDFilesToHandle = 0;
 }
 
+// If the user selects some files this is the function that handles that event:
 function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
   var files = document.getElementById('OIDChooseFilesBtn').files;
   // First we will check to see if the user selected any files:
@@ -2240,6 +2331,7 @@ function OIDFilesSelectedFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// This function cleans the files array and re-fills it with the new files that the user just chose:
 function OIDCleanArray(filesArray){
   OIDSomeSkipped = false;
   document.getElementById('OIDHeader').innerHTML = 'Processing...';
@@ -2304,6 +2396,7 @@ function OIDCleanArray(filesArray){
   OIDActuallyLoadImages();
 }
 
+// This function loops through the list of files and starts them off loading asynchronously:
 function OIDActuallyLoadImages(){
   // First check to see if there are actually files to load:
   if(OIDFilesToHandle <= 0){
@@ -2342,7 +2435,7 @@ function OIDIncrementAndCheck(){
   // Each time this function is called, it means that either:
   // 1. A file has finished loading, or:
   // 2. A file has failed to load.
-  // In either case, we need to keep track of how many files have handled so that
+  // In either case, we need to keep track of how many files have been handled so that
   // we can move on to the next step once all of them have been handled. Thus:
   // we will increment the OIDFilesHandled counter, and...
   ++OIDFilesHandled;
@@ -2408,7 +2501,7 @@ function OIDInformIfNecessary(){
 }
 
 
-// Here is the code for the saveImagesDialog:
+// ********Here is the code for the saveImagesDialog:********
 
 var SIDNameForFiles = '';
 var SIDValidInput = true;
@@ -2420,6 +2513,7 @@ var SIDFilesDeleted;
 var SIDErrorsSavingFiles = false;
 var SIDSaveViaCtrlS = false;
 
+// This function simply sets up the save images dialog:
 function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   document.getElementById('SIDHeader').innerHTML = 'Save Images';
@@ -2427,6 +2521,7 @@ function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
   SIDNameForFiles = '';
 }
 
+// Validation for the filename textbox.
 function SIDFileNamesInputTextboxValidator(){ // eslint-disable-line no-unused-vars
   var rawInput = document.getElementById('SIDFileNamesTextBox').value;
   if(rawInput.length === 0){
@@ -2454,6 +2549,7 @@ function SIDFileNamesInputTextboxValidator(){ // eslint-disable-line no-unused-v
   }
 }
 
+// This function checks for strange characters in the filename that the user specified.
 function SIDGoodChar(chr){
   if(SIDValidCharsString.indexOf(chr) === -1){
     return false;
@@ -2463,6 +2559,7 @@ function SIDGoodChar(chr){
   }
 }
 
+// Validation for the choose folder button so the user must enter a valid filename before being allowed to choose a folder
 function SIDChooseFolderBtnFunction(){ // eslint-disable-line no-unused-vars
   if(SIDValidInput){
     SIDLaunchOpenFolderWindow();
@@ -2472,6 +2569,7 @@ function SIDChooseFolderBtnFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// After the filename validation passes this function runs to launch the open folder window:
 function SIDLaunchOpenFolderWindow(){
   SIDNameForFiles = document.getElementById('SIDFileNamesTextBox').value;
   dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', defaultPath: hf,
@@ -2484,6 +2582,7 @@ function SIDLaunchOpenFolderWindow(){
     });
 }
 
+// Here is the function that actually handles the folder that the user chose:
 function SIDHandleFolderPath(){
   document.getElementById('SIDHeader').innerHTML = 'Processing...';
   document.getElementById('saveImagesDialog').style.cursor = 'wait';
@@ -2514,6 +2613,9 @@ function SIDHandleFolderPath(){
   });
 }
 
+// Here is the function that handles actually saving the images to the folder.
+// Note that this can be called internally by SIDHandleFolderPath(), via
+// keyboard shortcut, and also internally if the user has enabled autosave.
 function SIDActuallySaveFiles(ctl_s = false){
   SIDSaveViaCtrlS = ctl_s;
   fs.readdir(pathOfFolderToSaveInto, function (err, files){
