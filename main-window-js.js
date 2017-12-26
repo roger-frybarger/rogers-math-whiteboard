@@ -4399,7 +4399,7 @@ function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
 
 
 
-
+// Here is the function that pushes the current state of the whiteboard into the undo array:
 function pushStateIntoUndoArray(){
   if(currentPlaceInUndoArray !== imageArrayForUndo.length - 1){
     // This means they have just undone something, and are going on from there, so we have to get the remainder
@@ -4426,6 +4426,7 @@ function pushStateIntoUndoArray(){
   }
 }
 
+// Here is the function that clears all of the history out of the undo array:
 function clearUndoHistory(){
   // 1. fill array with nulls, 2. grab current image and insert it in last slot, 3. re-set 
   // currentPlaceInUndoArray to imageArrayForUndo.length - 1
@@ -4521,12 +4522,14 @@ function checkPNGImage(base64string){
   return true;
 }
 
+// This function is used to copy the content of textareas to the user's clipboard.
 function copyTextareaValueToClipboard(elid){ // eslint-disable-line no-unused-vars
   var txt = document.getElementById(elid).value;
   clipboard.writeText(txt);
   alert('Copied');
 }
 
+// This function simply copies a string to the user's clipboard.
 function copyStrToClipboard(s){ // eslint-disable-line no-unused-vars
   clipboard.writeText(s);
   alert('Copied');
