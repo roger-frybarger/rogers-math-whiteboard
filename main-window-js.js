@@ -4069,7 +4069,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
           alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
         }
         else{
-          // If it looks like the image exists and is a reasonable size, we will open just like we were opening a template:
+          // If it looks like the image exists and is a reasonable size, we will open it just like we were opening a template:
           insertTemplateAsPage(fileName);
         }
       }
@@ -4089,10 +4089,15 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
 
 
 // ***************************** END OF CODE FOR OTHER WINDOWS!!!
+// The functions below are of a more general nature. They are intended to be avaliable
+// to all other parts of the code. Typically they are used to manage various aspects
+// of the main interface or the drawing area. It can kinda be thought of as the
+// miscellaneous functions section.
 
 
 
-
+// Here is the function that cancels the selected region if there is a region of the whiteboard that
+// is selected.
 function cancelSelect(){
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -4107,14 +4112,12 @@ function cancelSelect(){
 
 
 
-
-
-
-
+// Here is the function that updates the color of the text on the color button.
 function updateColorOfColorBtn(){
   document.getElementById('colorBtn').style.color = instrumentColor;
 }
 
+// Here is the function that updates the text of the size button:
 function updateTextOfSizeBtn(){
   switch(instrumentWidth){
   case 2:
@@ -4133,6 +4136,7 @@ function updateTextOfSizeBtn(){
   }
 }
 
+// Here is the function that updates the text of the tool button:
 function updateTextOfToolBtn(){
   switch(tool){
   case 'pen':
@@ -4185,6 +4189,7 @@ function updateTextOfToolBtn(){
 // Below are the functions that execute whenever the applicable buttons are clicked.
 // They are in order from right to left.
 
+// This is the function that executes when the undo button is pressed:
 function undoBtnFunction(){
   if(currentPlaceInUndoArray > 0){
     if(imageArrayForUndo[currentPlaceInUndoArray - 1] !== null){
@@ -4195,6 +4200,7 @@ function undoBtnFunction(){
   }
 }
 
+// This is the function that executes when the redo button is pressed:
 function redoBtnFunction(){
   if(currentPlaceInUndoArray < imageArrayForUndo.length - 1){
     if(imageArrayForUndo[currentPlaceInUndoArray + 1] !== null){
@@ -4205,6 +4211,7 @@ function redoBtnFunction(){
   }
 }
 
+// This is the function that executes when the copy button is pressed:
 function copyBtnFunction(){
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -4246,6 +4253,7 @@ function copyBtnFunction(){
   }
 }
 
+// This is the function that executes when the paste button is pressed:
 function pasteBtnFunction(){
   if(copiedSectionOfCanvas !== 'NA'){
     tool = 'PASTE';
@@ -4256,6 +4264,7 @@ function pasteBtnFunction(){
   }
 }
 
+// This is the function that executes when the draw rectangle button is pressed:
 function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -4284,6 +4293,7 @@ function drawRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// This is the function that executes when the fill rectangle button is pressed:
 function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -4307,6 +4317,7 @@ function fillRectangleBtnFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// This is the function that executes when the draw ellipse button is pressed:
 function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars, max-statements
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
@@ -4357,6 +4368,7 @@ function drawEllipseBtnFunction(){ // eslint-disable-line no-unused-vars, max-st
   }
 }
 
+// This is the function that executes when the fill ellipse button is pressed:
 function fillEllipseBtnFunction(){ // eslint-disable-line no-unused-vars
   if(areaSelected === true){
     context.drawImage(tempCanvasForInterval, 0, 0, context.canvas.width, context.canvas.height);
