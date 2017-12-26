@@ -2735,7 +2735,7 @@ function ADReadyAboutDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('ADVersionLine').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roger’s Math Whiteboard version ' + appVersion + ' can be best understood as a multi-page image editor designed around the specific needs of math and science teachers who want to take advantage of pen/touch/stylus input while presenting. It is designed to be used while presenting content in class, and/or while working through questions from students.';
 }
 
-// Here is the code for the fileOtherDialog:
+// ********Here is the code for the fileOtherDialog:********
 
 var FODPercentValid = true;
 var FODImagesToLoad;
@@ -2745,6 +2745,7 @@ var FODImgForInsertion2;
 var FODOrgX;
 var FODOrgY;
 
+// Here is what happens when the user chooses to duplicate the page:
 function FODDuplicatePage(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   insertPageUsingImage(arrayOfCurrentImages[currentPg - 1]);
@@ -2753,6 +2754,7 @@ function FODDuplicatePage(){ // eslint-disable-line no-unused-vars
   document.getElementById('FODCloseBtn').click();
 }
 
+// This function is executed when the user chooses to make the current drawing permanant.
 function FODMakeCurrentDrawingPermanent(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   arrayOfOriginalImages[currentPg - 1] = arrayOfCurrentImages[currentPg - 1];
@@ -2760,6 +2762,7 @@ function FODMakeCurrentDrawingPermanent(){ // eslint-disable-line no-unused-vars
   document.getElementById('FODCloseBtn').click();
 }
 
+// This function executes when the user chooses to rotate the page in a particular direction:
 function FODRotateDrawingSurface(direction){ // eslint-disable-line max-statements, no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   var currentImageOnScreen = arrayOfCurrentImages[currentPg - 1];
@@ -2811,6 +2814,8 @@ function FODRotateDrawingSurface(direction){ // eslint-disable-line max-statemen
   FODImgForInsertion2.src = du2;
 }
 
+// This is essentially a helper function that continues the process of rotating a page
+// after the image loads.
 function FODContinueRotateDrawingSurfaceClockwise(){
   ++FODImagesLoaded;
   if(FODImagesLoaded === FODImagesToLoad){
@@ -2827,6 +2832,7 @@ function FODContinueRotateDrawingSurfaceClockwise(){
   }
 }
 
+// This function allows the user to import an image from their clipboard:
 function FODImportFromSystem(scle){ // eslint-disable-line no-unused-vars
   var imageIn = clipboard.readImage();
   var dataUrl = imageIn.toDataURL();
@@ -2858,6 +2864,8 @@ function FODImportFromSystem(scle){ // eslint-disable-line no-unused-vars
   document.getElementById('FODCloseBtn').click();
 }
 
+// This is the function that actually gets called by the import image from clipboard & resize button
+// It then calls the function above which actually does the work:
 function FODImportFromSystemResize(){ // eslint-disable-line no-unused-vars
   if(FODPercentValid){
     FODImportFromSystem(document.getElementById('FODPercentInput').value);
@@ -2867,6 +2875,7 @@ function FODImportFromSystemResize(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// Here is the input validation function for the scale percent input
 function FODCheckPercentInput(){ // eslint-disable-line no-unused-vars
   var elm = document.getElementById('FODPercentInput');
   var incomming = elm.value;
@@ -2881,6 +2890,8 @@ function FODCheckPercentInput(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// Here is the function that allows the user to export an image on the program's clipboard to
+// their system's clipboard.
 function FODExportCopiedSection(){ // eslint-disable-line no-unused-vars
   if(copiedSectionOfCanvas !== 'NA'){
     var canvas = document.createElement('canvas');
@@ -2898,9 +2909,10 @@ function FODExportCopiedSection(){ // eslint-disable-line no-unused-vars
 }
 
 
-// Here is the code for the insertTextDialog:
+// ********Here is the code for the insertTextDialog:********
 var ITDValid = true;
 
+// Here is the function that readies the insertTextDialog:
 function ITDReadyInsertTextDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('ITDTextBox').value = textToInsert;
   ITDValidationFunction();
@@ -2908,6 +2920,7 @@ function ITDReadyInsertTextDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('ITDTextBox').select();
 }
 
+// Here is the function that adds a character to the text field:
 function ITDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('ITDTextBox');
   var alreadyThere = textBox.value;
@@ -2921,6 +2934,7 @@ function ITDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   ITDValidationFunction();
 }
 
+// Here is the function that removes a character from the textbox based on where the cursor is.
 function ITDBackspace(){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('ITDTextBox');
   var alreadyThere = textBox.value;
@@ -2946,12 +2960,16 @@ function ITDBackspace(){ // eslint-disable-line no-unused-vars
   }
 }
 
+// Here is the function that clears out the entire textbox:
 function ITDClear(){ // eslint-disable-line no-unused-vars
   document.getElementById('ITDTextBox').value = '';
   document.getElementById('ITDTextBox').focus();
   ITDValidationFunction();
 }
 
+// Here is the input validation function for the textbox.
+// It basically makes sure there is at least 1 character
+// in the textbox and sets the box to red if there isn't.
 function ITDValidationFunction(){
   var input = document.getElementById('ITDTextBox').value;
   if(input.length < 1){
@@ -2964,6 +2982,7 @@ function ITDValidationFunction(){
   }
 }
 
+// Here is the function that executes when the OK button is pressed on the insert text dialog:
 function ITDOkBtnFunction(){
   if(ITDValid){
     textToInsert = document.getElementById('ITDTextBox').value;
@@ -2973,6 +2992,7 @@ function ITDOkBtnFunction(){
   }
 }
 
+// If the user hits enter while typing in the textbox that should ne the same as choosing OK:
 function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -2980,14 +3000,15 @@ function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
-// Here is the code for the otherToolDialog:
+// ********Here is the code for the otherToolDialog:********
 
+// This function just closes the dialog:
 function OTDCloseDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OTDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
 
-// Here is the code for the otherColorDialog:
+// ********Here is the code for the otherColorDialog:********
 var OCDColor = 'rgba(78, 78, 255, 1.0)';
 var OCDRed = 78;
 var OCDGreen = 78;
@@ -2995,6 +3016,7 @@ var OCDBlue = 78;
 var OCDAlpha = 1.0;
 var OCDValid = true;
 
+// This function readies the color picker dialog:
 function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   // Set up the canvas on which the two color wheels will be painted:
   var canvas = document.getElementById('OCDPickerCanvas');
@@ -3025,6 +3047,7 @@ function OCDReadyOtherColorDialog(){ // eslint-disable-line no-unused-vars
   OCDUpdateExample();
 }
 
+// This function basically draws the color circles:
 function OCDDrawColorCircle(x, y, r, ctx, drk){
   // Create a color circle:
   // This code is a modified version of the code written by shoo found at:
@@ -3050,11 +3073,13 @@ function OCDDrawColorCircle(x, y, r, ctx, drk){
   }
 }
 
+// This function executes when the mouse goes down on the color selection canvas:
 function OCDMouseDown(e){ // eslint-disable-line no-unused-vars
   var offset = getCoords(document.getElementById('OCDPickerCanvas'));
   OCDOnInstrumentDown(e.pageX - offset.left, e.pageY - offset.top);
 }
 
+// This function executes when the user touches somewhere on the color selection canvas:
 function OCDTouchStart(e){ // eslint-disable-line no-unused-vars
   if(e.touches.length === 1){
     var offset = getCoords(document.getElementById('OCDPickerCanvas'));
@@ -3063,6 +3088,7 @@ function OCDTouchStart(e){ // eslint-disable-line no-unused-vars
   }
 }
 
+// This function basically updates the textboxes according to the color the user chose.
 function OCDUpdateTextBoxes(){
   document.getElementById('OCDRedTextBox').value = OCDRed;
   document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
@@ -3076,6 +3102,8 @@ function OCDUpdateTextBoxes(){
   document.getElementById('OCDRedTextBox').select();
 }
 
+// This function executes whenever the user clicks/touches somewhere on the color selection canvas:
+// It basically gets the pixel directly under their click/touch and gets its color & updates the GUI.
 function OCDOnInstrumentDown(x, y){
   var canvas = document.getElementById('OCDPickerCanvas');
   var context = canvas.getContext('2d');
@@ -3091,6 +3119,8 @@ function OCDOnInstrumentDown(x, y){
   OCDUpdateExample();
 }
 
+// This function validates the input on the otherColor dialog and sets the appropriate box to red
+// if it finds something that isn't valid.
 function OCDValidateInputAndUpdateIfApplicable(){ // eslint-disable-line max-statements
   var tempRed = parseInt(document.getElementById('OCDRedTextBox').value, 10);
   var tempGreen = parseInt(document.getElementById('OCDGreenTextBox').value, 10);
@@ -3148,6 +3178,7 @@ function OCDValidateInputAndUpdateIfApplicable(){ // eslint-disable-line max-sta
   }
 }
 
+// This function updates the color example so that the user can see what color they have chosen:
 function OCDUpdateExample(){
   var canvas = document.getElementById('OCDColorChosenExampleCanvas');
   var context = canvas.getContext('2d');
@@ -3164,6 +3195,9 @@ function OCDUpdateExample(){
   context.fill();
 }
 
+// Here is the function that executes when the user chooses the OK button.
+// It basically makes sure there are no invalid entries in the textboxe 
+// and then updates the color if that is the case.
 function OCDOkBtnFunction(){
   if (OCDValid){
     instrumentColor = OCDColor;
@@ -3172,6 +3206,7 @@ function OCDOkBtnFunction(){
   }
 }
 
+// If the user presses enter inside of one of the textboxes, we will run the ok button function:
 function OCDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -3179,14 +3214,19 @@ function OCDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
-// Here is the code for the otherSizeDialog:
+// ********Here is the code for the otherSizeDialog:********
 var OSDValid = true;
 
+// Here is the function that readies the other size dialog:
 function OSDReadyOtherSizeDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OSDSizeTextBox').value = instrumentWidth;
   document.getElementById('OSDSizeTextBox').select();
 }
 
+// Here is the function that adds a character to the size textbox.
+// Note that because we used a number input field, we cannot place
+// the new character where the cursor is. Unfortunetly we can only
+// place it at the end of the existing content.
 function OSDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('OSDSizeTextBox');
   var alreadyThere = textBox.value;
@@ -3194,6 +3234,8 @@ function OSDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   OSDValidateInput();
 }
 
+// Here is the backspace function. It just removes one character from the end of the
+// content in the number input field.
 function OSDBackspace(){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('OSDSizeTextBox');
   var alreadyThere = textBox.value;
@@ -3201,12 +3243,16 @@ function OSDBackspace(){ // eslint-disable-line no-unused-vars
   OSDValidateInput();
 }
 
+// Here is the clear function is clears the number input field.
 function OSDClear(){ // eslint-disable-line no-unused-vars
   document.getElementById('OSDSizeTextBox').value = '';
   document.getElementById('OSDSizeTextBox').focus();
   OSDValidateInput();
 }
 
+// Here is the validation function for the number input field.
+// It basically ensures that the number entered is within the
+// limits defined and marks the field red if it isn't.
 function OSDValidateInput(){
   var rawInput = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
   if(isNaN(rawInput) || rawInput < 2 || rawInput > 2000){
@@ -3219,6 +3265,8 @@ function OSDValidateInput(){
   }
 }
 
+// Here is the OK button function. It basically checks that the number entered is
+// within the acceptable limits and proceeds only if that is the case.
 function OSDOkBtnFunction(){
   if (OSDValid){
     instrumentWidth = parseInt(document.getElementById('OSDSizeTextBox').value, 10);
@@ -3227,6 +3275,7 @@ function OSDOkBtnFunction(){
   }
 }
 
+// If the user presses enter in the number input box, we will click the ok button for them.
 function OSDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -3234,7 +3283,9 @@ function OSDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   }
 }
 
-// Here is the code for the insertScreenshotDialog:
+// ********Here is the code for the insertScreenshotDialog:********
+
+// Here are the variables used in the screenshot process:
 var ISDCanInsert = false;
 var ISDCanUseTool = false;
 var ISDAreaSelected = false;
@@ -3254,12 +3305,13 @@ var ISDLocationDropdown = null;
 var ISDExtraTextLabel = null;
 var ISDExtraBreak = null;
 var ISDExtraBreak2 = null;
-var ISDExtraBreak3 = null; // new
+var ISDExtraBreak3 = null;
 var ISDExtraTextLabel2 = null;
-var ISDExtraTextLabel3 = null; // new
+var ISDExtraTextLabel3 = null;
 var ISDBackgroundColorDropdown = null;
-var ISDCroppingMethodDropdown = null; // new
+var ISDCroppingMethodDropdown = null;
 
+// Here is the function that readies the insert screenshot dialog:
 function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   ISDCanInsert = false;
   ISDAreaSelected = false;
@@ -3302,6 +3354,7 @@ function ISDReadyInsertScreenshotDialog(){ // eslint-disable-line no-unused-vars
   });
 }
 
+// Here is the function that runs whenever one of the thumbnail images is chosen:
 function ISDThumbnailClicked(id){ // eslint-disable-line no-unused-vars
   // 1. clear out the dialog & put up new message
   document.getElementById('ISDContentHeader').innerHTML = 'Capturing Screenshot...';
@@ -3326,6 +3379,9 @@ function ISDHandleError(e){
   alert('An error occurred while obtaining the screenshot. Here is the error:\n\n' + e.name, 'Error:');
 }
 
+// Assuming everything goes well, this function will execute to handle the stream:
+// It basically gets a video feed of the thing the user chose and uses that to
+// obtain an image from the video feed.
 function ISDHandleStream(stream){
   // Create hidden video tag
   var video = document.createElement('video');
@@ -3362,6 +3418,7 @@ function ISDHandleStream(stream){
   document.body.appendChild(video);
 }
 
+// When the image has been obtained we will start the process of cropping it:
 function ISDReadyForCroping(){
   // 3. re-focus main window
   ipcRenderer.send('focus-main-win');
@@ -3379,14 +3436,11 @@ function ISDReadyForCroping(){
     ISDFixCanvas();
   };
   img.src = ISDScreenShotORIGINAL;
-
-  
-  // 5. set ISDCanInsert to true & area selected to false.
-  // 6. allow cropping.
-  // 7. If area gets selected, store area & set ISDAreaSelected to true.
-  // 8. make button for canceling select.
 }
 
+// This function attempts to crop the canvas and remove the black borders:
+// It also takes the image and renders a preview of it so that the user
+// can see all of it & perhaps crop it.
 function ISDFixCanvas(){
   var horizontalPixels = ISDContext.getImageData(0, 360, 640, 1);
   var verticalPixels = ISDContext.getImageData(640, 0, 1, 360);
@@ -3496,6 +3550,7 @@ function ISDAddTouchAndClickEventHandelers(){
   });
 }
 
+// This function adds the dropdowns and related HTML elements for the select region dropdown
 function ISDAddElementsForSelectRegion(){
   ISDExtraBreak = document.createElement('br');
   document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak);
@@ -3541,6 +3596,7 @@ function ISDAddElementsForSelectRegion(){
   ISDAddCroppingMethodDropdown();
 }
 
+// This function adds the HTML elements related to the location dropdown:
 function ISDAddLocationDropdown(){
   ISDLocationDropdown = document.createElement('select');
   ISDLocationDropdown.style.fontSize = '30px';
@@ -3561,6 +3617,7 @@ function ISDAddLocationDropdown(){
   document.getElementById('ISDContentDiv').appendChild(ISDLocationDropdown);
 }
 
+// This function adds the HTML elements related to the cropping dropdown:
 function ISDAddCroppingMethodDropdown(){
   ISDExtraBreak3 = document.createElement('br');
   document.getElementById('ISDContentDiv').appendChild(ISDExtraBreak3);
@@ -3589,6 +3646,8 @@ function ISDAddCroppingMethodDropdown(){
   document.getElementById('ISDContentDiv').appendChild(ISDCroppingMethodDropdown);
 }
 
+// This function displays the image on the canvas at an appropriate size for the avaliable
+// viewing area:
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
   typeof incommingHeight === 'undefined' || incommingWidth === null || incommingHeight === null){
@@ -3622,6 +3681,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
 }
 
+// This function gets the avaliable viewing area so that we can determine how big to make the screenshot preview.
 function ISDGetAvaliableDialogSpace(){
   // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future:
   var x = (0.88 * window.innerWidth) - 145;
@@ -3631,6 +3691,7 @@ function ISDGetAvaliableDialogSpace(){
   return { availableWidth: x, availableHeight: y };
 }
 
+// These three functions handle touch/mouse input from the preview:
 function ISDInstrumentDown(x, y){
   ISDCanUseTool = true;
   ISDSelectFunction(x, y, 'down');
@@ -3649,6 +3710,8 @@ function ISDInstrumentUp(x, y){
   ISDCanUseTool = false;
 }
 
+// This function is essentially the same as the one for the regular select tool,
+// it is only speciffic to the screenshot dialog:
 function ISDSelectFunction(x, y, phase){
   switch(phase){
   case 'down':
@@ -3707,6 +3770,7 @@ function ISDSelectFunction(x, y, phase){
   }
 }
 
+// Here is the function that cancles a selected region for the screenshot preview:
 function ISDCancelSelect(){
   if(ISDAreaSelected){
     ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
@@ -3718,6 +3782,9 @@ function ISDCancelSelect(){
   }
 }
 
+// Here is the function that runs when the user chooses to insert their screenshot.
+// It manages the entire process of geting the necessary information, cropping if
+// necessary, placing the selection in the appropriate place, cleanup, etc...
 function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statements
   if(ISDCanInsert){
     if(ISDAreaSelected){
@@ -3806,6 +3873,7 @@ function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statemen
   }
 }
 
+// This is the function that calculates the insertion point for the screenshot.
 function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, selSizeX, selSizeY){
   var toRet = { x: 0, y: 0 };
   switch(insertionLocationStr){
@@ -3844,6 +3912,8 @@ function ISDCalculateInsertionPoint(insertionLocationStr, orgImageX, orgImageY, 
   return toRet;
 }
 
+// Here is the first cleanup function for the insert screenshot section. It manages the
+// entire cleanup process calling other functions where needed.
 function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars, max-statements
   // Here is where we will remove the event listeners from the canvas & do any other necessary cleanup.
   ISDSimpleVariableCleanup();
@@ -3902,6 +3972,8 @@ function ISDCleanupFunction(){ // eslint-disable-line no-unused-vars, max-statem
   }
 }
 
+// Here is a helper function for the above cleanup function. It focuses on cleaning up the various
+// variables used.
 function ISDSimpleVariableCleanup(){
   ISDPrevX = 'NA';
   ISDPrevY = 'NA';
@@ -3919,8 +3991,11 @@ function ISDSimpleVariableCleanup(){
 }
 
 
-// Here is the code for the otherPageDialog:
+// ********Here is the code for the otherPageDialog:********
 
+// Here is the function that inserts pages from the otherPage dialog.
+// Note the pattern used in naming files and how they are used 
+// depending on whether widscreen or inverted colors is selected.
 function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
   var before = locOfTem.substring(0, (locOfTem.length - 4));
@@ -3935,6 +4010,7 @@ function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
+// Here is the function that inserts a colored page:
 function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
   var whiteImage = new Image();
   whiteImage.onload = function (){
@@ -3972,6 +4048,7 @@ function OPDInsertColoredPage(){ // eslint-disable-line no-unused-vars
   document.getElementById('OPDCloseBtn').click();  // Clicking the close button on dialog after we are done with it.
 }
 
+// Here is the function that inserts an page consisting of an image that the user opens:
 function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
   dialog.showOpenDialog(theMainWindow, { title: 'Open Image', filters: [
     { name: 'Image', extensions: ['png', 'jpeg', 'jpg', 'gif'] } // ----Visible!
@@ -3992,6 +4069,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
           alert('Error: That file is larger than the size limit of 25MB.\nIf you wish to open it, you will need to scale it down using\nan image editing program such as mtPaint or Microsoft Paint.', ' ');
         }
         else{
+          // If it looks like the image exists and is a reasonable size, we will open just like we were opening a template:
           insertTemplateAsPage(fileName);
         }
       }
