@@ -2641,6 +2641,8 @@ function SIDActuallySaveFiles(ctl_s = false){
   });
 }
 
+// This function basically just counts the number of files deleted and calls the next function if all
+// of the files that need to be deleted have been deleted:
 function SIDFileDeleted(){
   ++SIDFilesDeleted;
   if(SIDFilesDeleted === SIDFilesToDelete){
@@ -2648,6 +2650,7 @@ function SIDFileDeleted(){
   }
 }
 
+// This function actually saves the files:
 function SIDContinueSavingFiles(){
   SIDErrorsSavingFiles = false;
   SIDFilesToHandle = arrayOfCurrentImages.length;
@@ -2658,6 +2661,7 @@ function SIDContinueSavingFiles(){
   }
 }
 
+// This function runs every time a file is saved and then hands controll off to the incrementing function:
 function SIDFileSaved(err){
   if(SIDSaveViaCtrlS === false){
     document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
@@ -2671,6 +2675,8 @@ function SIDFileSaved(err){
   }
 }
 
+// This function just checks to see if all the files have been handled and calls the finishing function once
+// all the files have been handled.
 function SIDIncrementAndCheck(){
   ++SIDFilesHandled;
   if(SIDFilesHandled === SIDFilesToHandle){
@@ -2678,6 +2684,9 @@ function SIDIncrementAndCheck(){
   }
 }
 
+// This function gets called once all of the files have been handled.
+// It cleans up the gui of necessary and notifies the user if something
+// didn't go right.
 function SIDFinishedSaving(){
   if(SIDSaveViaCtrlS === false){
     document.getElementById('saveImagesDialog').style.cursor = 'default';
@@ -2717,8 +2726,10 @@ function SIDDecodeBase64Image(dataString){
   return new Buffer(matches[2], 'base64');
 }
 
-// Here is the code for the aboutDialog:
 
+// ********Here is the code for the aboutDialog:********
+
+// This function readies the about dialog.
 function ADReadyAboutDialog(){ // eslint-disable-line no-unused-vars
   // eslint-disable-next-line max-len
   document.getElementById('ADVersionLine').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Roger’s Math Whiteboard version ' + appVersion + ' can be best understood as a multi-page image editor designed around the specific needs of math and science teachers who want to take advantage of pen/touch/stylus input while presenting. It is designed to be used while presenting content in class, and/or while working through questions from students.';
