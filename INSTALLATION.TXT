@@ -1,0 +1,27 @@
+Here are the basic steps for getting Roger’s Math Whiteboard installed onto your computer for development purposes:
+1. Clone this repository into a folder of your choosing on your local machine.
+2. Obtain the Electron framework version 1.4.13
+3. Open the app using the Electron Framework.
+
+There are two different ways to obtain & use the Electron framework:
+
+Method 1: Installing Electron globally:
+On Ubuntu-based machines you can simply run the following commands in order:
+1. sudo apt-get update
+2. sudo apt-get upgrade
+3. sudo apt-get install nodejs
+4. sudo apt-get install npm
+5. sudo ln -s /usr/bin/nodejs /usr/bin/node
+6. sudo npm install electron@1.4.13 -g
+Note: Wait for that last command to complete! It takes a while.
+From there, you can cd, (change directory) into the folder with the source code for Roger’s Math Whiteboard and run:
+electron .
+to start the application.
+
+Method 2: Using the Binary:
+Go to 
+https://github.com/electron/electron/releases/tag/v1.4.13
+and download the bianary version for your system. (It comes down as a zip file).
+From there, extract it to a folder of your choosing on your machine and run the electron executable.
+This should produce a window that says 'Drag your app here it run it.'
+You can then drag the folder of source code onto the window to start the app.
