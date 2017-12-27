@@ -1,10 +1,10 @@
 # Project Title
 
-One Paragraph of project description goes here
+Roger's Math Whiteboard is a simple Electron App written in pure HTML5, JavaScript, and CSS; which is intended to suit the speciffic needs of math teachers. It is intended to be used while presenting course material on a touchscreen or similar device. In its current form, it is best described as a multi-page image editor with some additional features that suit the needs of the intended audience.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of Roger's Math Whiteboard up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
