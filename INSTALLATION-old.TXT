@@ -1,0 +1,35 @@
+Note that you can probably search for this program on the Google Chrome
+Web Store and install it from there. If that doesn't work, or you wish
+to build the program from its source code, do the following:
+
+1. Install Google Chrome or Chromium vesrion 51 or above if you do not
+   already have it. (This step is critical. The rest of this guide will
+   not work unless you have Google Chrome or Chromium version 51 or above
+   installed on your system and working). If you wish to check what
+   version of Chrome you have installed, open up Chrome or Chromium and
+   go to chrome://help That should tell you what version you have
+   installed. 
+
+2. Extract the files from the zip file to a location of your choosing,
+   making sure to keep the directory structure of the original zip file.
+
+3. Open up Google Chrome or Chromium and go to chrome://extensions
+
+4. Click the "Developer mode" checkbox if it is not already checked.
+
+5. Click "Load unpacked extension"
+
+6. Browse to the folder that you extracted the zip file into, and select
+   the folder named "RMW_vxx-xx-xx-xx" where the x's are the applicable
+   version numbers.
+
+7. Click "Open" to load the extension into Chrome or Chromium.
+
+8. To run it, simply click "Launch" underneath its name & description.
+   You can also go to chrome://apps, (or just click the "Apps" button),
+   and click its entry. If you wish to debug it, you can open an Inspect
+   view in its entry on the chrome://extensions page while it is running.
+
+
+
+
