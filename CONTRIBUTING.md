@@ -6,7 +6,7 @@ as well as feature suggestions!
 
 Please note that we have a code of conduct, please follow it in all your interactions with this project.
 
-## Pull Request Process
+## Some Notes on Pull Requests
 
 1. At this point because of the small size of this project, all pull requests must be signed off by the
    current project maintainer, (Roger Frybarger), who will also be responsible for merging the pull 
@@ -17,6 +17,10 @@ Please note that we have a code of conduct, please follow it in all your interac
    lesson from Windows 8. People don't like drastic interface changes. Furthermore, we have intentionally
    allowed for expandability via the 'Other...' options in the applicable dropdowns. Thus, new tools can
    be added so long as they are added in these areas.
+   
+3. It is assumed that you have read the README.md file and adhered to the eslint code quality standards
+   as explained in that file. If you find a need to make an exception to these standards, be prepared to
+   make a compelling case for why such an exception is needed.
 
 ## Code of Conduct
 

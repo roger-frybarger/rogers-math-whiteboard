@@ -1,4 +1,21 @@
 
+  /*Copyright 2016, 2017 Roger Frybarger
+
+    This file is part of Roger's Math Whiteboard.
+
+    Roger's Math Whiteboard is free software: you can redistribute
+    it and/or modify it under the terms of the GNU General Public
+    License version 2 as published by the Free Software Foundation.
+
+    Roger's Math Whiteboard is distributed in the hope that it will
+    be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+    PURPOSE. See the GNU General Public License version 2 for more
+    details.
+
+    You should have received a copy of the GNU General Public
+    License version 2 along with Roger's Math Whiteboard.  If not,
+    see <http://www.gnu.org/licenses/>.*/
 
 // These are global constants that allow us to access various functions within electron.
 const { ipcRenderer } = require('electron');
