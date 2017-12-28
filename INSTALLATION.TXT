@@ -1,8 +1,10 @@
 Here are the basic steps for getting Roger’s Math Whiteboard installed onto your computer for development purposes:
+1. Fork the GitHub repository.
 1. Clone this repository into a folder of your choosing on your local machine.
 2. Obtain the Electron framework version 1.4.13
 3. Open the app using the Electron Framework.
 
+Now for the details:
 There are two different ways to obtain & use the Electron framework:
 
 Method 1: Installing Electron globally:
