@@ -2702,7 +2702,7 @@ function SIDIncrementAndCheck(){
 }
 
 // This function gets called once all of the files have been handled.
-// It cleans up the gui of necessary and notifies the user if something
+// It cleans up the GUI of necessary and notifies the user if something
 // didn't go right.
 function SIDFinishedSaving(){
   if(SIDSaveViaCtrlS === false){
@@ -2771,7 +2771,7 @@ function FODDuplicatePage(){ // eslint-disable-line no-unused-vars
   document.getElementById('FODCloseBtn').click();
 }
 
-// This function is executed when the user chooses to make the current drawing permanant.
+// This function is executed when the user chooses to make the current drawing permanent.
 function FODMakeCurrentDrawingPermanent(){ // eslint-disable-line no-unused-vars
   saveCurrentImageToArrayBeforeMoving();
   arrayOfOriginalImages[currentPg - 1] = arrayOfCurrentImages[currentPg - 1];
@@ -2951,7 +2951,7 @@ function ITDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   ITDValidationFunction();
 }
 
-// Here is the function that removes a character from the textbox based on where the cursor is.
+// Here is the function that removes a character from the text box based on where the cursor is.
 function ITDBackspace(){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('ITDTextBox');
   var alreadyThere = textBox.value;
@@ -2977,16 +2977,16 @@ function ITDBackspace(){ // eslint-disable-line no-unused-vars
   }
 }
 
-// Here is the function that clears out the entire textbox:
+// Here is the function that clears out the entire text box:
 function ITDClear(){ // eslint-disable-line no-unused-vars
   document.getElementById('ITDTextBox').value = '';
   document.getElementById('ITDTextBox').focus();
   ITDValidationFunction();
 }
 
-// Here is the input validation function for the textbox.
+// Here is the input validation function for the text box.
 // It basically makes sure there is at least 1 character
-// in the textbox and sets the box to red if there isn't.
+// in the text box and sets the box to red if there isn't.
 function ITDValidationFunction(){
   var input = document.getElementById('ITDTextBox').value;
   if(input.length < 1){
@@ -3009,7 +3009,7 @@ function ITDOkBtnFunction(){
   }
 }
 
-// If the user hits enter while typing in the textbox that should ne the same as choosing OK:
+// If the user hits enter while typing in the text box that should be the same as choosing OK:
 function ITDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -3105,7 +3105,7 @@ function OCDTouchStart(e){ // eslint-disable-line no-unused-vars
   }
 }
 
-// This function basically updates the textboxes according to the color the user chose.
+// This function basically updates the text boxes according to the color the user chose.
 function OCDUpdateTextBoxes(){
   document.getElementById('OCDRedTextBox').value = OCDRed;
   document.getElementById('OCDRedTextBox').style.backgroundColor = 'white';
@@ -3213,7 +3213,7 @@ function OCDUpdateExample(){
 }
 
 // Here is the function that executes when the user chooses the OK button.
-// It basically makes sure there are no invalid entries in the textboxe 
+// It basically makes sure there are no invalid entries in the text boxes
 // and then updates the color if that is the case.
 function OCDOkBtnFunction(){
   if (OCDValid){
@@ -3223,7 +3223,7 @@ function OCDOkBtnFunction(){
   }
 }
 
-// If the user presses enter inside of one of the textboxes, we will run the ok button function:
+// If the user presses enter inside of one of the text boxes, we will run the ok button function:
 function OCDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
   if (key === 13){ // 13 is enter
@@ -3240,9 +3240,9 @@ function OSDReadyOtherSizeDialog(){ // eslint-disable-line no-unused-vars
   document.getElementById('OSDSizeTextBox').select();
 }
 
-// Here is the function that adds a character to the size textbox.
+// Here is the function that adds a character to the size text box.
 // Note that because we used a number input field, we cannot place
-// the new character where the cursor is. Unfortunetly we can only
+// the new character where the cursor is. unfortunately we can only
 // place it at the end of the existing content.
 function OSDAddCharacter(chr){ // eslint-disable-line no-unused-vars
   var textBox = document.getElementById('OSDSizeTextBox');
@@ -3663,7 +3663,7 @@ function ISDAddCroppingMethodDropdown(){
   document.getElementById('ISDContentDiv').appendChild(ISDCroppingMethodDropdown);
 }
 
-// This function displays the image on the canvas at an appropriate size for the avaliable
+// This function displays the image on the canvas at an appropriate size for the available
 // viewing area:
 function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   if(incommingWidth === 0 || incommingHeight === 0 || typeof incommingWidth === 'undefined' ||
@@ -3698,7 +3698,7 @@ function ISDDisplayImageOnCanvas(img, incommingWidth, incommingHeight){
   ISDYScale = ISDImageToReturn.naturalHeight / ISDCanvas.height;
 }
 
-// This function gets the avaliable viewing area so that we can determine how big to make the screenshot preview.
+// This function gets the available viewing area so that we can determine how big to make the screenshot preview.
 function ISDGetAvaliableDialogSpace(){
   // Note that this will need to be adjusted if the insert screenshot dialog css is changed in the future:
   var x = (0.88 * window.innerWidth) - 145;
@@ -3728,7 +3728,7 @@ function ISDInstrumentUp(x, y){
 }
 
 // This function is essentially the same as the one for the regular select tool,
-// it is only speciffic to the screenshot dialog:
+// it is only specific to the screenshot dialog:
 function ISDSelectFunction(x, y, phase){
   switch(phase){
   case 'down':
@@ -3787,7 +3787,7 @@ function ISDSelectFunction(x, y, phase){
   }
 }
 
-// Here is the function that cancles a selected region for the screenshot preview:
+// Here is the function that cancels a selected region for the screenshot preview:
 function ISDCancelSelect(){
   if(ISDAreaSelected){
     ISDContext.drawImage(ISDTempCanvasForInterval, 0, 0, ISDContext.canvas.width, ISDContext.canvas.height);
@@ -3800,7 +3800,7 @@ function ISDCancelSelect(){
 }
 
 // Here is the function that runs when the user chooses to insert their screenshot.
-// It manages the entire process of geting the necessary information, cropping if
+// It manages the entire process of getting the necessary information, cropping if
 // necessary, placing the selection in the appropriate place, cleanup, etc...
 function ISDOkBtnFunction(){ // eslint-disable-line no-unused-vars, max-statements
   if(ISDCanInsert){
@@ -4012,7 +4012,7 @@ function ISDSimpleVariableCleanup(){
 
 // Here is the function that inserts pages from the otherPage dialog.
 // Note the pattern used in naming files and how they are used 
-// depending on whether widscreen or inverted colors is selected.
+// depending on whether widescreen or inverted colors is selected.
 function OPDInsertPage(e){ // eslint-disable-line no-unused-vars
   var locOfTem = e.target.src;
   var before = locOfTem.substring(0, (locOfTem.length - 4));
@@ -4106,7 +4106,7 @@ function OPDInsertPageFromImage(){ // eslint-disable-line no-unused-vars
 
 
 // ***************************** END OF CODE FOR OTHER WINDOWS!!!
-// The functions below are of a more general nature. They are intended to be avaliable
+// The functions below are of a more general nature. They are intended to be available
 // to all other parts of the code. Typically they are used to manage various aspects
 // of the main interface or the drawing area. It can kinda be thought of as the
 // miscellaneous functions section.
@@ -4539,7 +4539,7 @@ function checkPNGImage(base64string){
   return true;
 }
 
-// This function is used to copy the content of textareas to the user's clipboard.
+// This function is used to copy the content of text areas to the user's clipboard.
 function copyTextareaValueToClipboard(elid){ // eslint-disable-line no-unused-vars
   var txt = document.getElementById(elid).value;
   clipboard.writeText(txt);

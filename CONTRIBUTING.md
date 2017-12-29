@@ -20,7 +20,9 @@ Please note that we have a code of conduct, please follow it in all your interac
    
 3. It is assumed that you have read the README.md file and adhered to the eslint code quality standards
    as explained in that file. If you find a need to make an exception to these standards, be prepared to
-   make a compelling case for why such an exception is needed.
+   make a compelling case for why such an exception is needed. An exemption to this would be adding words
+   to the eslint spellcheck ignore list. As long as you explain why the word should be added, that will
+   probably be fine. If you need something more than that though, be prepared to explain it.
 
 ## Code of Conduct
 

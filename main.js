@@ -1,5 +1,5 @@
 
-  /*Copyright 2016, 2017 Roger Frybarger
+ /* Copyright 2016, 2017 Roger Frybarger
 
     This file is part of Roger's Math Whiteboard.
 
@@ -17,7 +17,7 @@
     License version 2 along with Roger's Math Whiteboard.  If not,
     see <http://www.gnu.org/licenses/>.*/
 
-/* Note that the code in this file runs in a seperate process from the code in the main-window-js.js file. 
+/* Note that the code in this file runs in a separate process from the code in the main-window-js.js file. 
  * The code in this file is generally closer to the underlying OS and is responsible for creating a window
  * and telling that window where to load its HTML from. This file/process also handles things that require
  * deeper interaction with the underlying OS. As such, it is extra important to be careful that the code
@@ -41,7 +41,7 @@ const { clipboard } = require('electron');
 // so that the window is not closed when the object is garbage collected.
 let win;
 
-// This string is used to seperate error messages if any errors occur:
+// This string is used to separate error messages if any errors occur:
 const errorDelimiter = '\n-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~\n'; // eslint-disable-next-line max-len
 const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + appVersion + '\nPlatform: ' + osModule.platform() + ' ' + osModule.release() + ' ' + osModule.arch() + '\nTotal RAM: ' + osModule.totalmem() + ' bytes.';
 
@@ -68,13 +68,13 @@ if(shouldQuit){
 
 // Here is the event handler for uncaught exceptions.
 // This is probably the most critical piece of code in
-// the entire program from an exception handeling
+// the entire program from an exception handling
 // perspective. It is best not to touch it unless
 // you have a very very very good reason to.
 process.on('uncaughtException', function (err){
   if(windowLoaded){
     // If the window is loaded, we will make an error message and try to send it to the main interface
-    // so that it can be displayed in the error message textarea.
+    // so that it can be displayed in the error message text area.
     var tmpObj = {};
     var d = new Date();
     var n = d.getTime();
@@ -158,7 +158,7 @@ function createWindow(){
     },500);
   });
   
-  // This enables web adressess to be opened by the user's default browser:
+  // This enables web addresses to be opened by the user's default browser:
   win.webContents.on('new-window', function (event, url){
     event.preventDefault();
     open(url);
@@ -187,7 +187,7 @@ app.on('activate', () => {
   }
 });
 
-// This ts the event handeler that is called when the render process sends the signal to terminate the app.
+// This ts the event handler that is called when the render process sends the signal to terminate the app.
 ipcMain.on('terminate-this-app', () => {
   win.destroy(); // necessary to bypass the repeat-quit-check in the render process.
   app.quit();
