@@ -1,5 +1,5 @@
 
-  /*Copyright 2016, 2017 Roger Frybarger
+ /* Copyright 2016, 2017 Roger Frybarger
 
     This file is part of Roger's Math Whiteboard.
 
@@ -55,7 +55,7 @@ const platformAndVersionString = 'This is Roger\'s Math Whiteboard version ' + a
 
 // Here is the event handler for uncaught errors:
 // it basically tries to gather as much info as possible & put it into a log of sorts:
-// From there it passes the error log off to the unexpectedErrorOccured function.
+// From there it passes the error log off to the unexpectedErrorOccurred function.
 process.on('uncaughtException', function (err){
   var tmpObj = {};
   var d = new Date();
@@ -70,15 +70,15 @@ process.on('uncaughtException', function (err){
   if(err.message !== null && typeof err.message !== 'undefined'){
     tmpObj.messageTxt = err.message;
   }
-  unexpectedErrorOccured(tmpObj);
+  unexpectedErrorOccurred(tmpObj);
 });
 
 ipcRenderer.on('unexpected-error-in-main', function (event, data){
-  unexpectedErrorOccured(data);
+  unexpectedErrorOccurred(data);
 });
 
 // Here is the error logging function. It takes care of logging the error if possible:
-function unexpectedErrorOccured(objToLog){
+function unexpectedErrorOccurred(objToLog){
   try{
     var theBox = document.getElementById('SDErrorLogTextArea');
     var tmpStr = theBox.value;
@@ -101,8 +101,8 @@ function unexpectedErrorOccured(objToLog){
     }
     theBox.value = tmpStr;
     // Here is where we care about informing the user of what is happening:
-    // If there have been 3 or more errors within 30 seconds, we will silence the popups.
-    // Otherwise, we will just give them one popup per error.
+    // If there have been 3 or more errors within 30 seconds, we will silence the notifications.
+    // Otherwise, we will just give them one notification per error.
     errorTimestamps.unshift(objToLog.timeOfErr);
     if(displayErrorMessages){
       var threeErrorsWithin30Sec = false;
@@ -196,7 +196,7 @@ var useColorInvertedTemplates = false;
 
 // These are used to load a set of data urls into the array of images.
 // I wish there was a better way to do things like this but the images 
-// must load asyncncrously so having a bunch of global variables to
+// must load asynchronously so having a bunch of global variables to
 // keep track of things seems like the only way to me.
 var dataUrlsToLoad;
 var dataUrlsLoaded;
@@ -250,7 +250,7 @@ function continueAfterAppFinishedLoading1(){
   checkAgeOfRelease();
 }
 
-// This just recieves the path to the user's home folder and assigns it to the global variable.
+// This just receives the path to the user's home folder and assigns it to the global variable.
 // Note: this also happens about 1/2 second after main.js finishes doing its thing.
 ipcRenderer.on('users-home-folder' , function (event , data){
   hf = data.hf;
@@ -408,7 +408,7 @@ function MCTEnded(e){ // eslint-disable-line no-unused-vars
   instrumentUp(e.changedTouches[0].pageX - SideToolbarWidth, e.changedTouches[0].pageY - topToolbarWidth);
 }
 
-// *****As the 6 functions above show, all touch/mouse/pen input from the canvas ultimetly get dumped into one of 3 functions:
+// *****As the 6 functions above show, all touch/mouse/pen input from the canvas ultimately get dumped into one of 3 functions:
 //      1. instrumentDown()
 //      2. instrumentMoved()  or
 //      3. instrumentUp().
@@ -466,7 +466,7 @@ function setUpErrorLog(){
 // Remember that the intended audience is schools and they are often pretty out of date anyhow.
 // Thus, the best that we can realistically hope for is to have them update it twice per year between
 // the semesters. Other than that we need to assume that the program will run essentially offline and
-// be ebmeded into the school's seazonaly updated disk image twice a year.
+// be embedded into the school's seasonally updated disk image twice a year.
 function checkAgeOfRelease(){
   var d = new Date();
   var now = d.getTime();
@@ -1898,7 +1898,7 @@ function insertTemplateAsPage(locationOfTemplate){
   tempImageForInserting.src = locationOfTemplate;
 }
 
-// This function inserts a page using an image unless the user has exceded the pages maximum.
+// This function inserts a page using an image unless the user has exceeded the pages maximum.
 function insertPageUsingImage(img){
   // load the image onto the screen, then into the pages arrays.
   if(arrayOfCurrentImages.length < maxNumberOfPages){
@@ -1947,7 +1947,7 @@ function updatePageNumsOnGui(){
   document.getElementById('totalPagesDivID').innerHTML = 'Total Pages: ' + arrayOfCurrentImages.length;
 }
 
-// Sanitizing the input from the page textbox and changing the color of the box as appropriate:
+// Sanitizing the input from the page text box and changing the color of the box as appropriate:
 function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
   var input = document.getElementById('pageTextBoxID').value;
   var tempNum = parseInt(input, 10);
@@ -1964,7 +1964,7 @@ function pageInputBoxValidator(){ // eslint-disable-line no-unused-vars
   }
 }
 
-// If they hit enter in the page textbox the page should probably change to the number
+// If they hit enter in the page text box the page should probably change to the number
 // they entered:
 function pageInputBoxCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
@@ -2074,7 +2074,7 @@ function pasteAndResizeToolFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
-// This function sanitizes the input from the percentage textbox on the Tool -> Other dialog
+// This function sanitizes the input from the percentage text box on the Tool -> Other dialog
 // and changes its color appropriately: 
 function OTDCheckPercentInput(){ // eslint-disable-line no-unused-vars
   var elm = document.getElementById('OTDPercentInput');
@@ -2279,7 +2279,7 @@ function SDSetCursor(vle){
   }
 }
 
-// If the user hits enter in one of the textboxes in the settings dialog, it should probably try to
+// If the user hits enter in one of the text boxes in the settings dialog, it should probably try to
 // save the settings if it can:
 function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   var key = e.which || e.keyCode;
@@ -2538,7 +2538,7 @@ function SIDReadySaveImagesDialog(){ // eslint-disable-line no-unused-vars
   SIDNameForFiles = '';
 }
 
-// Validation for the filename textbox.
+// Validation for the file name text box.
 function SIDFileNamesInputTextboxValidator(){ // eslint-disable-line no-unused-vars
   var rawInput = document.getElementById('SIDFileNamesTextBox').value;
   if(rawInput.length === 0){
@@ -2566,7 +2566,7 @@ function SIDFileNamesInputTextboxValidator(){ // eslint-disable-line no-unused-v
   }
 }
 
-// This function checks for strange characters in the filename that the user specified.
+// This function checks for strange characters in the file name that the user specified.
 function SIDGoodChar(chr){
   if(SIDValidCharsString.indexOf(chr) === -1){
     return false;
@@ -2576,7 +2576,7 @@ function SIDGoodChar(chr){
   }
 }
 
-// Validation for the choose folder button so the user must enter a valid filename before being allowed to choose a folder
+// Validation for the choose folder button so the user must enter a valid file name before being allowed to choose a folder
 function SIDChooseFolderBtnFunction(){ // eslint-disable-line no-unused-vars
   if(SIDValidInput){
     SIDLaunchOpenFolderWindow();
@@ -2586,7 +2586,7 @@ function SIDChooseFolderBtnFunction(){ // eslint-disable-line no-unused-vars
   }
 }
 
-// After the filename validation passes this function runs to launch the open folder window:
+// After the file name validation passes this function runs to launch the open folder window:
 function SIDLaunchOpenFolderWindow(){
   SIDNameForFiles = document.getElementById('SIDFileNamesTextBox').value;
   dialog.showOpenDialog(theMainWindow, { title: 'Choose Folder', defaultPath: hf,
@@ -2678,7 +2678,7 @@ function SIDContinueSavingFiles(){
   }
 }
 
-// This function runs every time a file is saved and then hands controll off to the incrementing function:
+// This function runs every time a file is saved and then hands control off to the incrementing function:
 function SIDFileSaved(err){
   if(SIDSaveViaCtrlS === false){
     document.getElementById('SIDHeader').innerHTML = 'Processing file ' + SIDFilesHandled + ' of ' + SIDFilesToHandle;
