@@ -107,7 +107,7 @@ process.on('uncaughtException', function (err){
 function createWindow(){
   // Create the browser window. Note that it is created without a frame. This way we can customize the entire interface.
   win = new BrowserWindow({ width: 800, height: 600, minWidth: 730, minHeight: 550,
-    icon: __dirname + '/images/icons/scribble-128.png', frame: false });
+    icon: path.join(__dirname, '/images/icons/scribble-128.png'), frame: false });
 
   // and load the index.html of the app.
   win.loadURL(url.format({
