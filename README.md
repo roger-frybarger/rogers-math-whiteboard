@@ -21,7 +21,7 @@ Version numbers follow the signifficant mathematical constants with sqr(2) being
 ## License
 
     Roger's Math Whiteboard
-    Copyright 2016, 2017 Roger Frybarger
+    Copyright 2016, 2017, 2018 Roger Frybarger
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published
     by the Free Software Foundation.

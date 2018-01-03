@@ -1,5 +1,5 @@
 
- /* Copyright 2016, 2017 Roger Frybarger
+ /* Copyright 2016, 2017, 2018 Roger Frybarger
 
     This file is part of Roger's Math Whiteboard.
 
