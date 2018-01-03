@@ -247,6 +247,7 @@ function continueAfterAppFinishedLoading1(){
   document.addEventListener('keydown', validateKeyboardInputForDocument);
   allLoaded = true;
   setUpErrorLog();
+  addCommandLineArgsToTextarea();
   checkAgeOfRelease();
 }
 
@@ -459,6 +460,19 @@ function setUpErrorLog(){
   var tmpElement = document.getElementById('SDErrorLogTextArea');
   if(tmpElement.value === 'Empty'){
     tmpElement.value = platformAndVersionString;
+  }
+}
+
+// This function simply adds the command line arguments used to run the program
+// into the applicable text area.
+function addCommandLineArgsToTextarea(){
+  var tmpElm = document.getElementById('SDCommandArgsTextArea');
+  var cmds = remote.process.argv;
+  tmpElm.value = '';
+  var i;
+  for (i in cmds){
+    tmpElm.value += cmds[i];
+    tmpElm.value += ' ';
   }
 }
 
@@ -2286,6 +2300,12 @@ function SDCheckForEnter(e){ // eslint-disable-line no-unused-vars
   if (key === 13){ // 13 is enter
     SDOkBtnFunction();
   }
+}
+
+// Here is the function that is called when the user wants to copy the command used to run this program
+// to their clipboard.
+function SDCopyCommandLineArgs(){ // eslint-disable-line no-unused-vars
+  copyStrToClipboard(document.getElementById('SDCommandArgsTextArea').value);
 }
 
 // Here is the function that is called if the user tries to copy the error log to their clipboard:

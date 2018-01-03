@@ -508,6 +508,10 @@ input[type='checkbox']:checked {
   white-space: pre;
 }
 
+#SDCommandArgsTextArea {
+  white-space: pre;
+}
+
 /*
  * Below is the css that is speciffic to the openImagesDialog:
 */
