@@ -873,14 +873,14 @@ Public License instead of this License.
         <h2>Other Options/Tools:</h2>
         <div class="modalBoxContent">
           
-          <a class="modalBoxKeypadBtns" onclick="FODDuplicatePage();">Duplicate page</a><br>
-          <a class="modalBoxKeypadBtns" onclick="FODMakeCurrentDrawingPermanent();">Make current drawing permanent</a><br>
-          <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurface('clockwise');">Rotate page clockwise</a><br>
-          <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurface('counterclockwise');">Rotate page counterclockwise</a><br>
-          <a class="modalBoxKeypadBtns" onclick="FODImportFromSystem('100');">Import image from system clipboard</a><br>
-          <a class="modalBoxKeypadBtns" onclick="FODImportFromSystemResize();">Import image from system clipboard and resize to:</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODDuplicatePage();" ontouchstart="(function(e){e.preventDefault();})(event); FODDuplicatePage();">Duplicate page</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODMakeCurrentDrawingPermanent();" ontouchstart="(function(e){e.preventDefault();})(event); FODMakeCurrentDrawingPermanent();">Make current drawing permanent</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurface('clockwise');" ontouchstart="(function(e){e.preventDefault();})(event); FODRotateDrawingSurface('clockwise');">Rotate page clockwise</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODRotateDrawingSurface('counterclockwise');" ontouchstart="(function(e){e.preventDefault();})(event); FODRotateDrawingSurface('counterclockwise');">Rotate page counterclockwise</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODImportFromSystem('100');" ontouchstart="(function(e){e.preventDefault();})(event); FODImportFromSystem('100');">Import image from system clipboard</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODImportFromSystemResize();" ontouchstart="(function(e){e.preventDefault();})(event); FODImportFromSystemResize();">Import image from system clipboard and resize to:</a><br>
           <input type="number" min="10" max="400" value="90" id="FODPercentInput" oninput="FODCheckPercentInput();"/>%  (Min: 10%  Max: 400%)<br>
-          <a class="modalBoxKeypadBtns" onclick="FODExportCopiedSection();">Export copied section to system clipboard</a><br>
+          <a class="modalBoxKeypadBtns" onclick="FODExportCopiedSection();" ontouchstart="(function(e){e.preventDefault();})(event); FODExportCopiedSection();">Export copied section to system clipboard</a><br>
           <p> </p>
           
         </div>
@@ -895,97 +895,97 @@ Public License instead of this License.
         <h2>Insert Text:</h2>
         <div class="modalBoxContent">
           <!--All of these are the buttons that insert various symbols into the text box when clicked:-->
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">+</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">-</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8226;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&times;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&divide;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter('<');">&lt;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter('>');">&gt;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8804;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8805;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">=</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8800;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#177;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">|</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8730;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8731;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8732;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">U</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8745;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8734;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#960;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8776;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">i</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">e</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#916;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#931;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8747;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#945;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#946;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#947;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8736;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#952;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#956;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#963;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8709;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8712;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8737;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8451;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8457;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#176;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8970;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8971;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">^</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8968;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#8969;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">(</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">)</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">[</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">]</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">{</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">}</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#178;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">&#179;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">:</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">;</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">!</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">$</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">%</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">*</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">/</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">,</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">'</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">~</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">_</a><br>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">1</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">2</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">3</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">4</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">5</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">6</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">7</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">8</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">9</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">0</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">.</a><br>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">a</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">b</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">c</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">h</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">l</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">m</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">t</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">x</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">y</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);">z</a>
-          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(' ');">Space</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">+</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">-</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8226;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&times;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&divide;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter('<');" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter('<');">&lt;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter('>');" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter('>');">&gt;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8804;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8805;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">=</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8800;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#177;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">|</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8730;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8731;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8732;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">U</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8745;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8734;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#960;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8776;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">i</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">e</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#916;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#931;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8747;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#945;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#946;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#947;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8736;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#952;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#956;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#963;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8709;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8712;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8737;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8451;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8457;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#176;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8970;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8971;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">^</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8968;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#8969;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">(</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">)</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">[</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">]</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">{</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">}</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#178;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">&#179;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">:</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">;</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">!</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">$</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">%</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">*</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">/</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">,</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">'</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">~</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">_</a><br>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">1</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">2</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">3</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">4</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">5</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">6</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">7</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">8</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">9</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">0</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">.</a><br>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">a</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">b</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">c</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">h</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">l</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">m</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">t</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">x</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">y</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(this.innerHTML);">z</a>
+          <a class="modalBoxKeypadBtns" onclick="ITDAddCharacter(' ');" ontouchstart="(function(e){e.preventDefault();})(event); ITDAddCharacter(' ');">Space</a>
           
         </div>
         <p id="ITDTextLabel">Text:</p>
         <input type="text" oninput="ITDValidationFunction();" onkeydown="ITDCheckForEnter(event);" id="ITDTextBox" size="20" autofocus>
-        <a class="extraBottomButtons" onclick="ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
-        <a class="extraBottomButtons" onclick="ITDClear();" id="ITDClearBtn">Clear</a><br>
+        <a class="extraBottomButtons" onclick="ITDBackspace();" ontouchstart="(function(e){e.preventDefault();})(event); ITDBackspace();" id="ITDBackspaceBtn">Backspace</a>
+        <a class="extraBottomButtons" onclick="ITDClear();" ontouchstart="(function(e){e.preventDefault();})(event); ITDClear();" id="ITDClearBtn">Clear</a><br>
         <a onclick="ITDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
       </div>
     </div>
@@ -1046,18 +1046,18 @@ Public License instead of this License.
           <input type="number"  oninput="OSDValidateInput();" onkeydown="OSDCheckForEnter(event);" id="OSDSizeTextBox" min="2" max="2000">
           <p>Min: 2, Max: 2000. Medium = 5</p>
           <!--These are just the buttons on the dialog. I put these here so that they don't need to use their keyboard.-->
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">1</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">2</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">3</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">4</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">5</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">6</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">7</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">8</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">9</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);">0</a><br>
-          <a class="modalBoxKeypadBtns" onclick="OSDBackspace();">Backspace</a>
-          <a class="modalBoxKeypadBtns" onclick="OSDClear();">Clear</a><br>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">1</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">2</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">3</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">4</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">5</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">6</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">7</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">8</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">9</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDAddCharacter(this.innerHTML);" ontouchstart="(function(e){e.preventDefault();})(event); OSDAddCharacter(this.innerHTML);">0</a><br>
+          <a class="modalBoxKeypadBtns" onclick="OSDBackspace();" ontouchstart="(function(e){e.preventDefault();})(event); OSDBackspace();">Backspace</a>
+          <a class="modalBoxKeypadBtns" onclick="OSDClear();" ontouchstart="(function(e){e.preventDefault();})(event); OSDClear();">Clear</a><br>
         </div>
         <a onclick="OSDOkBtnFunction();" title="" class="modalBoxOkBtns">OK</a>
       </div>
