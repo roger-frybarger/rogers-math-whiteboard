@@ -82,11 +82,17 @@ process.on('uncaughtException', function (err){
     tmpObj.processFrom = 'Main'; // ----Visible!
     tmpObj.stackTrace = 'Empty :('; // ----Visible!
     tmpObj.messageTxt = 'Empty :('; // ----Visible!
-    if(err.stack !== null && typeof err.stack !== 'undefined'){
+    try{
       tmpObj.stackTrace = err.stack;
     }
-    if(err.message !== null && typeof err.message !== 'undefined'){
+    catch(e){
+      // If we can't get the stack trace we will just go with empty.
+    }
+    try{
       tmpObj.messageTxt = err.message;
+    }
+    catch(e){
+      // If we can't get the error message then we will just go with empty.
     }
     try{
       win.webContents.send('unexpected-error-in-main', tmpObj);
